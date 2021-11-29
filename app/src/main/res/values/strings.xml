@@ -10,4 +10,20 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="long_class_name">Long name</string>
+    <string name="short_class_name">Short name</string>
+    <string name="edit_class">Edit class</string>
+    <string name="name_exists">This name already exists</string>
+    <string name="name_empty">Please specify a name</string>
+    <string name="pick_bg_color">Pick background color</string>
+    <string name="invalid_hex">Invalid hexadecimal color</string>
+    <string name="color_wheel">Color wheel</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="starts_at">Starts at</string>
+    <string name="ends_at">Ends at</string>
+    <string name="unnamed">Unnamed</string>
+    <string name="schedule">Schedule</string>
+    <string name="class_list">Class list</string>
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SchoolTime</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Configurações</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="long_class_name">Nome longo</string>
+    <string name="short_class_name">Nome curto</string>
+    <string name="edit_class">Editar disciplina</string>
+    <string name="name_exists">Este nome já existe</string>
+    <string name="name_empty">Por favor especifique um nome</string>
+    <string name="pick_bg_color">Escolhe a cor de fundo</string>
+    <string name="invalid_hex">Cor hexadecimal inválida</string>
+    <string name="color_wheel">Roda de cores</string>
+    <string name="select">Selecionar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="starts_at">Começa às</string>
+    <string name="ends_at">Acaba às</string>
+    <string name="unnamed">Sem nome</string>
+    <string name="schedule">Horário</string>
+    <string name="class_list">Lista de aulas</string>
+</resources>

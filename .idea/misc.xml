@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/activity_main.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/app_bar_main.xml" value="0.2821557971014493" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/content_main.xml" value="0.2884963768115942" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_gallery.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_home.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_slideshow.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/nav_header_main.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/schedule_block_edit_activity.xml" value="0.18342391304347827" />
       </map>
     </option>
   </component>
