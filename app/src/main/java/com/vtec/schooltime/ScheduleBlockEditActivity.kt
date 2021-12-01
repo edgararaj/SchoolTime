@@ -1,10 +1,9 @@
-package com.vtec.schooltime.activities
+package com.vtec.schooltime
 
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.vtec.schooltime.*
 import com.vtec.schooltime.databinding.ScheduleBlockEditActivityBinding
 
 class ScheduleBlockEditActivity : AppCompatActivity() {
@@ -13,7 +12,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
     private var scheduleBlockPosition = 0
     private lateinit var scheduleBlockStartTime: Time
     private lateinit var scheduleBlockEndTime: Time
-    private lateinit var schoolClassCard: SchoolClassVH
+    private lateinit var schoolClassCard: ClassVH
 
     override fun onBackPressed() {
         MainActivity.schedule?.mutation {
@@ -39,7 +38,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         binding = ScheduleBlockEditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
@@ -49,8 +48,8 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
 
         if (scheduleBlock == null || schoolClass == null) return
 
-        schoolClassCard = SchoolClassVH(binding.schoolClassCard)
-        schoolClassCard.bind(schoolClass, SchoolClassVH.Mode.Display)
+        schoolClassCard = ClassVH(binding.schoolClassCard)
+        schoolClassCard.bind(schoolClass, null, ClassVH.Mode.Display)
 
         scheduleBlockStartTime = scheduleBlock.startTime
         binding.startTime.text = scheduleBlockStartTime.toString()

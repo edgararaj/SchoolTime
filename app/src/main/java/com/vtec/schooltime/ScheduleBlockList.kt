@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.vtec.schooltime.activities.ScheduleBlockEditActivity
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
 
 class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?) : RecyclerView.Adapter<ScheduleBlockVH>() {
@@ -41,11 +40,12 @@ class ScheduleBlockVH(private val binding: ScheduleBlockListItemBinding) : Recyc
             if (schoolClass != null)
             {
                 val bgColor = schoolClass.color
-                binding.root.setCardBackgroundColor(bgColor)
                 val contrastyFgColor = getContrastingColor(bgColor)
-                binding.className.setTextColor(contrastyFgColor)
+                binding.root.setCardBackgroundColor(bgColor)
                 binding.className.setTextColor(contrastyFgColor)
                 binding.className.text = schoolClass.longName
+
+                binding.innerCard.setCardBackgroundColor(getDarkerColor(bgColor))
                 binding.blockTime.setTextColor(contrastyFgColor)
                 binding.blockTime.text = "${scheduleBlock.startTime} — ${scheduleBlock.endTime}"
 
@@ -60,17 +60,17 @@ class ScheduleBlockVH(private val binding: ScheduleBlockListItemBinding) : Recyc
                     }
                 }
 
-//                binding.root.setOnClickListener {
-//                    val intent = Intent(context, SchoolClassEditActivity::class.java).apply {
-//                        putExtra("school_class_id", scheduleBlock.schoolClassId)
-//                    }
-//
-//                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-//                    vibrator.vibrate(App.littleVibrationEffect)
-//                    context.startActivity(intent)
-//                }
+                binding.root.setOnClickListener {
+                    val intent = Intent(context, ClassEditActivity::class.java).apply {
+                        putExtra("school_class_id", scheduleBlock.schoolClassId)
+                    }
 
-                binding.blockTime.setOnClickListener {
+                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                    vibrator.vibrate(App.littleVibrationEffect)
+                    context.startActivity(intent)
+                }
+
+                binding.innerCard.setOnClickListener {
                     val intent = Intent(context, ScheduleBlockEditActivity::class.java).apply {
                         putExtra("day_of_week", dayOfWeek)
                         putExtra("schedule_block_position", adapterPosition)

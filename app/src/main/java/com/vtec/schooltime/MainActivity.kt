@@ -4,17 +4,16 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import com.vtec.schooltime.databinding.ActivityMainBinding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_schedule, R.id.nav_class_list
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

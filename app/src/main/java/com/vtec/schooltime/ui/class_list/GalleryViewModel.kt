@@ -1,4 +1,4 @@
-package com.vtec.schooltime.ui.gallery
+package com.vtec.schooltime.ui.class_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -15,12 +15,22 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="15dp"/>
 
-        <TextView
-            android:id="@+id/block_time"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/inner_card"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingHorizontal="15dp"/>
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            style="@style/BaseScheduleBlock">
+
+            <TextView
+                android:id="@+id/block_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="15dp"/>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <ImageView
             android:id="@+id/drag_handle"

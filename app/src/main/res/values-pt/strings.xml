@@ -8,9 +8,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Configurações</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="schedule">Horário</string>
+    <string name="class_list">Lista de aulas</string>
 
     <string name="long_class_name">Nome longo</string>
     <string name="short_class_name">Nome curto</string>
@@ -25,6 +24,4 @@
     <string name="starts_at">Começa às</string>
     <string name="ends_at">Acaba às</string>
     <string name="unnamed">Sem nome</string>
-    <string name="schedule">Horário</string>
-    <string name="class_list">Lista de aulas</string>
 </resources>

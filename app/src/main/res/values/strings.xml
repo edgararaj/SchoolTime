@@ -7,9 +7,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="schedule">Schedule</string>
+    <string name="class_list">Class list</string>
 
     <string name="long_class_name">Long name</string>
     <string name="short_class_name">Short name</string>
@@ -24,6 +23,4 @@
     <string name="starts_at">Starts at</string>
     <string name="ends_at">Ends at</string>
     <string name="unnamed">Unnamed</string>
-    <string name="schedule">Schedule</string>
-    <string name="class_list">Class list</string>
 </resources>

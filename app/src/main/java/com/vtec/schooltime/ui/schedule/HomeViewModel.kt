@@ -1,4 +1,4 @@
-package com.vtec.schooltime.ui.home
+package com.vtec.schooltime.ui.schedule
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

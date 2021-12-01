@@ -1,19 +1,16 @@
-package com.vtec.schooltime.ui.home
+package com.vtec.schooltime.ui.schedule
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
-import com.vtec.schooltime.activities.DayOfWeekEditActivity
 import com.vtec.schooltime.databinding.FragmentScheduleBinding
 
 class ScheduleFragment : Fragment() {

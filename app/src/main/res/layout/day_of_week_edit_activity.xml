@@ -4,16 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/app_bar_main"
+        layout="@layout/app_bar_main" />
 
     <include
         android:id="@+id/day_of_week_card"

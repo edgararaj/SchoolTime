@@ -1,7 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="Theme.SchoolTime" parent="BaseTheme">
-        <item name="colorPrimary">#252525</item>
-        <item name="colorSecondary">#fff</item>
         <item name="colorSurface">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>

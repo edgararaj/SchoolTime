@@ -1,14 +1,12 @@
-package com.vtec.schooltime.activities
+package com.vtec.schooltime
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.vtec.schooltime.*
 import com.vtec.schooltime.databinding.DayOfWeekEditActivityBinding
 import java.util.*
 
@@ -35,19 +33,19 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         binding = DayOfWeekEditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val dayOfWeek = intent.getIntExtra("day_of_week", -1)
-//        val schoolClassListSelector = registerForActivityResult(SchoolClassListActivity.Contract()) { schoolClassId ->
-//            if (schoolClassId != null)
-//            {
-//                val scheduleBlock = ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0))
-//                MainActivity.schedule?.value?.get(dayOfWeek)?.add(scheduleBlock)
-//                val itemCount = binding.dayOfWeekCard.scheduleBlocks.adapter?.itemCount
-//                binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemInserted(itemCount ?: 0)
-//            }
-//        }
+        val schoolClassListSelector = registerForActivityResult(ClassListActivity.Contract()) { schoolClassId ->
+            if (schoolClassId != null)
+            {
+                val scheduleBlock = ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0))
+                MainActivity.schedule?.value?.get(dayOfWeek)?.add(scheduleBlock)
+                val itemCount = binding.dayOfWeekCard.scheduleBlocks.adapter?.itemCount
+                binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemInserted(itemCount ?: 0)
+            }
+        }
 
         val dayOfWeekCard = DayOfWeekVH(binding.dayOfWeekCard)
         val schedule = MainActivity.schedule?.value?.get(dayOfWeek)
@@ -76,14 +74,14 @@ class DayOfWeekEditActivity: AppCompatActivity() {
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
             if (schedule != null)
             {
-//                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
             }
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule?.value?.get(dayOfWeek)
-//            if (schedule != null)
-//                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
+            if (schedule != null)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
         }
 
         MainActivity.schoolClasses?.observe(this, observer)

@@ -1,6 +1,9 @@
 package com.vtec.schooltime
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.VibrationEffect
@@ -74,14 +77,19 @@ val fallbackSchedule = mutableMapOf(
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias Schedule = MutableLiveData<MutableMap<Int, DayOfWeekSchedule>>
 typealias SchoolClasses = MutableLiveData<MutableMap<String, SchoolClass>>
-//var currentSchedule: Schedule? = null
-//var currentSchoolClasses: SchoolClasses? = null
 
 fun getContrastingColor(color: Int): Int
 {
-    val hsv = FloatArray(3)
-    hsv[2] = if (Color.luminance(color) > 0.5) 0F else 1F
-    return Color.HSVToColor(hsv)
+    return Color.HSVToColor(FloatArray(3).apply {
+        this[2] = if (Color.luminance(color) > 0.5) 0F else 1F
+    })
+}
+
+fun getDarkerColor(color: Int): Int {
+    return Color.HSVToColor(FloatArray(3).apply {
+        Color.colorToHSV(color, this)
+        this[2] *= 0.9f
+    })
 }
 
 fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
@@ -94,5 +102,17 @@ class App : Application() {
         const val notificationChannelId = "SchoolTime"
         @RequiresApi(Build.VERSION_CODES.Q)
         val littleVibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel(applicationContext)
+    }
+
+    private fun createNotificationChannel(context: Context)
+    {
+        val channel = NotificationChannel(notificationChannelId, "Example", NotificationManager.IMPORTANCE_LOW)
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.createNotificationChannel(channel)
     }
 }

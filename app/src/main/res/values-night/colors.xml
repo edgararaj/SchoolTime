@@ -4,6 +4,6 @@
     <color name="none">#fff</color>
     <color name="finished">#3C9BAC</color>
 
-    <color name="app_bg">#fff</color>
-    <color name="app_fg">#000</color>
+    <color name="app_bg">#252525</color>
+    <color name="app_fg">#fff</color>
 </resources>

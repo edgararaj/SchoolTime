@@ -1,7 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">#fff</item>
-        <item name="colorSecondary">#000</item>
+<resources>
+    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/app_bg</item>
+        <item name="colorSecondary">@color/app_fg</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="toolbarStyle">@style/Toolbar</item>
@@ -11,25 +11,20 @@
         <item name="materialButtonStyle">@style/Widget.Button</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.TimePicker</item>
         <item name="floatingActionButtonStyle">@style/Widget.FAB</item>
+        <item name="navigationViewStyle">@style/Widget.NavigationView</item>
     </style>
     <style name="Theme.SchoolTime" parent="BaseTheme">
     </style>
 
-    <style name="Theme.SchoolTime.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.SchoolTime.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.SchoolTime.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="ScheduleBlock">
+    <style name="BaseScheduleBlock">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">46dp</item>
+        <item name="cardCornerRadius">23dp</item>
+    </style>
+
+    <style name="ScheduleBlock" parent="BaseScheduleBlock">
         <item name="android:layout_marginBottom">@dimen/card_margin</item>
         <item name="android:layout_marginHorizontal">@dimen/card_margin</item>
-        <item name="cardCornerRadius">23dp</item>
     </style>
 
     <style name="SchoolClass">
@@ -39,31 +34,41 @@
         <item name="android:layout_marginHorizontal">@dimen/card_margin</item>
     </style>
 
-    <style name="ThemeOverlay.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
-        <item name="materialButtonStyle">@style/Widget.Button</item>
-    </style>
-
     <style name="Widget.FAB" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FAB</item>
     </style>
 
     <style name="ThemeOverlay.FAB" parent="">
-        <item name="colorSecondary">?attr/colorPrimary</item>
+        <item name="colorOnSecondary">@color/app_fg</item>
+        <item name="colorSecondary">@color/app_bg</item>
+    </style>
+
+    <style name="Widget.NavigationView" parent="Widget.Design.NavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.NavigationView</item>
+        <item name="android:background">@color/app_bg</item>
+    </style>
+
+    <style name="ThemeOverlay.NavigationView" parent="">
+        <item name="colorPrimary">@color/app_fg</item>
+    </style>
+
+    <style name="ThemeOverlay.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="materialButtonStyle">@style/Widget.Button</item>
     </style>
 
     <style name="Widget.Button" parent="Widget.MaterialComponents.Button">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.SecondaryToPrimary</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppFgToPrimary</item>
     </style>
 
     <style name="Widget.Slider" parent="Widget.MaterialComponents.Slider">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.SecondaryToPrimary</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppFgToPrimary</item>
     </style>
 
     <style name="Widget.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.TextInput</item>
     </style>
 
-    <style name="ThemeOverlay.TextInput" parent="ThemeOverlay.SecondaryToPrimary">
+    <style name="ThemeOverlay.TextInput" parent="ThemeOverlay.AppFgToPrimary">
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
@@ -73,8 +78,8 @@
         <item name="android:stepSize">1</item>
     </style>
 
-    <style name="ThemeOverlay.SecondaryToPrimary" parent="">
-        <item name="colorPrimary">?attr/colorSecondary</item>
+    <style name="ThemeOverlay.AppFgToPrimary" parent="">
+        <item name="colorPrimary">@color/app_fg</item>
     </style>
 
     <style name="TextAppearance.Toolbar" parent="TextAppearance.MaterialComponents.Headline6">
@@ -84,10 +89,6 @@
 
     <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">@dimen/card_corner_size</item>
-    </style>
-
-    <style name="TextInputLayout">
-        <item name="colorPrimary">?colorSecondary</item>
     </style>
 
     <style name="Toolbar" parent="Widget.MaterialComponents.Toolbar">
