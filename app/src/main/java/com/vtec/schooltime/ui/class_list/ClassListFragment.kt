@@ -58,7 +58,7 @@ class ClassListFragment : Fragment() {
                     adapter?.notifyItemRemoved(adapterPosition)
                 }
             }
-            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, action, null))
+            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.schoolClasses)
         }
 

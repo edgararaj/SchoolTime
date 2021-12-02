@@ -70,7 +70,7 @@ class DayOfWeekEditActivity: AppCompatActivity() {
                 }
                 true
             }
-            itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, action, onMove))
+            itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, onMove))
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
             if (schedule != null)
             {

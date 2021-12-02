@@ -6,10 +6,10 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Configurações</string>
+    <string name="settings">Configurações</string>
 
     <string name="schedule">Horário</string>
-    <string name="class_list">Lista de aulas</string>
+    <string name="class_list">Disciplinas</string>
 
     <string name="long_class_name">Nome longo</string>
     <string name="short_class_name">Nome curto</string>
@@ -24,4 +24,21 @@
     <string name="starts_at">Começa às</string>
     <string name="ends_at">Acaba às</string>
     <string name="unnamed">Sem nome</string>
+
+    <string name="minute">minuto</string>
+    <string name="minutes">minutos</string>
+    <string name="hour">hora</string>
+    <string name="hours">horas</string>
+
+    <string name="weekend_school">Mostrar fim de semana</string>
+
+    <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
+    <!--    Aula de PT começa em 5 minutos-->
+    <string name="widget_class_starting">Aula de &lt;b&gt;%s&lt;/b&gt; começa em &lt;br&gt;&lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "%s <b>%02d:%02d</b> para acabar <b>%s</b>"-->
+    <!--    Faltam 2:50 para acabar PT-->
+    <string name="widget_class_ending_hours">%s &lt;b&gt;%02d:%02d&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
+    <!--    "%s <b>%d %s</b> para acabar <b>%s</b>"-->
+    <!--    Faltam 5 minutos para acabar PT-->
+    <string name="widget_class_ending_minutes">%s &lt;b&gt;%d %s&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
 </resources>

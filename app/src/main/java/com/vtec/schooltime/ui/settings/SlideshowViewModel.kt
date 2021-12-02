@@ -1,4 +1,4 @@
-package com.vtec.schooltime.ui.slideshow
+package com.vtec.schooltime.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

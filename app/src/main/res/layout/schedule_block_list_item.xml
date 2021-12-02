@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            style="@style/BaseScheduleBlock">
+            style="@style/InnerScheduleBlock">
 
             <TextView
                 android:id="@+id/block_time"

@@ -15,11 +15,11 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.tanh
 
-class ItemSlideAction(private val context: Context, private val editIcon: Drawable, private val action: (Int) -> Unit, private val onMoveEvent: ((recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) -> Boolean)?) : ItemTouchHelper.Callback() {
+class ItemSlideAction(private val context: Context, private val editIcon: Drawable, private val deleteAction: Boolean, private val action: (Int) -> Unit, private val onMoveEvent: ((recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) -> Boolean)?) : ItemTouchHelper.Callback() {
     private var slideActionState = false
     private var slideComplete = false
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    private val bgColor = if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) Color.rgb(80, 80, 80) else Color.rgb(150, 150, 150)
+    private val bgColor = if (deleteAction) context.getColor(R.color.delete_red) else context.getColor(R.color.app_bg2)
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,

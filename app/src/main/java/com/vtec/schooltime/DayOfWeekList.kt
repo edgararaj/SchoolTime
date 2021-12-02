@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.DayOfWeekListItemBinding
 import java.util.*
 
-class DayOfWeekListAdapter(private val schedule: Schedule) : RecyclerView.Adapter<DayOfWeekVH>() {
+class DayOfWeekListAdapter(private val schedule: Schedule, private val showWeekend: Boolean) : RecyclerView.Adapter<DayOfWeekVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayOfWeekVH {
         val binding = DayOfWeekListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DayOfWeekVH(binding)
@@ -24,7 +24,7 @@ class DayOfWeekListAdapter(private val schedule: Schedule) : RecyclerView.Adapte
         }
     }
 
-    override fun getItemCount() = schedule.value?.size ?: 0
+    override fun getItemCount() = schedule.value?.let { if (!showWeekend && it.size > 5) 5 else it.size} ?: 0
 }
 
 class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.ViewHolder(binding.root) {

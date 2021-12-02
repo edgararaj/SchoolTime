@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_schedule"
             android:icon="@drawable/schedule_icon"
@@ -12,5 +14,14 @@
             android:id="@+id/nav_class_list"
             android:icon="@drawable/class_list_icon"
             android:title="@string/class_list" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_icon"
+            android:title="@string/settings" />
     </group>
 </menu>

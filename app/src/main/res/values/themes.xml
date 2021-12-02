@@ -12,26 +12,43 @@
         <item name="materialTimePickerTheme">@style/ThemeOverlay.TimePicker</item>
         <item name="floatingActionButtonStyle">@style/Widget.FAB</item>
         <item name="navigationViewStyle">@style/Widget.NavigationView</item>
+        <item name="switchStyle">@style/Widget.Switch</item>
     </style>
     <style name="Theme.SchoolTime" parent="BaseTheme">
     </style>
 
-    <style name="BaseScheduleBlock">
+    <style name="InnerScheduleBlock">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">46dp</item>
+        <item name="android:layout_gravity">center</item>
         <item name="cardCornerRadius">23dp</item>
     </style>
 
-    <style name="ScheduleBlock" parent="BaseScheduleBlock">
-        <item name="android:layout_marginBottom">@dimen/card_margin</item>
-        <item name="android:layout_marginHorizontal">@dimen/card_margin</item>
+    <style name="ScheduleBlock" parent="InnerScheduleBlock">
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginHorizontal">10dp</item>
+        <item name="cardElevation">3dp</item>
     </style>
 
-    <style name="SchoolClass">
+    <style name="BigCard">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">100dp</item>
-        <item name="android:layout_marginTop">@dimen/card_margin</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginHorizontal">@dimen/card_margin</item>
+        <item name="android:layout_marginTop">@dimen/card_margin</item>
+        <item name="cardElevation">5dp</item>
+    </style>
+
+    <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">@dimen/card_corner_size</item>
+    </style>
+
+    <style name="Widget.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="android:trackTint">@color/success_green</item>
+    </style>
+
+    <style name="ThemeOverlay.Switch" parent="">
+        <item name="colorSecondary">@color/success_green</item>
+        <item name="colorOnSurface">@color/success_green</item>
     </style>
 
     <style name="Widget.FAB" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -43,7 +60,7 @@
         <item name="colorSecondary">@color/app_bg</item>
     </style>
 
-    <style name="Widget.NavigationView" parent="Widget.Design.NavigationView">
+    <style name="Widget.NavigationView" parent="Widget.MaterialComponents.NavigationView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.NavigationView</item>
         <item name="android:background">@color/app_bg</item>
     </style>
@@ -85,10 +102,6 @@
     <style name="TextAppearance.Toolbar" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textSize">18sp</item>
         <item name="android:letterSpacing">0.02</item>
-    </style>
-
-    <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerSize">@dimen/card_corner_size</item>
     </style>
 
     <style name="Toolbar" parent="Widget.MaterialComponents.Toolbar">

@@ -22,7 +22,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class ItemDecoration: RecyclerView.ItemDecoration()
+class ItemDecoration(): RecyclerView.ItemDecoration()
 {
     override fun getItemOffsets(
         outRect: Rect,
@@ -32,9 +32,9 @@ class ItemDecoration: RecyclerView.ItemDecoration()
     ) {
         val position = parent.getChildAdapterPosition(view)
 
-        val margin = parent.resources.getDimension(R.dimen.card_margin).toInt()
+        val margin = parent.resources.getDimension(R.dimen.screen_bottom_margin).toInt()
 
-        parent.adapter?.let { if (position == it.itemCount - 1) outRect.bottom = margin * 2 }
+        parent.adapter?.let { if (position == it.itemCount - 1) outRect.bottom = margin }
     }
 }
 
@@ -70,24 +70,10 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_schedule, R.id.nav_class_list
-            ), drawerLayout
-        )
+        appBarConfiguration = AppBarConfiguration(binding.navView.menu, binding.drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
+        binding.navView.setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

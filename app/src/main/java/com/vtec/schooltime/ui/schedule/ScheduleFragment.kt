@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
@@ -41,11 +42,12 @@ class ScheduleFragment : Fragment() {
                 }
                 startActivity(intent)
             }
-            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, action, null))
+            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, false, action, null))
             itemTouchHelper.attachToRecyclerView(binding.daysOfWeek)
         }
 
-        val adapter = MainActivity.schedule?.let { DayOfWeekListAdapter(it) }
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val adapter = MainActivity.schedule?.let { DayOfWeekListAdapter(it, preferences.getBoolean("weekend_school", false)) }
 
         binding.daysOfWeek.adapter = adapter
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())

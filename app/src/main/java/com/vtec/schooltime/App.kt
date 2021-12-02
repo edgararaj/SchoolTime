@@ -55,14 +55,16 @@ val fallbackSchedule = mutableMapOf(
     ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
     ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
     ScheduleBlock("FSC", Time(17, 20), Time(18, 50)),
-),
+    ),
     Calendar.TUESDAY to mutableListOf(
         ScheduleBlock("PT", Time(13, 15), Time(13, 50)),
         ScheduleBlock("PT", Time(14, 0), Time(15, 30)),
         ScheduleBlock("FSC", Time(15, 40), Time(17, 10)),
         ScheduleBlock("MAT", Time(17, 20), Time(18, 50)),
     ),
-    Calendar.WEDNESDAY to mutableListOf(),
+    Calendar.WEDNESDAY to mutableListOf(
+        ScheduleBlock("PT", Time(19, 20), Time(20, 21))
+    ),
     Calendar.THURSDAY to mutableListOf(
         ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
         ScheduleBlock("PT", Time(15, 40), Time(17, 10)),
@@ -72,7 +74,10 @@ val fallbackSchedule = mutableMapOf(
         ScheduleBlock("FSC", Time(14, 0), Time(15, 30)),
         ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
         ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
-    ))
+    ),
+    Calendar.SATURDAY to mutableListOf(),
+    Calendar.SUNDAY to mutableListOf()
+)
 
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias Schedule = MutableLiveData<MutableMap<Int, DayOfWeekSchedule>>
@@ -88,7 +93,7 @@ fun getContrastingColor(color: Int): Int
 fun getDarkerColor(color: Int): Int {
     return Color.HSVToColor(FloatArray(3).apply {
         Color.colorToHSV(color, this)
-        this[2] *= 0.9f
+        this[2] *= 0.95f
     })
 }
 

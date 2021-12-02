@@ -5,10 +5,10 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="settings">Settings</string>
 
     <string name="schedule">Schedule</string>
-    <string name="class_list">Class list</string>
+    <string name="class_list">Classes</string>
 
     <string name="long_class_name">Long name</string>
     <string name="short_class_name">Short name</string>
@@ -23,4 +23,21 @@
     <string name="starts_at">Starts at</string>
     <string name="ends_at">Ends at</string>
     <string name="unnamed">Unnamed</string>
+
+    <string name="minute">minute</string>
+    <string name="minutes">minutes</string>
+    <string name="hour">hour</string>
+    <string name="hours">hours</string>
+
+    <string name="weekend_school">Show weekends</string>
+
+    <!--    "<b>%s</b> class starts in <b>%d %s</b>"-->
+    <!--    PT class starts in 5 minutes-->
+    <string name="widget_class_starting">&lt;b&gt;%s&lt;/b&gt; class starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "<b>%02d:%02d</b> until <b>%s</b> ends"-->
+    <!--    2:50 until PT ends-->
+    <string name="widget_class_ending_hours">&lt;b&gt;%02d:%02d&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>
+    <!--    "<b>%d %s</b> until <b>%s</b> ends"-->
+    <!--    5 minutes until PT ends-->
+    <string name="widget_class_ending_minutes">&lt;b&gt;%d %s&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>
 </resources>
