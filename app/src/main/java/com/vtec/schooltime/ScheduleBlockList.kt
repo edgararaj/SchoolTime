@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.os.Vibrator
 import android.view.LayoutInflater
@@ -11,10 +15,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
+import kotlin.math.round
 
-class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?) : RecyclerView.Adapter<ScheduleBlockVH>() {
+class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBlockVH {
         val binding = ScheduleBlockListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ScheduleBlockVH(binding)
@@ -22,17 +29,28 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: ScheduleBlockVH, position: Int) {
-        holder.bind(dayOfWeekSchedule.getOrNull(position), dayOfWeek, onStartDrag)
+        var roundCorners = floatArrayOf(0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F)
+        if (itemCount >= 2)
+        {
+            if (position == 0)
+                roundCorners = floatArrayOf(20F, 20F, 20F, 20F, 0F, 0F, 0F, 0F)
+            else if (position == itemCount - 1)
+                roundCorners = floatArrayOf(0F, 0F, 0F, 0F, 20F, 20F, 20F, 20F)
+        }
+        else
+            roundCorners = floatArrayOf(20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F)
+        holder.binding.root.background = ShapeDrawable(RoundRectShape(roundCorners, null, null))
+        holder.bind(dayOfWeekSchedule.getOrNull(position), dayOfWeek)
     }
 
     override fun getItemCount() = dayOfWeekSchedule.size
 }
 
-class ScheduleBlockVH(private val binding: ScheduleBlockListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun bind(scheduleBlock: ScheduleBlock?, dayOfWeek: Int, onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?)
+    fun bind(scheduleBlock: ScheduleBlock?, dayOfWeek: Int)
     {
         if (scheduleBlock != null)
         {
@@ -41,24 +59,19 @@ class ScheduleBlockVH(private val binding: ScheduleBlockListItemBinding) : Recyc
             {
                 val bgColor = schoolClass.color
                 val contrastyFgColor = getContrastingColor(bgColor)
-                binding.root.setCardBackgroundColor(bgColor)
+//                binding.root.background.colorFilter = BlendModeColorFilter(bgColor, BlendMode.SRC_ATOP)
                 binding.className.setTextColor(contrastyFgColor)
                 binding.className.text = schoolClass.longName
 
-                binding.innerCard.setCardBackgroundColor(getDarkerColor(bgColor))
-                binding.blockTime.setTextColor(contrastyFgColor)
-                binding.blockTime.text = "${scheduleBlock.startTime} — ${scheduleBlock.endTime}"
+                val darkerBgColor = getDarkerColor(bgColor)
+//                binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
+                binding.innerCard.setBackgroundColor(darkerBgColor)
 
-                if (onStartDrag != null)
-                {
-                    binding.dragHandle.visibility = View.VISIBLE
-                    binding.dragHandle.colorFilter = BlendModeColorFilter(contrastyFgColor, BlendMode.SRC_ATOP)
-                    binding.dragHandle.setOnTouchListener { view, motionEvent ->
-                        if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN)
-                            onStartDrag(this)
-                        false
-                    }
-                }
+                binding.startTime.setTextColor(contrastyFgColor)
+                binding.startTime.text = scheduleBlock.startTime.toString()
+
+                binding.endTime.setTextColor(contrastyFgColor)
+                binding.endTime.text = scheduleBlock.endTime.toString()
 
                 binding.root.setOnClickListener {
                     val intent = Intent(context, ClassEditActivity::class.java).apply {

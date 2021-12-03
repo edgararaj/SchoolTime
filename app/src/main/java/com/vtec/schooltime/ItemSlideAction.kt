@@ -19,7 +19,7 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
     private var slideActionState = false
     private var slideComplete = false
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    private val bgColor = if (deleteAction) context.getColor(R.color.delete_red) else context.getColor(R.color.app_bg2)
+    private val baseBgColor = context.getColor(R.color.app_bg2)
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -59,12 +59,15 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
         if (dX != 0f)
         {
             val rect = Rect(itemView.left, itemView.top, itemView.right, itemView.bottom)
-            val cardCornerSize = (itemView as CardView).radius
-            val bgPaint = Paint().apply { color = bgColor }
+            val cardCornerSize = if (itemView is CardView) itemView.radius else 0F
+
+            val fractionOfCompletion = min(abs(newDX) / slideWindowSize, 1f)
+            val fractionOfCompletionSquared = fractionOfCompletion * fractionOfCompletion
+            val animatedBgColor = if (!deleteAction) baseBgColor else getColorTransitionState(baseBgColor, context.getColor(R.color.delete_red), fractionOfCompletionSquared)
+            val bgPaint = Paint().apply { color = animatedBgColor }
             c.drawRoundRect(rect.toRectF(), cardCornerSize, cardCornerSize, bgPaint)
 
             val verticalCenter = itemView.top + (itemView.bottom - itemView.top) / 2
-            val fractionOfCompletion = min(abs(newDX) / slideWindowSize, 1f)
 
             if (fractionOfCompletion == 1f)
             {
@@ -90,8 +93,8 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
             else
                 editIcon.setBounds(itemView.right - horizontalMargin - size, top, itemView.right - horizontalMargin, top + size)
 
-            editIcon.alpha = (fractionOfCompletion * fractionOfCompletion * 255).toInt()
-            editIcon.colorFilter = BlendModeColorFilter(getContrastingColor(bgColor), BlendMode.SRC_ATOP)
+            editIcon.alpha = (fractionOfCompletionSquared * 255).toInt()
+            editIcon.colorFilter = BlendModeColorFilter(getContrastingColor(animatedBgColor), BlendMode.SRC_ATOP)
             editIcon.draw(c)
         }
         else

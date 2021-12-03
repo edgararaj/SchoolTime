@@ -90,6 +90,17 @@ fun getContrastingColor(color: Int): Int
     })
 }
 
+fun getTransitionState(value1: Int, value2: Int, fraction: Float) = (value1 + (value2 - value1) * fraction).toInt()
+
+fun getColorTransitionState(value1: Int, value2: Int, fraction: Float): Int
+{
+    return Color.rgb(
+        getTransitionState(Color.red(value1), Color.red(value2), fraction),
+        getTransitionState(Color.green(value1), Color.green(value2), fraction),
+        getTransitionState(Color.blue(value1), Color.blue(value2), fraction)
+    )
+}
+
 fun getDarkerColor(color: Int): Int {
     return Color.HSVToColor(FloatArray(3).apply {
         Color.colorToHSV(color, this)

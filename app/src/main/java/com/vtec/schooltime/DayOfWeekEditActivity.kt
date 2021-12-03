@@ -50,11 +50,6 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         val dayOfWeekCard = DayOfWeekVH(binding.dayOfWeekCard)
         val schedule = MainActivity.schedule?.value?.get(dayOfWeek)
 
-        var itemTouchHelper: ItemTouchHelper? = null
-        val onStartDrag = { viewHolder: RecyclerView.ViewHolder ->
-            itemTouchHelper?.startDrag(viewHolder) ?: Unit
-        }
-
         val icon = AppCompatResources.getDrawable(applicationContext, R.drawable.delete_icon)
         if (icon != null) {
             val action = { adapterPosition: Int ->
@@ -62,26 +57,26 @@ class DayOfWeekEditActivity: AppCompatActivity() {
                 binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemRemoved(adapterPosition)
                 Unit
             }
-            val onMove = { recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder ->
-                if (schedule != null)
-                {
-                    Collections.swap(schedule, viewHolder.adapterPosition, target.adapterPosition)
-                    binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
-                }
-                true
-            }
-            itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, onMove))
+//            val onMove = { recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder ->
+//                if (schedule != null)
+//                {
+//                    Collections.swap(schedule, viewHolder.adapterPosition, target.adapterPosition)
+//                    binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+//                }
+//                true
+//            }
+            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
             if (schedule != null)
             {
-                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector)
             }
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule?.value?.get(dayOfWeek)
             if (schedule != null)
-                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector, onStartDrag)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector)
         }
 
         MainActivity.schoolClasses?.observe(this, observer)

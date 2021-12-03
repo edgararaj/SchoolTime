@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ScheduleBlock">
+<!--    app:strokeWidth="1dp">-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,27 +20,30 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/inner_card"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
             style="@style/InnerScheduleBlock">
 
-            <TextView
-                android:id="@+id/block_time"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingHorizontal="15dp"/>
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-        <ImageView
-            android:id="@+id/drag_handle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/drag_handle"
-            android:visibility="gone"
-            android:paddingRight="10dp"/>
 
     </LinearLayout>
 

@@ -20,7 +20,7 @@ class DayOfWeekListAdapter(private val schedule: Schedule, private val showWeeke
     override fun onBindViewHolder(holder: DayOfWeekVH, position: Int) {
         val entry = schedule.value?.toList()?.get(position)
         if (entry != null) {
-            holder.bind(entry.second, entry.first, null, null)
+            holder.bind(entry.second, entry.first, null)
         }
     }
 
@@ -30,12 +30,12 @@ class DayOfWeekListAdapter(private val schedule: Schedule, private val showWeeke
 class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
-    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, editLauncher: ActivityResultLauncher<Unit>?, onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?)
+    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, editLauncher: ActivityResultLauncher<Unit>?)
     {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         binding.dayOfWeek.text = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
-        binding.scheduleBlocks.adapter = ScheduleBlockListAdapter(schedule, dayOfWeek, onStartDrag)
+        binding.scheduleBlocks.adapter = ScheduleBlockListAdapter(schedule, dayOfWeek)
         binding.scheduleBlocks.layoutManager = LinearLayoutManager(context)
         if (editLauncher != null)
         {
