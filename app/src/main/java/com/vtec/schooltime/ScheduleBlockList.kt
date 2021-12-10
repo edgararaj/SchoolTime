@@ -29,17 +29,6 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: ScheduleBlockVH, position: Int) {
-        var roundCorners = floatArrayOf(0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F)
-        if (itemCount >= 2)
-        {
-            if (position == 0)
-                roundCorners = floatArrayOf(20F, 20F, 20F, 20F, 0F, 0F, 0F, 0F)
-            else if (position == itemCount - 1)
-                roundCorners = floatArrayOf(0F, 0F, 0F, 0F, 20F, 20F, 20F, 20F)
-        }
-        else
-            roundCorners = floatArrayOf(20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F)
-        holder.binding.root.background = ShapeDrawable(RoundRectShape(roundCorners, null, null))
         holder.bind(dayOfWeekSchedule.getOrNull(position), dayOfWeek)
     }
 
@@ -59,12 +48,12 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             {
                 val bgColor = schoolClass.color
                 val contrastyFgColor = getContrastingColor(bgColor)
-//                binding.root.background.colorFilter = BlendModeColorFilter(bgColor, BlendMode.SRC_ATOP)
+                binding.root.setBackgroundColor(bgColor)
                 binding.className.setTextColor(contrastyFgColor)
                 binding.className.text = schoolClass.longName
 
                 val darkerBgColor = getDarkerColor(bgColor)
-//                binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
+                binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
                 binding.innerCard.setBackgroundColor(darkerBgColor)
 
                 binding.startTime.setTextColor(contrastyFgColor)
