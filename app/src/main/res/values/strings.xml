@@ -31,6 +31,7 @@
     <string name="hours">hours</string>
 
     <string name="weekend_school">Show weekends</string>
+    <string name="lock_duration">Lock duration</string>
 
     <!--    "<b>%s</b> class starts in <b>%d %s</b>"-->
     <!--    PT class starts in 5 minutes-->

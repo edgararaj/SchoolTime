@@ -32,6 +32,7 @@
     <string name="hours">horas</string>
 
     <string name="weekend_school">Mostrar fim de semana</string>
+    <string name="lock_duration">Bloquear duração</string>
 
     <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
     <!--    Aula de PT começa em 5 minutos-->

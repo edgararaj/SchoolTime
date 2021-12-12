@@ -6,5 +6,10 @@
         app:key="weekend_school"
         app:iconSpaceReserved="false"
         app:title="@string/weekend_school"/>
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="lock_duration"
+        app:iconSpaceReserved="false"
+        app:title="@string/lock_duration"/>
 
 </PreferenceScreen>

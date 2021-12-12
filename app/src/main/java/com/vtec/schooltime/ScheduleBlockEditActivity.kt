@@ -4,6 +4,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.vtec.schooltime.databinding.ScheduleBlockEditActivityBinding
 
 class ScheduleBlockEditActivity : AppCompatActivity() {
@@ -31,6 +32,12 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
             field = x
         }
     private lateinit var schoolClassCard: ClassVH
+    private var lockDuration = false
+    set(x)
+    {
+        binding.lock.setImageResource(if (x) R.drawable.lock_icon else R.drawable.lock_open_icon)
+        field = x
+    }
 
     override fun onBackPressed() {
         MainActivity.schedule?.mutation { schedule ->
@@ -72,14 +79,20 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         schoolClassCard = ClassVH(binding.schoolClassCard)
         schoolClassCard.bind(schoolClass, null, ClassVH.Mode.Display)
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        lockDuration = preferences.getBoolean("lock_duration", false)
+        binding.lock.setOnClickListener {
+            lockDuration = !lockDuration
+        }
+
         scheduleBlockStartTime = scheduleBlock.startTime
         binding.startTime.setOnClickListener {
             val timePickerListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 scheduleBlockStartTime = Time(hour, minute)
-                if (scheduleBlockStartTime <= scheduleBlockEndTime)
-                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
-                else
+                if (lockDuration || scheduleBlockStartTime > scheduleBlockEndTime)
                     scheduleBlockEndTime = scheduleBlockStartTime + scheduleBlockDuration
+                else
+                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
             }
             TimePickerDialog(this,
                 R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlockStartTime.hour, scheduleBlockStartTime.minute, true).show()
@@ -89,10 +102,10 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         binding.endTime.setOnClickListener {
             val timePickerListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 scheduleBlockEndTime = Time(hour, minute)
-                if (scheduleBlockEndTime >= scheduleBlockStartTime)
-                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
-                else
+                if (lockDuration || scheduleBlockEndTime < scheduleBlockStartTime)
                     scheduleBlockStartTime = scheduleBlockEndTime - scheduleBlockDuration
+                else
+                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
             }
             TimePickerDialog(this,
                 R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlockEndTime.hour, scheduleBlockEndTime.minute, true).show()

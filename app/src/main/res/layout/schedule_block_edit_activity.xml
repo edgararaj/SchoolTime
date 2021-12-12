@@ -64,14 +64,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/duration"
-            android:layout_marginRight="10dp"/>
+            android:text="@string/duration"/>
 
         <Button
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        <ImageView
+            android:id="@+id/lock"
+            android:padding="5dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
