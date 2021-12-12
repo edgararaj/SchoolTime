@@ -43,10 +43,8 @@ class DayOfWeekEditActivity: AppCompatActivity() {
             if (schoolClassId != null)
             {
                 binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
-                val scheduleBlock = ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0))
-                MainActivity.schedule?.value?.get(dayOfWeek)?.add(scheduleBlock)
-                binding.dayOfWeekCard.scheduleBlocks.adapter?.let {
-                    it.notifyItemInserted(it.itemCount)
+                MainActivity.schedule?.mutation {
+                    it.value?.get(dayOfWeek)?.add(ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0)))
                 }
             }
         }
@@ -57,11 +55,9 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         val icon = AppCompatResources.getDrawable(applicationContext, R.drawable.delete_icon)
         if (icon != null) {
             val action = { adapterPosition: Int ->
-                val dayOfWeekList = MainActivity.schedule?.value?.get(dayOfWeek)
-                if (dayOfWeekList != null)
-                {
-                    dayOfWeekList.removeAt(adapterPosition)
-                    if (dayOfWeekList.size == 0)
+                MainActivity.schedule?.value?.get(dayOfWeek)?.let {
+                    it.removeAt(adapterPosition)
+                    if (it.size == 0)
                         binding.dayOfWeekCard.scheduleBlocks.visibility = View.GONE
                 }
                 binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemRemoved(adapterPosition)

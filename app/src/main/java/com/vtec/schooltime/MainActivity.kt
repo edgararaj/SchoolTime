@@ -21,6 +21,7 @@ import kotlinx.serialization.json.encodeToStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.*
 
 class ItemDecoration(private val resId: Int): RecyclerView.ItemDecoration()
 {
@@ -46,6 +47,20 @@ class MainActivity : AppCompatActivity() {
     companion object {
         var schedule: Schedule? = null
         var schoolClasses: SchoolClasses? = null
+
+        fun calculateSmallestScheduleBlockDelta(): Int
+        {
+            var result = 0
+            schedule?.value?.toList()?.forEach { dayOfWeek ->
+                dayOfWeek.second.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
+                    if (dayOfWeek.first == Calendar.MONDAY)
+                        result = it
+                    else if (it < result)
+                        result = it
+                }
+            }
+            return result
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

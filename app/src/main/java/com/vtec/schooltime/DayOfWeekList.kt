@@ -35,7 +35,7 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         binding.dayOfWeek.text = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
 
-        val adapter = ScheduleBlockListAdapter(schedule, dayOfWeek)
+        val adapter = ScheduleBlockListAdapter(schedule, dayOfWeek, MainActivity.calculateSmallestScheduleBlockDelta())
         binding.scheduleBlocks.adapter = adapter
         binding.scheduleBlocks.layoutManager = LinearLayoutManager(context)
 

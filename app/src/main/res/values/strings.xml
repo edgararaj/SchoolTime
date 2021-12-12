@@ -22,6 +22,7 @@
     <string name="cancel">Cancel</string>
     <string name="starts_at">Starts at</string>
     <string name="ends_at">Ends at</string>
+    <string name="duration">Duration</string>
     <string name="unnamed">Unnamed</string>
 
     <string name="minute">minute</string>

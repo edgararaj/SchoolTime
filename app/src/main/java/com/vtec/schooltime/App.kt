@@ -22,6 +22,13 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
         return Time(deltaMinutes / 60, deltaMinutes % 60)
     }
 
+    operator fun plus(other: Time): Time {
+        val timeInMinutes = hour * 60 + minute
+        val otherTimeInMinutes = other.hour * 60 + other.minute
+        val deltaMinutes = timeInMinutes + otherTimeInMinutes
+        return Time(deltaMinutes / 60, deltaMinutes % 60)
+    }
+
     val averageHour = hour + if (minute >= 30) 1 else 0
 
     operator fun compareTo(other: Int) = compareTo(Time(other, other))
@@ -43,7 +50,7 @@ class SchoolClass(var shortName: String, var longName: String, var color: Int)
 @Serializable
 class ScheduleBlock(val schoolClassId: String, var startTime: Time, var endTime: Time)
 {
-    val delta = endTime - startTime
+    val delta get() = endTime - startTime
 }
 
 val fallbackSchoolClasses = mutableMapOf("MAT" to SchoolClass("MAT", "Matemática", Color.parseColor("#7f98e3")),

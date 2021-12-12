@@ -10,8 +10,26 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
     private lateinit var binding: ScheduleBlockEditActivityBinding
     private var dayOfWeek: Int = 0
     private var scheduleBlockPosition = 0
-    private lateinit var scheduleBlockStartTime: Time
-    private lateinit var scheduleBlockEndTime: Time
+    private var scheduleBlockStartTime: Time = Time(0, 0)
+        set(x)
+        {
+            binding.startTime.text = x.toString()
+            field = x
+        }
+
+    private var scheduleBlockEndTime: Time = Time(0, 0)
+        set(x)
+        {
+            binding.endTime.text = x.toString()
+            field = x
+        }
+
+    private var scheduleBlockDuration: Time = Time(0, 0)
+        set(x)
+        {
+            binding.duration.text = x.toString()
+            field = x
+        }
     private lateinit var schoolClassCard: ClassVH
 
     override fun onBackPressed() {
@@ -55,25 +73,39 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         schoolClassCard.bind(schoolClass, null, ClassVH.Mode.Display)
 
         scheduleBlockStartTime = scheduleBlock.startTime
-        binding.startTime.text = scheduleBlockStartTime.toString()
         binding.startTime.setOnClickListener {
             val timePickerListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 scheduleBlockStartTime = Time(hour, minute)
-                binding.startTime.text = scheduleBlockStartTime.toString()
+                if (scheduleBlockStartTime <= scheduleBlockEndTime)
+                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
+                else
+                    scheduleBlockEndTime = scheduleBlockStartTime + scheduleBlockDuration
             }
             TimePickerDialog(this,
-                R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlock.startTime.hour, scheduleBlock.startTime.minute, true).show()
+                R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlockStartTime.hour, scheduleBlockStartTime.minute, true).show()
         }
 
         scheduleBlockEndTime = scheduleBlock.endTime
-        binding.endTime.text = scheduleBlockEndTime.toString()
         binding.endTime.setOnClickListener {
             val timePickerListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 scheduleBlockEndTime = Time(hour, minute)
-                binding.endTime.text = scheduleBlockEndTime.toString()
+                if (scheduleBlockEndTime >= scheduleBlockStartTime)
+                    scheduleBlockDuration = scheduleBlockEndTime - scheduleBlockStartTime
+                else
+                    scheduleBlockStartTime = scheduleBlockEndTime - scheduleBlockDuration
             }
             TimePickerDialog(this,
-                R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlock.endTime.hour, scheduleBlock.endTime.minute, true).show()
+                R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlockEndTime.hour, scheduleBlockEndTime.minute, true).show()
+        }
+
+        scheduleBlockDuration = scheduleBlock.endTime - scheduleBlock.startTime
+        binding.duration.setOnClickListener {
+            val timePickerListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+                scheduleBlockDuration = Time(hour, minute)
+                scheduleBlockEndTime = scheduleBlockStartTime + scheduleBlockDuration
+            }
+            TimePickerDialog(this,
+                R.style.ThemeOverlay_TimePicker, timePickerListener, scheduleBlockDuration.hour, scheduleBlockDuration.minute, true).show()
         }
     }
 }

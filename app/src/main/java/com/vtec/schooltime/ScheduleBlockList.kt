@@ -24,7 +24,7 @@ import java.util.*
 import kotlin.coroutines.coroutineContext
 import kotlin.math.round
 
-class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
+class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val smallestScheduleBlockDelta: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBlockVH {
         val binding = ScheduleBlockListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ScheduleBlockVH(binding)
@@ -35,17 +35,7 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
         val scheduleBlock = dayOfWeekSchedule.getOrNull(position)
         if (scheduleBlock != null)
         {
-            var smallestScheduleBlockDelta: Int? = null
-            MainActivity.schedule?.value?.toList()?.forEach { dayOfWeek ->
-                dayOfWeek.second.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
-                    if (dayOfWeek.first == Calendar.MONDAY)
-                        smallestScheduleBlockDelta = it
-                    else if (it < smallestScheduleBlockDelta!!)
-                        smallestScheduleBlockDelta = it
-                }
-            }
-
-            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta!!) * 20
+            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta) * 25
             holder.bind(scheduleBlock, dayOfWeek, stretch)
         }
     }

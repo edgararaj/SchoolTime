@@ -23,6 +23,7 @@
     <string name="cancel">Cancelar</string>
     <string name="starts_at">Começa às</string>
     <string name="ends_at">Acaba às</string>
+    <string name="duration">Duração</string>
     <string name="unnamed">Sem nome</string>
 
     <string name="minute">minuto</string>

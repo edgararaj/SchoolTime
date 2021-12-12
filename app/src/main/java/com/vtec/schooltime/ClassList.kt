@@ -29,18 +29,18 @@ class ClassVH(private val binding: ClassListItemBinding) : RecyclerView.ViewHold
     private val context: Context = binding.root.context
 
     var color: Int = Color.BLACK
-    set(value) {
-        binding.root.setCardBackgroundColor(value)
-        val contrastyFgColor = getContrastingColor(value)
-        binding.className.setTextColor(contrastyFgColor)
-        field = value
-    }
+        set(value) {
+            binding.root.setCardBackgroundColor(value)
+            val contrastyFgColor = getContrastingColor(value)
+            binding.className.setTextColor(contrastyFgColor)
+            field = value
+        }
 
     var longName: String = context.getString(R.string.unnamed)
-    set(value) {
-        binding.className.text = value
-        field = value
-    }
+        set(value) {
+            binding.className.text = value
+            field = value
+        }
 
     enum class Mode {
         Display, EditOnClick, SelectAndFinishActivity
