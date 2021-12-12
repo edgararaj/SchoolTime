@@ -25,7 +25,6 @@
     </style>
 
     <style name="ScheduleBlock" parent="InnerScheduleBlock">
-        <item name="android:layout_marginHorizontal">10dp</item>
         <item name="cardElevation">3dp</item>
     </style>
 

@@ -19,9 +19,8 @@ class DayOfWeekListAdapter(private val schedule: Schedule, private val showWeeke
 
     override fun onBindViewHolder(holder: DayOfWeekVH, position: Int) {
         val entry = schedule.value?.toList()?.get(position)
-        if (entry != null) {
+        if (entry != null)
             holder.bind(entry.second, entry.first, null)
-        }
     }
 
     override fun getItemCount() = schedule.value?.let { if (!showWeekend && it.size > 5) 5 else it.size} ?: 0
@@ -35,8 +34,16 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         binding.dayOfWeek.text = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
-        binding.scheduleBlocks.adapter = ScheduleBlockListAdapter(schedule, dayOfWeek)
+
+        val adapter = ScheduleBlockListAdapter(schedule, dayOfWeek)
+        binding.scheduleBlocks.adapter = adapter
         binding.scheduleBlocks.layoutManager = LinearLayoutManager(context)
+
+        if (adapter.itemCount != 0)
+            binding.scheduleBlocks.visibility = View.VISIBLE
+        else
+            binding.scheduleBlocks.visibility = View.GONE
+
         if (editLauncher != null)
         {
             binding.addButton.visibility = View.VISIBLE

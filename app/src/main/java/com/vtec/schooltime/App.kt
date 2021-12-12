@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 import java.util.*
 
 @Serializable
-class Time(val hour: Int, val minute: Int)
+class Time(val hour: Int, val minute: Int) : Comparable<Time>
 {
     operator fun minus(other: Time): Time {
         val timeInMinutes = hour * 60 + minute
@@ -26,7 +26,7 @@ class Time(val hour: Int, val minute: Int)
 
     operator fun compareTo(other: Int) = compareTo(Time(other, other))
 
-    operator fun compareTo(other: Time): Int
+    override operator fun compareTo(other: Time): Int
     {
         val result = hour.compareTo(other.hour)
         if (result == 0)
@@ -42,6 +42,9 @@ class SchoolClass(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
 class ScheduleBlock(val schoolClassId: String, var startTime: Time, var endTime: Time)
+{
+    val delta = endTime - startTime
+}
 
 val fallbackSchoolClasses = mutableMapOf("MAT" to SchoolClass("MAT", "Matemática", Color.parseColor("#7f98e3")),
     "EF" to SchoolClass("EF", "Educação Física", Color.parseColor("#e3cc7f")),

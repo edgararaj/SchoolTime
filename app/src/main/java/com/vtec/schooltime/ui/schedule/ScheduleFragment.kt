@@ -52,7 +52,7 @@ class ScheduleFragment : Fragment() {
         binding.daysOfWeek.adapter = adapter
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
-        binding.daysOfWeek.addItemDecoration(ItemDecoration())
+        binding.daysOfWeek.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
 
         MainActivity.schoolClasses?.observe(viewLifecycleOwner, {
             adapter?.notifyDataSetChanged()

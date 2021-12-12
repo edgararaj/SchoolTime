@@ -1,7 +1,9 @@
 package com.vtec.schooltime
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
@@ -40,10 +42,12 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         val schoolClassListSelector = registerForActivityResult(ClassListActivity.Contract()) { schoolClassId ->
             if (schoolClassId != null)
             {
+                binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
                 val scheduleBlock = ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0))
                 MainActivity.schedule?.value?.get(dayOfWeek)?.add(scheduleBlock)
-                val itemCount = binding.dayOfWeekCard.scheduleBlocks.adapter?.itemCount
-                binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemInserted(itemCount ?: 0)
+                binding.dayOfWeekCard.scheduleBlocks.adapter?.let {
+                    it.notifyItemInserted(it.itemCount)
+                }
             }
         }
 
@@ -53,7 +57,13 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         val icon = AppCompatResources.getDrawable(applicationContext, R.drawable.delete_icon)
         if (icon != null) {
             val action = { adapterPosition: Int ->
-                MainActivity.schedule?.value?.get(dayOfWeek)?.removeAt(adapterPosition)
+                val dayOfWeekList = MainActivity.schedule?.value?.get(dayOfWeek)
+                if (dayOfWeekList != null)
+                {
+                    dayOfWeekList.removeAt(adapterPosition)
+                    if (dayOfWeekList.size == 0)
+                        binding.dayOfWeekCard.scheduleBlocks.visibility = View.GONE
+                }
                 binding.dayOfWeekCard.scheduleBlocks.adapter?.notifyItemRemoved(adapterPosition)
                 Unit
             }

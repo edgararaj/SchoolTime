@@ -22,7 +22,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class ItemDecoration(): RecyclerView.ItemDecoration()
+class ItemDecoration(private val resId: Int): RecyclerView.ItemDecoration()
 {
     override fun getItemOffsets(
         outRect: Rect,
@@ -32,7 +32,7 @@ class ItemDecoration(): RecyclerView.ItemDecoration()
     ) {
         val position = parent.getChildAdapterPosition(view)
 
-        val margin = parent.resources.getDimension(R.dimen.screen_bottom_margin).toInt()
+        val margin = parent.resources.getDimension(resId).toInt()
 
         parent.adapter?.let { if (position == it.itemCount - 1) outRect.bottom = margin }
     }

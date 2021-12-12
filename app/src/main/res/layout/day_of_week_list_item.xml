@@ -19,17 +19,21 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/schedule_blocks"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/schedule_block_margin"
+            android:layout_marginBottom="@dimen/schedule_block_margin"
             android:overScrollMode="never"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/add_button"
             android:visibility="gone"
             style="@style/ScheduleBlock"
-            android:layout_height="38dp"
-            android:layout_width="100dp"
-            app:cardCornerRadius="19dp">
+            android:layout_height="40dp"
+            app:cardCornerRadius="10dp"
+            android:layout_marginHorizontal="@dimen/schedule_block_margin"
+            android:layout_marginBottom="@dimen/schedule_block_margin">
 
             <ImageView
                 android:layout_width="wrap_content"

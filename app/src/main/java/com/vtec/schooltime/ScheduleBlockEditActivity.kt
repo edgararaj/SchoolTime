@@ -15,10 +15,13 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
     private lateinit var schoolClassCard: ClassVH
 
     override fun onBackPressed() {
-        MainActivity.schedule?.mutation {
-            it.value?.get(dayOfWeek)?.get(scheduleBlockPosition)?.apply {
+        MainActivity.schedule?.mutation { schedule ->
+            schedule.value?.get(dayOfWeek)?.get(scheduleBlockPosition)?.apply {
                 startTime = scheduleBlockStartTime
                 endTime = scheduleBlockEndTime
+            }
+            schedule.value?.get(dayOfWeek)?.sortedBy { it.startTime }?.toMutableList()?.let {
+                schedule.value?.set(dayOfWeek, it)
             }
         }
         super.onBackPressed()

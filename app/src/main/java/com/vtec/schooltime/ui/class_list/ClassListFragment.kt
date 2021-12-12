@@ -65,7 +65,7 @@ class ClassListFragment : Fragment() {
         binding.schoolClasses.adapter = adapter
         binding.schoolClasses.layoutManager = LinearLayoutManager(requireContext())
         binding.schoolClasses.edgeEffectFactory = BounceEdgeEffectFactory()
-        binding.schoolClasses.addItemDecoration(ItemDecoration())
+        binding.schoolClasses.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
 
         binding.fab.setOnClickListener {
             val intent = Intent(requireContext(), ClassEditActivity::class.java).apply { }

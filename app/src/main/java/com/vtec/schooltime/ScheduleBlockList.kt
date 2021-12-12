@@ -17,8 +17,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
+import java.util.*
+import kotlin.coroutines.coroutineContext
 import kotlin.math.round
 
 class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
@@ -29,7 +32,22 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: ScheduleBlockVH, position: Int) {
-        holder.bind(dayOfWeekSchedule.getOrNull(position), dayOfWeek)
+        val scheduleBlock = dayOfWeekSchedule.getOrNull(position)
+        if (scheduleBlock != null)
+        {
+            var smallestScheduleBlockDelta: Int? = null
+            MainActivity.schedule?.value?.toList()?.forEach { dayOfWeek ->
+                dayOfWeek.second.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
+                    if (dayOfWeek.first == Calendar.MONDAY)
+                        smallestScheduleBlockDelta = it
+                    else if (it < smallestScheduleBlockDelta!!)
+                        smallestScheduleBlockDelta = it
+                }
+            }
+
+            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta!!) * 20
+            holder.bind(scheduleBlock, dayOfWeek, stretch)
+        }
     }
 
     override fun getItemCount() = dayOfWeekSchedule.size
@@ -39,49 +57,47 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
     private val context: Context = binding.root.context
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun bind(scheduleBlock: ScheduleBlock?, dayOfWeek: Int)
+    fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int)
     {
-        if (scheduleBlock != null)
+        val schoolClass = MainActivity.schoolClasses?.value?.get(scheduleBlock.schoolClassId)
+        if (schoolClass != null)
         {
-            val schoolClass = MainActivity.schoolClasses?.value?.get(scheduleBlock.schoolClassId)
-            if (schoolClass != null)
-            {
-                val bgColor = schoolClass.color
-                val contrastyFgColor = getContrastingColor(bgColor)
-                binding.root.setBackgroundColor(bgColor)
-                binding.className.setTextColor(contrastyFgColor)
-                binding.className.text = schoolClass.longName
+            val bgColor = schoolClass.color
+            val contrastyFgColor = getContrastingColor(bgColor)
+            binding.root.setBackgroundColor(bgColor)
+            binding.className.setTextColor(contrastyFgColor)
+            binding.className.text = schoolClass.longName
 
-                val darkerBgColor = getDarkerColor(bgColor)
-                binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
-                binding.innerCard.setBackgroundColor(darkerBgColor)
+            val darkerBgColor = getDarkerColor(bgColor)
+            binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
+            binding.innerCard.setBackgroundColor(darkerBgColor)
 
-                binding.startTime.setTextColor(contrastyFgColor)
-                binding.startTime.text = scheduleBlock.startTime.toString()
+            binding.startTime.setTextColor(contrastyFgColor)
+            binding.startTime.text = scheduleBlock.startTime.toString()
+            binding.startTime.setPadding(0, 0, 0, stretch)
 
-                binding.endTime.setTextColor(contrastyFgColor)
-                binding.endTime.text = scheduleBlock.endTime.toString()
+            binding.endTime.setTextColor(contrastyFgColor)
+            binding.endTime.text = scheduleBlock.endTime.toString()
 
-                binding.root.setOnClickListener {
-                    val intent = Intent(context, ClassEditActivity::class.java).apply {
-                        putExtra("school_class_id", scheduleBlock.schoolClassId)
-                    }
-
-                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                    vibrator.vibrate(App.littleVibrationEffect)
-                    context.startActivity(intent)
+            binding.root.setOnClickListener {
+                val intent = Intent(context, ClassEditActivity::class.java).apply {
+                    putExtra("school_class_id", scheduleBlock.schoolClassId)
                 }
 
-                binding.innerCard.setOnClickListener {
-                    val intent = Intent(context, ScheduleBlockEditActivity::class.java).apply {
-                        putExtra("day_of_week", dayOfWeek)
-                        putExtra("schedule_block_position", adapterPosition)
-                    }
+                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(App.littleVibrationEffect)
+                context.startActivity(intent)
+            }
 
-                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                    vibrator.vibrate(App.littleVibrationEffect)
-                    context.startActivity(intent)
+            binding.innerCard.setOnClickListener {
+                val intent = Intent(context, ScheduleBlockEditActivity::class.java).apply {
+                    putExtra("day_of_week", dayOfWeek)
+                    putExtra("schedule_block_position", adapterPosition)
                 }
+
+                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(App.littleVibrationEffect)
+                context.startActivity(intent)
             }
         }
     }
