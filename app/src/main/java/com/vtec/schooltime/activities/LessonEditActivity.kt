@@ -1,4 +1,4 @@
-package com.vtec.schooltime
+package com.vtec.schooltime.activities
 
 import android.content.Context
 import android.graphics.Color
@@ -14,16 +14,17 @@ import androidx.core.widget.doOnTextChanged
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-import com.vtec.schooltime.databinding.ClassEditActivityBinding
+import com.vtec.schooltime.*
+import com.vtec.schooltime.databinding.LessonEditActivityBinding
 
-class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
-    private lateinit var binding: ClassEditActivityBinding
-    private var baseSchoolClassId: String? = null
-    private lateinit var schoolClassCard: ClassVH
+class LessonEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
+    private lateinit var binding: LessonEditActivityBinding
+    private var baseSchoolLessonId: String? = null
+    private lateinit var schoolLessonCard: LessonVH
 
     private fun setCardBackgroundColor(color: Int)
     {
-        schoolClassCard.color = color
+        schoolLessonCard.color = color
     }
 
     private fun setHexColorEditText(color: Int)
@@ -57,21 +58,21 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onBackPressed() {
-        if (binding.shortClassNameEdit.error.isNullOrEmpty() && binding.longClassNameEdit.error.isNullOrEmpty())
-            MainActivity.schoolClasses?.mutation {
-                val newSchoolClassId = binding.shortClassNameEdit.text.toString()
-                val schoolClass = it.value?.get(baseSchoolClassId)
-                if (schoolClass == null || newSchoolClassId != baseSchoolClassId)
+        if (binding.shortLessonNameEdit.error.isNullOrEmpty() && binding.longLessonNameEdit.error.isNullOrEmpty())
+            MainActivity.schoolLessons?.mutation {
+                val newSchoolLessonId = binding.shortLessonNameEdit.text.toString()
+                val schoolLesson = it.value?.get(baseSchoolLessonId)
+                if (schoolLesson == null || newSchoolLessonId != baseSchoolLessonId)
                 {
-                    it.value?.put(newSchoolClassId, SchoolClass(newSchoolClassId, schoolClassCard.longName, schoolClassCard.color))
-                    if (newSchoolClassId != baseSchoolClassId)
-                        it.value?.remove(baseSchoolClassId)
+                    it.value?.put(newSchoolLessonId, SchoolLesson(newSchoolLessonId, schoolLessonCard.longName, schoolLessonCard.color))
+                    if (newSchoolLessonId != baseSchoolLessonId)
+                        it.value?.remove(baseSchoolLessonId)
                 }
                 else
                 {
-                    schoolClass.apply {
-                        longName = schoolClassCard.longName
-                        color = schoolClassCard.color
+                    schoolLesson.apply {
+                        longName = schoolLessonCard.longName
+                        color = schoolLessonCard.color
                     }
                 }
             }
@@ -89,24 +90,24 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ClassEditActivityBinding.inflate(layoutInflater)
+        binding = LessonEditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        baseSchoolClassId = intent.getStringExtra("school_class_id")
-        if (baseSchoolClassId != null)
-            binding.shortClassNameEdit.setText(baseSchoolClassId)
+        baseSchoolLessonId = intent.getStringExtra("school_lesson_id")
+        if (baseSchoolLessonId != null)
+            binding.shortLessonNameEdit.setText(baseSchoolLessonId)
         else
-            binding.shortClassNameEdit.error = getString(R.string.name_empty)
-        val schoolClass = MainActivity.schoolClasses?.value?.get(baseSchoolClassId)
+            binding.shortLessonNameEdit.error = getString(R.string.name_empty)
+        val schoolLesson = MainActivity.schoolLessons?.value?.get(baseSchoolLessonId)
 
-        schoolClassCard = ClassVH(binding.schoolClassCard)
-        schoolClassCard.bind(schoolClass, null, ClassVH.Mode.Display)
-        binding.longClassNameEdit.setText(schoolClassCard.longName)
+        schoolLessonCard = LessonVH(binding.schoolLessonCard)
+        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
+        binding.longLessonNameEdit.setText(schoolLessonCard.longName)
 
-        val color = schoolClass?.color ?: Color.BLACK
+        val color = schoolLesson?.color ?: Color.BLACK
         setHexColorEditText(color)
         setSlidersProgress(color)
 
@@ -155,22 +156,22 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             }
         })
 
-        binding.longClassNameEdit.doOnTextChanged { text, start, before, count ->
-            schoolClassCard.longName = text.toString()
+        binding.longLessonNameEdit.doOnTextChanged { text, start, before, count ->
+            schoolLessonCard.longName = text.toString()
             if (text.isNullOrEmpty())
-                binding.longClassNameEdit.error = getString(R.string.name_empty)
+                binding.longLessonNameEdit.error = getString(R.string.name_empty)
             else
-                binding.longClassNameEdit.error = null
+                binding.longLessonNameEdit.error = null
         }
 
-        binding.shortClassNameEdit.doOnTextChanged { text, start, before, count ->
-            val schoolClass = MainActivity.schoolClasses?.value?.get(text.toString())
+        binding.shortLessonNameEdit.doOnTextChanged { text, start, before, count ->
+            val schoolLesson = MainActivity.schoolLessons?.value?.get(text.toString())
             if (text.isNullOrEmpty())
-                binding.shortClassNameEdit.error = getString(R.string.name_empty)
-            else if (schoolClass != null && text.toString() != baseSchoolClassId)
-                binding.shortClassNameEdit.error = getString(R.string.name_exists)
+                binding.shortLessonNameEdit.error = getString(R.string.name_empty)
+            else if (schoolLesson != null && text.toString() != baseSchoolLessonId)
+                binding.shortLessonNameEdit.error = getString(R.string.name_exists)
             else
-                binding.shortClassNameEdit.error = null
+                binding.shortLessonNameEdit.error = null
         }
 
         binding.redSlider.setOnSeekBarChangeListener(this)

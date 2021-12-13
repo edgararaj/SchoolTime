@@ -1,4 +1,4 @@
-package com.vtec.schooltime
+package com.vtec.schooltime.activities
 
 import android.content.Context
 import android.content.Intent
@@ -8,13 +8,13 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import com.vtec.schooltime.databinding.ActivitySecondaryBinding
 
-class ClassListActivity: AppCompatActivity() {
+class LessonListActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySecondaryBinding
 
     class Contract : ActivityResultContract<Unit, String>() {
-        override fun createIntent(context: Context, input: Unit?) = Intent(context, ClassListActivity::class.java)
+        override fun createIntent(context: Context, input: Unit?) = Intent(context, LessonListActivity::class.java)
 
-        override fun parseResult(resultCode: Int, intent: Intent?) = intent?.getStringExtra("school_class_id")
+        override fun parseResult(resultCode: Int, intent: Intent?) = intent?.getStringExtra("school_lesson_id")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

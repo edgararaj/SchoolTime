@@ -45,19 +45,19 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 }
 
 @Serializable
-class SchoolClass(var shortName: String, var longName: String, var color: Int)
+class SchoolLesson(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
-class ScheduleBlock(val schoolClassId: String, var startTime: Time, var endTime: Time)
+class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime: Time)
 {
     val delta get() = endTime - startTime
 }
 
-val fallbackSchoolClasses = mutableMapOf("MAT" to SchoolClass("MAT", "Matemática", Color.parseColor("#7f98e3")),
-    "EF" to SchoolClass("EF", "Educação Física", Color.parseColor("#e3cc7f")),
-    "FSC" to SchoolClass("FSC", "Física", Color.parseColor("#e3cc7f")),
-    "PT" to SchoolClass("PT", "Português", Color.parseColor("#e37f7f")),
-    "AINF" to SchoolClass("AINF", "Aplicações Informáticas", Color.parseColor("#7fe390"))
+val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemática", Color.parseColor("#7f98e3")),
+    "EF" to SchoolLesson("EF", "Educação Física", Color.parseColor("#e3cc7f")),
+    "FSC" to SchoolLesson("FSC", "Física", Color.parseColor("#e3cc7f")),
+    "PT" to SchoolLesson("PT", "Português", Color.parseColor("#e37f7f")),
+    "AINF" to SchoolLesson("AINF", "Aplicações Informáticas", Color.parseColor("#7fe390"))
 )
 
 val fallbackSchedule = mutableMapOf(
@@ -72,9 +72,7 @@ val fallbackSchedule = mutableMapOf(
         ScheduleBlock("FSC", Time(15, 40), Time(17, 10)),
         ScheduleBlock("MAT", Time(17, 20), Time(18, 50)),
     ),
-    Calendar.WEDNESDAY to mutableListOf(
-        ScheduleBlock("PT", Time(19, 20), Time(20, 21))
-    ),
+    Calendar.WEDNESDAY to mutableListOf(),
     Calendar.THURSDAY to mutableListOf(
         ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
         ScheduleBlock("PT", Time(15, 40), Time(17, 10)),
@@ -91,7 +89,7 @@ val fallbackSchedule = mutableMapOf(
 
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias Schedule = MutableLiveData<MutableMap<Int, DayOfWeekSchedule>>
-typealias SchoolClasses = MutableLiveData<MutableMap<String, SchoolClass>>
+typealias SchoolLessons = MutableLiveData<MutableMap<String, SchoolLesson>>
 
 fun getContrastingColor(color: Int): Int
 {

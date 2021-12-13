@@ -9,8 +9,8 @@
         layout="@layout/app_bar_main" />
 
     <include
-        android:id="@+id/school_class_card"
-        layout="@layout/class_list_item"/>
+        android:id="@+id/school_lesson_card"
+        layout="@layout/lesson_list_item"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/edit_class"
+            android:text="@string/edit_lesson"
             android:layout_marginBottom="10dp"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -32,10 +32,10 @@
             android:layout_marginBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/long_class_name_edit"
+                android:id="@+id/long_lesson_name_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/long_class_name"
+                android:hint="@string/long_lesson_name"
                 android:maxLines="1"
                 android:inputType="text"/>
 
@@ -47,10 +47,10 @@
             android:layout_marginBottom="30dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/short_class_name_edit"
+                android:id="@+id/short_lesson_name_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/short_class_name"
+                android:hint="@string/short_lesson_name"
                 android:maxLines="1"
                 android:inputType="text"/>
 

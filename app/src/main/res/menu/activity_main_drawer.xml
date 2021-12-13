@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
         android:id="@+id/group1"
@@ -11,13 +9,22 @@
             android:icon="@drawable/schedule_icon"
             android:title="@string/schedule" />
         <item
+            android:id="@+id/nav_lesson_list"
+            android:icon="@drawable/lesson_list_icon"
+            android:title="@string/lesson_list" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
             android:id="@+id/nav_class_list"
             android:icon="@drawable/class_list_icon"
             android:title="@string/class_list" />
     </group>
 
     <group
-        android:id="@+id/group2"
+        android:id="@+id/group3"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"

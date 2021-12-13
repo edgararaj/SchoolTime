@@ -2,10 +2,8 @@ package com.vtec.schooltime
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,7 +11,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 import com.vtec.schooltime.databinding.ActivityMainBinding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var schedule: Schedule? = null
-        var schoolClasses: SchoolClasses? = null
+        var schoolLessons: SchoolLessons? = null
 
         fun calculateSmallestScheduleBlockDelta(): Int
         {
@@ -74,10 +71,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         run {
-            val schoolClassesFile = File(getExternalFilesDir(null), "school_classes.json")
-            val schoolClassesOutputStream = FileOutputStream(schoolClassesFile)
-            Json.encodeToStream(fallbackSchoolClasses, schoolClassesOutputStream)
-            schoolClasses = MutableLiveData(Json.decodeFromStream(FileInputStream(schoolClassesFile)))
+            val schoolLessonsFile = File(getExternalFilesDir(null), "school_lessons.json")
+            val schoolLessonsOutputStream = FileOutputStream(schoolLessonsFile)
+            Json.encodeToStream(fallbackSchoolLessons, schoolLessonsOutputStream)
+            schoolLessons = MutableLiveData(Json.decodeFromStream(FileInputStream(schoolLessonsFile)))
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

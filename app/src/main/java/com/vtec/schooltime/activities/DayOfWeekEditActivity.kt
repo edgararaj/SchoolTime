@@ -1,6 +1,5 @@
-package com.vtec.schooltime
+package com.vtec.schooltime.activities
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -8,15 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
+import com.vtec.schooltime.*
 import com.vtec.schooltime.databinding.DayOfWeekEditActivityBinding
-import java.util.*
 
 class DayOfWeekEditActivity: AppCompatActivity() {
     private lateinit var binding: DayOfWeekEditActivityBinding
 
     override fun onBackPressed() {
-        MainActivity.schoolClasses?.value = MainActivity.schoolClasses?.value
+        MainActivity.schoolLessons?.value = MainActivity.schoolLessons?.value
         MainActivity.schedule?.value = MainActivity.schedule?.value
         super.onBackPressed()
     }
@@ -39,12 +37,12 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val dayOfWeek = intent.getIntExtra("day_of_week", -1)
-        val schoolClassListSelector = registerForActivityResult(ClassListActivity.Contract()) { schoolClassId ->
-            if (schoolClassId != null)
+        val schoolLessonListSelector = registerForActivityResult(LessonListActivity.Contract()) { schoolLessonId ->
+            if (schoolLessonId != null)
             {
                 binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
                 MainActivity.schedule?.mutation {
-                    it.value?.get(dayOfWeek)?.add(ScheduleBlock(schoolClassId, Time(0, 0), Time(0, 0)))
+                    it.value?.get(dayOfWeek)?.add(ScheduleBlock(schoolLessonId, Time(0, 0), Time(0, 0)))
                 }
             }
         }
@@ -75,17 +73,17 @@ class DayOfWeekEditActivity: AppCompatActivity() {
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
             if (schedule != null)
             {
-                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolLessonListSelector)
             }
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule?.value?.get(dayOfWeek)
             if (schedule != null)
-                dayOfWeekCard.bind(schedule, dayOfWeek, schoolClassListSelector)
+                dayOfWeekCard.bind(schedule, dayOfWeek, schoolLessonListSelector)
         }
 
-        MainActivity.schoolClasses?.observe(this, observer)
+        MainActivity.schoolLessons?.observe(this, observer)
         MainActivity.schedule?.observe(this, observer)
     }
 }

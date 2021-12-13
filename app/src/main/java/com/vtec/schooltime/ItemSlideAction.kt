@@ -1,7 +1,6 @@
 package com.vtec.schooltime
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Build

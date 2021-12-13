@@ -8,37 +8,38 @@ import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vtec.schooltime.databinding.ClassListItemBinding
+import com.vtec.schooltime.activities.LessonEditActivity
+import com.vtec.schooltime.databinding.LessonListItemBinding
 
-class ClassListAdapter(private val schoolClasses: SchoolClasses, private val activity: Activity?, private val mode: ClassVH.Mode) : RecyclerView.Adapter<ClassVH>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassVH {
-        val binding = ClassListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ClassVH(binding)
+class LessonListAdapter(private val schoolLessons: SchoolLessons, private val activity: Activity?, private val mode: LessonVH.Mode) : RecyclerView.Adapter<LessonVH>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonVH {
+        val binding = LessonListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LessonVH(binding)
     }
 
-    override fun onBindViewHolder(holder: ClassVH, position: Int) {
-        schoolClasses.value?.toList()?.get(position)?.second?.let {
+    override fun onBindViewHolder(holder: LessonVH, position: Int) {
+        schoolLessons.value?.toList()?.get(position)?.second?.let {
             holder.bind(it, activity, mode)
         }
     }
 
-    override fun getItemCount() = schoolClasses.value?.size ?: 0
+    override fun getItemCount() = schoolLessons.value?.size ?: 0
 }
 
-class ClassVH(private val binding: ClassListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class LessonVH(private val binding: LessonListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
     var color: Int = Color.BLACK
         set(value) {
             binding.root.setCardBackgroundColor(value)
             val contrastyFgColor = getContrastingColor(value)
-            binding.className.setTextColor(contrastyFgColor)
+            binding.lessonName.setTextColor(contrastyFgColor)
             field = value
         }
 
     var longName: String = context.getString(R.string.unnamed)
         set(value) {
-            binding.className.text = value
+            binding.lessonName.text = value
             field = value
         }
 
@@ -46,23 +47,23 @@ class ClassVH(private val binding: ClassListItemBinding) : RecyclerView.ViewHold
         Display, EditOnClick, SelectAndFinishActivity
     }
 
-    fun bind(schoolClass: SchoolClass?, activity: Activity?, mode: Mode)
+    fun bind(schoolLesson: SchoolLesson?, activity: Activity?, mode: Mode)
     {
-        if (schoolClass == null)
+        if (schoolLesson == null)
         {
             longName = longName
             color = color
         }
         else
         {
-            longName = schoolClass.longName
-            color = schoolClass.color
+            longName = schoolLesson.longName
+            color = schoolLesson.color
 
             if (mode != Mode.Display) binding.root.setOnClickListener {
                 if (mode == Mode.EditOnClick)
                 {
-                    val intent = Intent(context, ClassEditActivity::class.java).apply {
-                        putExtra("school_class_id", schoolClass.shortName)
+                    val intent = Intent(context, LessonEditActivity::class.java).apply {
+                        putExtra("school_lesson_id", schoolLesson.shortName)
                     }
 
                     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -72,7 +73,7 @@ class ClassVH(private val binding: ClassListItemBinding) : RecyclerView.ViewHold
                 else
                 {
                     activity?.let {
-                        it.setResult(0, Intent().putExtra("school_class_id", schoolClass.shortName))
+                        it.setResult(0, Intent().putExtra("school_lesson_id", schoolLesson.shortName))
                         it.finish()
                     }
                 }

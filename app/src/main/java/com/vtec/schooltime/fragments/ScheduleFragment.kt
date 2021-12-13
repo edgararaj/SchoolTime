@@ -1,4 +1,4 @@
-package com.vtec.schooltime.ui.schedule
+package com.vtec.schooltime.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,30 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
+import com.vtec.schooltime.activities.DayOfWeekEditActivity
 import com.vtec.schooltime.databinding.FragmentScheduleBinding
 
 class ScheduleFragment : Fragment() {
-
-    private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentScheduleBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
+    ): View {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
         val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_icon)
@@ -54,7 +46,7 @@ class ScheduleFragment : Fragment() {
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
         binding.daysOfWeek.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
 
-        MainActivity.schoolClasses?.observe(viewLifecycleOwner, {
+        MainActivity.schoolLessons?.observe(viewLifecycleOwner, {
             adapter?.notifyDataSetChanged()
         })
 

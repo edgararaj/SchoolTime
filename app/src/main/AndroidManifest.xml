@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ScheduleBlockEditActivity"/>
-        <activity android:name=".DayOfWeekEditActivity"/>
-        <activity android:name=".ClassEditActivity"/>
-        <activity android:name=".ClassListActivity"/>
+        <activity android:name=".activities.ScheduleBlockEditActivity"/>
+        <activity android:name=".activities.DayOfWeekEditActivity"/>
+        <activity android:name=".activities.LessonEditActivity"/>
+        <activity android:name=".activities.LessonListActivity"/>
 
         <receiver android:name=".Widget" android:exported="false">
             <intent-filter>

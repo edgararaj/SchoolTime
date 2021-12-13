@@ -9,8 +9,8 @@
         layout="@layout/app_bar_main" />
 
     <include
-        android:id="@+id/school_class_card"
-        layout="@layout/class_list_item"/>
+        android:id="@+id/school_lesson_card"
+        layout="@layout/lesson_list_item"/>
 
     <LinearLayout
         android:layout_width="match_parent"

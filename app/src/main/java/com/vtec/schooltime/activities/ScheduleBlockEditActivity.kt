@@ -1,10 +1,11 @@
-package com.vtec.schooltime
+package com.vtec.schooltime.activities
 
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.vtec.schooltime.*
 import com.vtec.schooltime.databinding.ScheduleBlockEditActivityBinding
 
 class ScheduleBlockEditActivity : AppCompatActivity() {
@@ -31,7 +32,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
             binding.duration.text = x.toString()
             field = x
         }
-    private lateinit var schoolClassCard: ClassVH
+    private lateinit var schoolLessonCard: LessonVH
     private var lockDuration = false
     set(x)
     {
@@ -72,12 +73,12 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
         scheduleBlockPosition = intent.getIntExtra("schedule_block_position", -1)
         val scheduleBlock = MainActivity.schedule?.value?.get(dayOfWeek)?.get(scheduleBlockPosition)
-        val schoolClass = MainActivity.schoolClasses?.value?.get(scheduleBlock?.schoolClassId)
+        val schoolLesson = MainActivity.schoolLessons?.value?.get(scheduleBlock?.schoolLessonId)
 
-        if (scheduleBlock == null || schoolClass == null) return
+        if (scheduleBlock == null || schoolLesson == null) return
 
-        schoolClassCard = ClassVH(binding.schoolClassCard)
-        schoolClassCard.bind(schoolClass, null, ClassVH.Mode.Display)
+        schoolLessonCard = LessonVH(binding.schoolLessonCard)
+        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         lockDuration = preferences.getBoolean("lock_duration", false)

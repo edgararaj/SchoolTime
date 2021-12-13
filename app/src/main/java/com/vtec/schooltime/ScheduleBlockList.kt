@@ -2,27 +2,15 @@ package com.vtec.schooltime
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.os.Vibrator
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
+import com.vtec.schooltime.activities.LessonEditActivity
+import com.vtec.schooltime.activities.ScheduleBlockEditActivity
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
-import java.util.*
-import kotlin.coroutines.coroutineContext
-import kotlin.math.round
 
 class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val smallestScheduleBlockDelta: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBlockVH {
@@ -49,14 +37,14 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
     @RequiresApi(Build.VERSION_CODES.Q)
     fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int)
     {
-        val schoolClass = MainActivity.schoolClasses?.value?.get(scheduleBlock.schoolClassId)
-        if (schoolClass != null)
+        val schoolLesson = MainActivity.schoolLessons?.value?.get(scheduleBlock.schoolLessonId)
+        if (schoolLesson != null)
         {
-            val bgColor = schoolClass.color
+            val bgColor = schoolLesson.color
             val contrastyFgColor = getContrastingColor(bgColor)
             binding.root.setBackgroundColor(bgColor)
-            binding.className.setTextColor(contrastyFgColor)
-            binding.className.text = schoolClass.longName
+            binding.lessonName.setTextColor(contrastyFgColor)
+            binding.lessonName.text = schoolLesson.longName
 
             val darkerBgColor = getDarkerColor(bgColor)
             binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
@@ -70,8 +58,8 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.endTime.text = scheduleBlock.endTime.toString()
 
             binding.root.setOnClickListener {
-                val intent = Intent(context, ClassEditActivity::class.java).apply {
-                    putExtra("school_class_id", scheduleBlock.schoolClassId)
+                val intent = Intent(context, LessonEditActivity::class.java).apply {
+                    putExtra("school_lesson_id", scheduleBlock.schoolLessonId)
                 }
 
                 val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator

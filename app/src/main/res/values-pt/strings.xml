@@ -9,11 +9,12 @@
     <string name="settings">Configurações</string>
 
     <string name="schedule">Horário</string>
-    <string name="class_list">Disciplinas</string>
+    <string name="lesson_list">Disciplinas</string>
+    <string name="class_list">Turmas</string>
 
-    <string name="long_class_name">Nome longo</string>
-    <string name="short_class_name">Nome curto</string>
-    <string name="edit_class">Editar disciplina</string>
+    <string name="long_lesson_name">Nome longo</string>
+    <string name="short_lesson_name">Nome curto</string>
+    <string name="edit_lesson">Editar disciplina</string>
     <string name="name_exists">Este nome já existe</string>
     <string name="name_empty">Por favor especifique um nome</string>
     <string name="pick_bg_color">Escolhe a cor de fundo</string>
@@ -36,11 +37,11 @@
 
     <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
     <!--    Aula de PT começa em 5 minutos-->
-    <string name="widget_class_starting">Aula de &lt;b&gt;%s&lt;/b&gt; começa em &lt;br&gt;&lt;b&gt;%d %s&lt;/b&gt;</string>
+    <string name="widget_lesson_starting">Aula de &lt;b&gt;%s&lt;/b&gt; começa em &lt;br&gt;&lt;b&gt;%d %s&lt;/b&gt;</string>
     <!--    "%s <b>%02d:%02d</b> para acabar <b>%s</b>"-->
     <!--    Faltam 2:50 para acabar PT-->
-    <string name="widget_class_ending_hours">%s &lt;b&gt;%02d:%02d&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="widget_lesson_ending_hours">%s &lt;b&gt;%02d:%02d&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
     <!--    "%s <b>%d %s</b> para acabar <b>%s</b>"-->
     <!--    Faltam 5 minutos para acabar PT-->
-    <string name="widget_class_ending_minutes">%s &lt;b&gt;%d %s&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="widget_lesson_ending_minutes">%s &lt;b&gt;%d %s&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
 </resources>

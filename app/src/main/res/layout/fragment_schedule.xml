@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.schedule.ScheduleFragment">
+    tools:context=".fragments.ScheduleFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/days_of_week"
