@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/edit_lesson"
+            android:text="@string/edit_class"
             android:layout_marginBottom="10dp"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -32,25 +32,10 @@
             android:layout_marginBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/long_lesson_name_edit"
+                android:id="@+id/class_name_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/long_name"
-                android:maxLines="1"
-                android:inputType="text"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/short_lesson_name_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/short_name"
+                android:hint="@string/name"
                 android:maxLines="1"
                 android:inputType="text"/>
 

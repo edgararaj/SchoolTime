@@ -25,6 +25,7 @@
         <activity android:name=".activities.ScheduleBlockEditActivity"/>
         <activity android:name=".activities.DayOfWeekEditActivity"/>
         <activity android:name=".activities.LessonEditActivity"/>
+        <activity android:name=".activities.ClassEditActivity"/>
         <activity android:name=".activities.LessonListActivity"/>
 
         <receiver android:name=".Widget" android:exported="false">

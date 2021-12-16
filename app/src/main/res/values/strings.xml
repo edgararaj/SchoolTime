@@ -12,9 +12,11 @@
     <string name="lesson_list">Lessons</string>
     <string name="class_list">Classes</string>
 
-    <string name="long_lesson_name">Long name</string>
-    <string name="short_lesson_name">Short name</string>
+    <string name="long_name">Long name</string>
+    <string name="short_name">Short name</string>
+    <string name="name">Name</string>
     <string name="edit_lesson">Edit lesson</string>
+    <string name="edit_class">Edit class</string>
     <string name="name_exists">This name already exists</string>
     <string name="name_empty">Please specify a name</string>
     <string name="pick_bg_color">Pick background color</string>

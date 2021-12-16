@@ -25,6 +25,7 @@
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/activity_main.xml" value="0.2821557971014493" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/activity_secondary.xml" value="0.20260416666666667" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/app_bar_main.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/class_edit_activity.xml" value="0.1762917933130699" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/class_list_item.xml" value="0.26222826086956524" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/content_main.xml" value="0.2884963768115942" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/day_of_week_edit_activity.xml" value="0.1762917933130699" />
@@ -35,6 +36,8 @@
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_lesson_list.xml" value="0.20199275362318841" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_schedule.xml" value="0.2758152173913043" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/fragment_slideshow.xml" value="0.2821557971014493" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/lesson_edit_activity.xml" value="0.1762917933130699" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/lesson_list_item.xml" value="0.1762917933130699" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/nav_header_main.xml" value="0.2821557971014493" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/schedule_block_edit_activity.xml" value="0.18342391304347827" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/layout/schedule_block_list_item.xml" value="0.20260416666666667" />

@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.activities.LessonEditActivity
-import com.vtec.schooltime.databinding.LessonListItemBinding
+import com.vtec.schooltime.databinding.DisplayCardBinding
 
 class LessonListAdapter(private val schoolLessons: SchoolLessons, private val activity: Activity?, private val mode: LessonVH.Mode) : RecyclerView.Adapter<LessonVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonVH {
-        val binding = LessonListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = DisplayCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return LessonVH(binding)
     }
 
@@ -26,20 +26,20 @@ class LessonListAdapter(private val schoolLessons: SchoolLessons, private val ac
     override fun getItemCount() = schoolLessons.value?.size ?: 0
 }
 
-class LessonVH(private val binding: LessonListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class LessonVH(private val binding: DisplayCardBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
     var color: Int = Color.BLACK
         set(value) {
             binding.root.setCardBackgroundColor(value)
             val contrastyFgColor = getContrastingColor(value)
-            binding.lessonName.setTextColor(contrastyFgColor)
+            binding.name.setTextColor(contrastyFgColor)
             field = value
         }
 
     var longName: String = context.getString(R.string.unnamed)
         set(value) {
-            binding.lessonName.text = value
+            binding.name.text = value
             field = value
         }
 

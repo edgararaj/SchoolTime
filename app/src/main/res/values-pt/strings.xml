@@ -12,9 +12,11 @@
     <string name="lesson_list">Disciplinas</string>
     <string name="class_list">Turmas</string>
 
-    <string name="long_lesson_name">Nome longo</string>
-    <string name="short_lesson_name">Nome curto</string>
+    <string name="long_name">Nome longo</string>
+    <string name="short_name">Nome curto</string>
+    <string name="name">Nome</string>
     <string name="edit_lesson">Editar disciplina</string>
+    <string name="edit_class">Editar turma</string>
     <string name="name_exists">Este nome já existe</string>
     <string name="name_empty">Por favor especifique um nome</string>
     <string name="pick_bg_color">Escolhe a cor de fundo</string>

@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         var schedule: Schedule? = null
         var schoolLessons: SchoolLessons? = null
+        var schoolClasses: SchoolClasses = MutableLiveData(mutableListOf())
 
         fun calculateSmallestScheduleBlockDelta(): Int
         {
@@ -71,10 +72,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         run {
-            val schoolLessonsFile = File(getExternalFilesDir(null), "school_lessons.json")
+            val schoolLessonsFile = File(getExternalFilesDir(null), "lessons.json")
             val schoolLessonsOutputStream = FileOutputStream(schoolLessonsFile)
             Json.encodeToStream(fallbackSchoolLessons, schoolLessonsOutputStream)
             schoolLessons = MutableLiveData(Json.decodeFromStream(FileInputStream(schoolLessonsFile)))
+        }
+
+        run {
+            schoolClasses.value?.clear()
+            for (schoolClass in fallbackSchoolClasses)
+            {
+                val schoolClassFile = File(getExternalFilesDir(null), "class_${schoolClass.name}.json")
+                val schoolClassOutputStream = FileOutputStream(schoolClassFile)
+                Json.encodeToStream(schoolClass, schoolClassOutputStream)
+                schoolClasses.value?.add(Json.decodeFromStream(FileInputStream(schoolClassFile)))
+            }
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

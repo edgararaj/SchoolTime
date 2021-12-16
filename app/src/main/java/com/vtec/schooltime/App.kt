@@ -48,10 +48,17 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 class SchoolLesson(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
+class SchoolClass(var name: String, var color: Int)
+
+@Serializable
 class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime: Time)
 {
     val delta get() = endTime - startTime
 }
+
+var fallbackSchoolClasses = mutableListOf(
+    SchoolClass("12º K", Color.parseColor("#7fe390"))
+)
 
 val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemática", Color.parseColor("#7f98e3")),
     "EF" to SchoolLesson("EF", "Educação Física", Color.parseColor("#e3cc7f")),
@@ -90,6 +97,7 @@ val fallbackSchedule = mutableMapOf(
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias Schedule = MutableLiveData<MutableMap<Int, DayOfWeekSchedule>>
 typealias SchoolLessons = MutableLiveData<MutableMap<String, SchoolLesson>>
+typealias SchoolClasses = MutableLiveData<MutableList<SchoolClass>>
 
 fun getContrastingColor(color: Int): Int
 {

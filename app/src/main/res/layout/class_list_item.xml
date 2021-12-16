@@ -4,7 +4,7 @@
     android:layout_height="100dp">
 
     <TextView
-        android:id="@+id/lesson_name"
+        android:id="@+id/class_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/TextAppearance.MaterialComponents.Headline5"

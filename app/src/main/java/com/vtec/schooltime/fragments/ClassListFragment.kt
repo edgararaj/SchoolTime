@@ -12,10 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
-import com.vtec.schooltime.activities.LessonEditActivity
-import com.vtec.schooltime.activities.LessonListActivity
+import com.vtec.schooltime.activities.ClassEditActivity
 import com.vtec.schooltime.databinding.FragmentClassListBinding
-import com.vtec.schooltime.databinding.FragmentLessonListBinding
 
 class ClassListFragment : Fragment() {
     private var _binding: FragmentClassListBinding? = null
@@ -27,31 +25,14 @@ class ClassListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClassListBinding.inflate(inflater, container, false)
-        /*
-        val adapter = MainActivity.schoolLessons?.let { LessonListAdapter(it, activity, if (activity is LessonListActivity) LessonVH.Mode.SelectAndFinishActivity else LessonVH.Mode.EditOnClick) }
+        val adapter = ClassListAdapter(MainActivity.schoolClasses)
 
         val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.delete_icon)
         if (icon != null)
         {
             val action = { adapterPosition: Int ->
-                val schoolLesson = MainActivity.schoolLessons?.value?.toList()?.get(adapterPosition)
-                if (schoolLesson != null)
-                {
-                    MainActivity.schoolLessons?.value?.remove(schoolLesson.first)
-
-                    val newSchedule: MutableMap<Int, DayOfWeekSchedule> = mutableMapOf()
-                    MainActivity.schedule?.value?.forEach { (dayOfWeek, dayOfWeekSchedule) ->
-                        val newDayOfWeekSchedule: DayOfWeekSchedule = mutableListOf()
-                        dayOfWeekSchedule.forEach { scheduleBlock ->
-                            if (scheduleBlock.schoolLessonId != schoolLesson.first)
-                                newDayOfWeekSchedule.add(scheduleBlock)
-                        }
-                        newSchedule[dayOfWeek] = newDayOfWeekSchedule
-                    }
-                    MainActivity.schedule?.value = newSchedule
-
-                    adapter?.notifyItemRemoved(adapterPosition)
-                }
+                MainActivity.schoolClasses.value?.removeAt(adapterPosition)
+                adapter.notifyItemRemoved(adapterPosition)
             }
             val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.schoolClasses)
@@ -63,7 +44,7 @@ class ClassListFragment : Fragment() {
         binding.schoolClasses.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
 
         binding.fab.setOnClickListener {
-            val intent = Intent(requireContext(), LessonEditActivity::class.java).apply { }
+            val intent = Intent(requireContext(), ClassEditActivity::class.java).apply { }
 
             val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibrator.vibrate(App.littleVibrationEffect)
@@ -71,10 +52,9 @@ class ClassListFragment : Fragment() {
         }
         binding.fab.show()
 
-        MainActivity.schoolLessons?.observe(viewLifecycleOwner, {
-            adapter?.notifyDataSetChanged()
+        MainActivity.schoolClasses.observe(viewLifecycleOwner, {
+            adapter.notifyDataSetChanged()
         })
-        */
 
         return binding.root
     }
