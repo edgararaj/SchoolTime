@@ -124,11 +124,6 @@ fun getDarkerColor(color: Int): Int {
     })
 }
 
-fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
-    actions(this)
-    this.value = this.value
-}
-
 fun MutableLiveData<Boolean>.notify() {
     this.value = this.value?.not()
 }
@@ -136,7 +131,6 @@ fun MutableLiveData<Boolean>.notify() {
 class App : Application() {
     companion object {
         const val notificationChannelId = "SchoolTime"
-        @RequiresApi(Build.VERSION_CODES.Q)
         val littleVibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
     }
 

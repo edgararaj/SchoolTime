@@ -16,10 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.ActivityMainBinding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import kotlinx.serialization.json.encodeToStream
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.util.*
 
 class ItemDecoration(private val columns: Int): RecyclerView.ItemDecoration()

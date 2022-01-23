@@ -10,8 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginRight
-import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog

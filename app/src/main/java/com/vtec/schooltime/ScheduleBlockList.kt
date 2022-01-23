@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Vibrator
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,6 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
         return ScheduleBlockVH(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: ScheduleBlockVH, position: Int) {
         val scheduleBlock = dayOfWeekSchedule.getOrNull(position)
         if (scheduleBlock != null)
@@ -35,7 +33,6 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
 class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int)
     {
         val schoolLesson = MainActivity.lessons[scheduleBlock.schoolLessonId]

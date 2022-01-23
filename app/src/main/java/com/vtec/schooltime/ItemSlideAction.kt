@@ -41,7 +41,6 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
 
     override fun getSwipeEscapeVelocity(defaultValue: Float) = Float.NaN
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,

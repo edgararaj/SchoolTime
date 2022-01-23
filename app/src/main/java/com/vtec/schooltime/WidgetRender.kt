@@ -4,15 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.text.Html
-import android.util.Log
 import android.widget.RemoteViews
-import androidx.preference.PreferenceManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONObject
-import java.net.URL
 import java.util.*
 
 fun updateWidget(context: Context, views: RemoteViews)
