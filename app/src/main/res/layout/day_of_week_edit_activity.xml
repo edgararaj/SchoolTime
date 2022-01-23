@@ -10,6 +10,7 @@
 
     <include
         android:id="@+id/day_of_week_card"
-        layout="@layout/day_of_week_list_item"/>
+        layout="@layout/day_of_week_list_item"
+        style="@style/BigCard"/>
 
 </LinearLayout>

@@ -11,7 +11,7 @@
     <include
         android:id="@+id/display_card"
         layout="@layout/universal_card"
-        style="@style/DisplayCard"/>
+        style="@style/SmallCard"/>
 
     <LinearLayout
         android:orientation="vertical"

@@ -109,7 +109,7 @@ class LessonEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener 
         val schoolLesson = MainActivity.lessons[baseSchoolLessonId]
 
         schoolLessonCard = LessonVH(binding.displayCard)
-        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
+        schoolLessonCard.bind(schoolLesson, LessonVH.Mode.Display)
         binding.longLessonNameEdit.setText(schoolLessonCard.longName)
 
         val color = schoolLesson?.color ?: Color.BLACK

@@ -58,29 +58,6 @@ class ClassVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHold
             name = schoolClass.first!!
             color = schoolClass.second!!.color
 
-//            if (mode == Mode.EditOnClick)
-//            {
-//                binding.checkbox.visibility = View.VISIBLE
-//                binding.checkbox.isChecked = schoolClass.second!!.visible
-//
-//                binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-//                    if (!isChecked)
-//                    {
-//                        MainActivity.schedule.forEach { (dayOfWeek, dayOfWeekSchedule) ->
-//                            val newDayOfWeekSchedule: DayOfWeekSchedule = mutableListOf()
-//                            dayOfWeekSchedule.forEach { scheduleBlock ->
-//                                if (scheduleBlock.schoolClassId != name)
-//                                {
-//                                    newDayOfWeekSchedule.add(scheduleBlock)
-//                                }
-//                            }
-//                            MainActivity.schedule[dayOfWeek] = newDayOfWeekSchedule
-//                        }
-//                    }
-//                    MainActivity.didSchedulesUpdate.notify()
-//                }
-//            }
-
             if (mode != Mode.Display) binding.root.setOnClickListener {
                 if (mode == Mode.EditOnClick)
                 {

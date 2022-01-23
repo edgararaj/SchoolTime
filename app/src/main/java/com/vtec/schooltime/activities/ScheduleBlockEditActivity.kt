@@ -74,7 +74,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         if (scheduleBlock == null || schoolLesson == null) return
 
         schoolLessonCard = LessonVH(binding.schoolLessonCard)
-        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
+        schoolLessonCard.bind(schoolLesson, LessonVH.Mode.Display)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         lockDuration = preferences.getBoolean("lock_duration", false)

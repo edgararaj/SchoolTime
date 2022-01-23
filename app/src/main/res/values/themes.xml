@@ -28,7 +28,7 @@
         <item name="cardElevation">3dp</item>
     </style>
 
-    <style name="DayOfWeekCard">
+    <style name="BigGridCard">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/card_margin</item>
@@ -36,7 +36,16 @@
         <item name="cardElevation">5dp</item>
     </style>
 
-    <style name="GridCard">
+    <style name="BigCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/card_margin</item>
+        <item name="android:layout_marginLeft">@dimen/card_margin</item>
+        <item name="android:layout_marginRight">@dimen/card_margin</item>
+        <item name="cardElevation">5dp</item>
+    </style>
+
+    <style name="SmallGridCard">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">100dp</item>
         <item name="android:layout_marginTop">@dimen/card_margin</item>
@@ -44,7 +53,7 @@
         <item name="cardElevation">5dp</item>
     </style>
 
-    <style name="DisplayCard">
+    <style name="SmallCard">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">100dp</item>
         <item name="android:layout_marginTop">@dimen/card_margin</item>
