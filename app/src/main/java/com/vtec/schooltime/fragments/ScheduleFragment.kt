@@ -30,7 +30,7 @@ class ScheduleFragment : Fragment() {
         {
             val action = { adapterPosition: Int ->
                 val intent = Intent(context, DayOfWeekEditActivity::class.java).apply {
-                    putExtra("day_of_week", MainActivity.schedule?.value?.keys?.toList()?.get(adapterPosition))
+                    putExtra("day_of_week", adapterPosition + 2)
                 }
                 startActivity(intent)
             }
@@ -39,19 +39,23 @@ class ScheduleFragment : Fragment() {
         }
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val adapter = MainActivity.schedule?.let { DayOfWeekListAdapter(it, preferences.getBoolean("weekend_school", false)) }
+        val adapter = DayOfWeekListAdapter(MainActivity.schedule, preferences.getBoolean("weekend_school", false))
 
         binding.daysOfWeek.adapter = adapter
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
-        binding.daysOfWeek.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
+        binding.daysOfWeek.addItemDecoration(ItemDecoration(1))
 
-        MainActivity.schoolLessons?.observe(viewLifecycleOwner, {
-            adapter?.notifyDataSetChanged()
+        MainActivity.didLessonsUpdate.observe(viewLifecycleOwner, {
+            adapter.notifyDataSetChanged()
         })
 
-        MainActivity.schedule?.observe(viewLifecycleOwner, {
-            adapter?.notifyDataSetChanged()
+        MainActivity.didSchedulesUpdate.observe(viewLifecycleOwner, {
+            adapter.notifyDataSetChanged()
+        })
+
+        MainActivity.didSchoolClassesUpdate.observe(viewLifecycleOwner, {
+            adapter.notifyDataSetChanged()
         })
 
         return binding.root

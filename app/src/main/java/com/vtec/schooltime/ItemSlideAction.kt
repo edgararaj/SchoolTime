@@ -52,8 +52,8 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
         isCurrentlyActive: Boolean
     ) {
         val itemView = viewHolder.itemView
-        val slideWindowSize = (70 * context.resources.displayMetrics.density).toInt()
-        val animationSlideWindowSize = (slideWindowSize * 3)
+        val slideWindowSize = (78 * context.resources.displayMetrics.density).toInt()
+        val animationSlideWindowSize = (slideWindowSize * 2)
         val newDX = tanh(dX / (animationSlideWindowSize * 3)) * animationSlideWindowSize
         if (dX != 0f)
         {
@@ -80,7 +80,7 @@ class ItemSlideAction(private val context: Context, private val editIcon: Drawab
                 slideComplete = false
 
             val marginCoeff = 0.5/(fractionOfCompletion * 0.5) * context.resources.displayMetrics.density
-            val horizontalMargin = (20 * marginCoeff).toInt()
+            val horizontalMargin = (23 * marginCoeff).toInt()
             val verticalMargin = (10 * marginCoeff).toInt()
             val horizontalSize = slideWindowSize - 2 * horizontalMargin
             val verticalSize = itemView.height - 2 * verticalMargin

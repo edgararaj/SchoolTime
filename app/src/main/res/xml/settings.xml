@@ -10,5 +10,10 @@
         app:key="lock_duration"
         app:iconSpaceReserved="false"
         app:title="@string/lock_duration"/>
+    <EditTextPreference
+        app:defaultValue="Braga"
+        app:key="weather_location"
+        app:iconSpaceReserved="false"
+        app:title="@string/weather_location"/>
 
 </PreferenceScreen>

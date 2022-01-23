@@ -10,7 +10,8 @@
 
     <include
         android:id="@+id/display_card"
-        layout="@layout/display_card"/>
+        layout="@layout/universal_card"
+        style="@style/DisplayCard"/>
 
     <LinearLayout
         android:orientation="vertical"

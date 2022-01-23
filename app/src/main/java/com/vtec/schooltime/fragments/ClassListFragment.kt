@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.vtec.schooltime.*
 import com.vtec.schooltime.activities.ClassEditActivity
+import com.vtec.schooltime.activities.ClassListActivity
 import com.vtec.schooltime.databinding.FragmentClassListBinding
 
 class ClassListFragment : Fragment() {
@@ -25,36 +27,52 @@ class ClassListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClassListBinding.inflate(inflater, container, false)
-        val adapter = ClassListAdapter(MainActivity.schoolClasses)
 
-        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.delete_icon)
-        if (icon != null)
-        {
-            val action = { adapterPosition: Int ->
-                MainActivity.schoolClasses.value?.removeAt(adapterPosition)
-                adapter.notifyItemRemoved(adapterPosition)
+        MainActivity.schoolClasses.let {
+            val adapter = ClassListAdapter(it, activity, if (activity is ClassListActivity) ClassVH.Mode.SelectAndFinishActivity else ClassVH.Mode.EditOnClick)
+
+            val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.delete_icon)
+            if (icon != null)
+            {
+                val action = { adapterPosition: Int ->
+                    val schoolClassId = it.toList()[adapterPosition].first
+                    MainActivity.schedule.forEach { (dayOfWeek, dayOfWeekSchedule) ->
+                        val newDayOfWeekSchedule: DayOfWeekSchedule = mutableListOf()
+                        dayOfWeekSchedule.forEach { scheduleBlock ->
+                            if (scheduleBlock.schoolClassId != schoolClassId)
+                            {
+                                newDayOfWeekSchedule.add(scheduleBlock)
+                            }
+                        }
+                        MainActivity.schedule[dayOfWeek] = newDayOfWeekSchedule
+                    }
+                    MainActivity.didSchedulesUpdate.notify()
+
+                    MainActivity.schoolClasses.remove(schoolClassId)
+                    adapter.notifyItemRemoved(adapterPosition)
+                }
+                val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, true, action, null))
+                itemTouchHelper.attachToRecyclerView(binding.schoolClasses)
             }
-            val itemTouchHelper = ItemTouchHelper(ItemSlideAction(requireContext(), icon, true, action, null))
-            itemTouchHelper.attachToRecyclerView(binding.schoolClasses)
+
+            binding.schoolClasses.adapter = adapter
+            binding.schoolClasses.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
+            binding.schoolClasses.edgeEffectFactory = BounceEdgeEffectFactory()
+            binding.schoolClasses.addItemDecoration(ItemDecoration(2))
+
+            binding.fab.setOnClickListener {
+                val intent = Intent(requireContext(), ClassEditActivity::class.java).apply { }
+
+                val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(App.littleVibrationEffect)
+                startActivity(intent)
+            }
+            binding.fab.show()
+
+            MainActivity.didSchoolClassesUpdate.observe(viewLifecycleOwner, {
+                adapter.notifyDataSetChanged()
+            })
         }
-
-        binding.schoolClasses.adapter = adapter
-        binding.schoolClasses.layoutManager = LinearLayoutManager(requireContext())
-        binding.schoolClasses.edgeEffectFactory = BounceEdgeEffectFactory()
-        binding.schoolClasses.addItemDecoration(ItemDecoration(R.dimen.screen_bottom_margin))
-
-        binding.fab.setOnClickListener {
-            val intent = Intent(requireContext(), ClassEditActivity::class.java).apply { }
-
-            val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(App.littleVibrationEffect)
-            startActivity(intent)
-        }
-        binding.fab.show()
-
-        MainActivity.schoolClasses.observe(viewLifecycleOwner, {
-            adapter.notifyDataSetChanged()
-        })
 
         return binding.root
     }

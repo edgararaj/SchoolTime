@@ -37,7 +37,7 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
     @RequiresApi(Build.VERSION_CODES.Q)
     fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int)
     {
-        val schoolLesson = MainActivity.schoolLessons?.value?.get(scheduleBlock.schoolLessonId)
+        val schoolLesson = MainActivity.lessons[scheduleBlock.schoolLessonId]
         if (schoolLesson != null)
         {
             val bgColor = schoolLesson.color
@@ -45,6 +45,8 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.root.setBackgroundColor(bgColor)
             binding.lessonName.setTextColor(contrastyFgColor)
             binding.lessonName.text = schoolLesson.longName
+            binding.className.setTextColor(contrastyFgColor)
+            binding.className.text = scheduleBlock.schoolClassId
 
             val darkerBgColor = getDarkerColor(bgColor)
             binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))

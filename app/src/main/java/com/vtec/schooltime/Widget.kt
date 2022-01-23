@@ -10,9 +10,6 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.lifecycle.Observer
 
-//var currentSchedule: Schedule? = null
-//var currentSchoolClasses: SchoolClasses? = null
-//
 const val tapAction = "com.vtec.schooltime.TAP"
 
 class Widget : AppWidgetProvider() {
@@ -24,28 +21,15 @@ class Widget : AppWidgetProvider() {
         context?.applicationContext?.let {
             it.startForegroundService(Intent(it, WidgetUpdateService::class.java))
 
-//            run {
-//                val scheduleFile = File(context.getExternalFilesDir(null), "schedule.json")
-////                val scheduleOutputStream = FileOutputStream(scheduleFile)
-////                Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
-//                currentSchedule = MutableLiveData(Json.decodeFromStream(FileInputStream(scheduleFile)))
-//            }
-//
-//            run {
-//                val schoolClassesFile = File(context.getExternalFilesDir(null), "school_classes.json")
-////                val schoolClassesOutputStream = FileOutputStream(schoolClassesFile)
-////                Json.encodeToStream(fallbackSchoolClasses, schoolClassesOutputStream)
-//                currentSchoolClasses = MutableLiveData(Json.decodeFromStream(FileInputStream(schoolClassesFile)))
-//            }
-
             val observer = Observer<Any> {
                 val views = RemoteViews(context.packageName, R.layout.widget)
                 updateWidget(context, views)
                 val widget = ComponentName(context, Widget::class.java)
                 AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
             }
-            MainActivity.schoolLessons?.observeForever(observer)
-            MainActivity.schedule?.observeForever(observer)
+
+            MainActivity.didLessonsUpdate.observeForever(observer)
+            MainActivity.didSchedulesUpdate.observeForever(observer)
         }
     }
 

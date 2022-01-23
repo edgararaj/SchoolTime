@@ -4,6 +4,8 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
+import androidx.core.view.marginTop
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,7 +22,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.*
 
-class ItemDecoration(private val resId: Int): RecyclerView.ItemDecoration()
+class ItemDecoration(private val columns: Int): RecyclerView.ItemDecoration()
 {
     override fun getItemOffsets(
         outRect: Rect,
@@ -30,9 +32,13 @@ class ItemDecoration(private val resId: Int): RecyclerView.ItemDecoration()
     ) {
         val position = parent.getChildAdapterPosition(view)
 
-        val margin = parent.resources.getDimension(resId).toInt()
+        val margin = parent.resources.getDimension(R.dimen.screen_bottom_margin).toInt()
 
-        parent.adapter?.let { if (position == it.itemCount - 1) outRect.bottom = margin }
+        parent.adapter?.let {
+            if ((position + 1) % columns == 0) outRect.right = parent.children.first().marginTop
+            if (columns == 1)
+                if (position >= it.itemCount - columns) outRect.bottom = margin
+        }
     }
 }
 
@@ -42,16 +48,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     companion object {
-        var schedule: Schedule? = null
-        var schoolLessons: SchoolLessons? = null
-        var schoolClasses: SchoolClasses = MutableLiveData(mutableListOf())
+        var schoolClasses: SchoolClasses = mutableMapOf()
+        var schedule: SchoolSchedule = mutableMapOf()
+        val lessons: SchoolLessons = mutableMapOf()
+        var didLessonsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+        var didSchedulesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+        var didSchoolClassesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
 
         fun calculateSmallestScheduleBlockDelta(): Int
         {
             var result = 0
-            schedule?.value?.toList()?.forEach { dayOfWeek ->
-                dayOfWeek.second.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
-                    if (dayOfWeek.first == Calendar.MONDAY)
+            schedule.forEach { (key, value) ->
+                value.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
+                    if (key == Calendar.MONDAY)
                         result = it
                     else if (it < result)
                         result = it
@@ -64,29 +73,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        run {
-            val scheduleFile = File(getExternalFilesDir(null), "schedule.json")
-            val scheduleOutputStream = FileOutputStream(scheduleFile)
-            Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
-            schedule = MutableLiveData(Json.decodeFromStream(FileInputStream(scheduleFile)))
-        }
+        val file = File(getExternalFilesDir(null), "classes.json")
+        val outStream = FileOutputStream(file)
+        Json.encodeToStream(fallbackSchoolClasses, outStream)
+        schoolClasses = Json.decodeFromStream(FileInputStream(file))
 
-        run {
-            val schoolLessonsFile = File(getExternalFilesDir(null), "lessons.json")
-            val schoolLessonsOutputStream = FileOutputStream(schoolLessonsFile)
-            Json.encodeToStream(fallbackSchoolLessons, schoolLessonsOutputStream)
-            schoolLessons = MutableLiveData(Json.decodeFromStream(FileInputStream(schoolLessonsFile)))
-        }
-
-        run {
-            schoolClasses.value?.clear()
-            for (schoolClass in fallbackSchoolClasses)
-            {
-                val schoolClassFile = File(getExternalFilesDir(null), "class_${schoolClass.name}.json")
-                val schoolClassOutputStream = FileOutputStream(schoolClassFile)
-                Json.encodeToStream(schoolClass, schoolClassOutputStream)
-                schoolClasses.value?.add(Json.decodeFromStream(FileInputStream(schoolClassFile)))
+        for (schoolClass in schoolClasses)
+        {
+            run {
+                val lessonsFile = File(getExternalFilesDir(null), "lessons_${schoolClass.key}.json")
+                val lessonsOutputStream = FileOutputStream(lessonsFile)
+                Json.encodeToStream(fallbackSchoolLessons, lessonsOutputStream)
+                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
+                init.forEach { (t, u) -> lessons[t] = u }
             }
+
+            run {
+                val scheduleFile = File(getExternalFilesDir(null), "schedule_${schoolClass.key}.json")
+                val scheduleOutputStream = FileOutputStream(scheduleFile)
+                Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
+                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+                init.forEach { (t, u) ->
+                    if (schedule[t] == null) schedule[t] = mutableListOf()
+                    u.forEach { schedule[t]?.add(it) }
+                }
+            }
+        }
+
+        schedule.forEach { entry ->
+            entry.value.sortBy { it.startTime }
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

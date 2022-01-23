@@ -11,11 +11,20 @@
 
         <TextView
             android:id="@+id/lesson_name"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingHorizontal="15dp"/>
+
+        <TextView
+            android:id="@+id/class_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:paddingHorizontal="20dp"
+            android:textStyle="bold"
+            android:alpha="0.7"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/inner_card"

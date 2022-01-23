@@ -41,15 +41,11 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        MainActivity.schedule?.mutation { schedule ->
-            schedule.value?.get(dayOfWeek)?.get(scheduleBlockPosition)?.apply {
-                startTime = scheduleBlockStartTime
-                endTime = scheduleBlockEndTime
-            }
-            schedule.value?.get(dayOfWeek)?.sortedBy { it.startTime }?.toMutableList()?.let {
-                schedule.value?.set(dayOfWeek, it)
-            }
+        MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)?.apply {
+            startTime = scheduleBlockStartTime
+            endTime = scheduleBlockEndTime
         }
+        MainActivity.didSchedulesUpdate.notify()
         super.onBackPressed()
     }
 
@@ -72,8 +68,8 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
 
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
         scheduleBlockPosition = intent.getIntExtra("schedule_block_position", -1)
-        val scheduleBlock = MainActivity.schedule?.value?.get(dayOfWeek)?.get(scheduleBlockPosition)
-        val schoolLesson = MainActivity.schoolLessons?.value?.get(scheduleBlock?.schoolLessonId)
+        val scheduleBlock = MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)
+        val schoolLesson = MainActivity.lessons[scheduleBlock?.schoolLessonId]
 
         if (scheduleBlock == null || schoolLesson == null) return
 

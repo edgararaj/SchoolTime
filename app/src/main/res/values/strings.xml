@@ -36,6 +36,7 @@
 
     <string name="weekend_school">Show weekends</string>
     <string name="lock_duration">Lock duration</string>
+    <string name="weather_location">Weather location</string>
 
     <!--    "<b>%s</b> lesson starts in <b>%d %s</b>"-->
     <!--    PT lesson starts in 5 minutes-->

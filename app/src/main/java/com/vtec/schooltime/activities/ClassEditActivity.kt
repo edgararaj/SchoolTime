@@ -19,7 +19,7 @@ import com.vtec.schooltime.databinding.ClassEditActivityBinding
 
 class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var binding: ClassEditActivityBinding
-    private var schoolClassId = 0
+    private var schoolClassId: String? = null
     private lateinit var schoolClassCard: ClassVH
 
     private fun setCardBackgroundColor(color: Int)
@@ -59,22 +59,15 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onBackPressed() {
         if (binding.classNameEdit.error.isNullOrEmpty())
-            MainActivity.schoolClasses.mutation {
-                var schoolClass: SchoolClass? = null
-                if (schoolClassId != -1) schoolClass = it.value?.get(schoolClassId)
+        {
+            val schoolClass = MainActivity.schoolClasses[schoolClassId]
 
-                if (schoolClass == null || schoolClassId == -1)
-                {
-                    it.value?.add(SchoolClass(schoolClassCard.name, schoolClassCard.color))
-                }
-                else
-                {
-                    schoolClass.apply {
-                        name = schoolClassCard.name
-                        color = schoolClassCard.color
-                    }
-                }
-            }
+            if (schoolClass != null && schoolClassId != schoolClassCard.name)
+                MainActivity.schoolClasses.remove(schoolClassId)
+
+            MainActivity.schoolClasses[schoolClassCard.name] = SchoolClass(schoolClassCard.color)
+            MainActivity.didSchoolClassesUpdate.notify()
+        }
         super.onBackPressed()
     }
 
@@ -95,17 +88,16 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        schoolClassId = intent.getIntExtra("school_class_id", -1)
-        if (schoolClassId != -1)
-        {
-            val schoolClass = MainActivity.schoolClasses.value?.get(schoolClassId)
-            binding.classNameEdit.setText(schoolClass?.name)
-        }
+        schoolClassId = intent.getStringExtra("school_class_id")
+        if (schoolClassId != null)
+            binding.classNameEdit.setText(schoolClassId)
         else
             binding.classNameEdit.error = getString(R.string.name_empty)
 
+        val schoolClass = MainActivity.schoolClasses[schoolClassId]
+
         schoolClassCard = ClassVH(binding.displayCard)
-        schoolClassCard.bind(MainActivity.schoolClasses, schoolClassId, ClassVH.Mode.Display)
+        schoolClassCard.bind(Pair(schoolClassId, schoolClass), null, ClassVH.Mode.Display)
 
         val color = schoolClassCard.color
         setHexColorEditText(color)
@@ -159,14 +151,11 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         binding.classNameEdit.doOnTextChanged { text, start, before, count ->
             schoolClassCard.name = text.toString()
 
-            var currentSchoolClassName: String? = null
-            if (schoolClassId != -1) currentSchoolClassName = MainActivity.schoolClasses.value?.get(schoolClassId)?.name
-
-            val schoolClassesWithSameName = MainActivity.schoolClasses.value?.filter { x -> x.name == text.toString() && x.name != currentSchoolClassName}
+            val schoolClassesWithSameName = MainActivity.schoolClasses.filter { x -> x.key == text.toString() && x.key != schoolClassId}
 
             if (text.isNullOrEmpty())
                 binding.classNameEdit.error = getString(R.string.name_empty)
-            else if (schoolClassesWithSameName?.size != 0)
+            else if (schoolClassesWithSameName.isNotEmpty())
                 binding.classNameEdit.error = getString(R.string.name_exists)
             else
                 binding.classNameEdit.error = null

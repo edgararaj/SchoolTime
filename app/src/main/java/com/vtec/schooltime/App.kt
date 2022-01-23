@@ -48,16 +48,17 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 class SchoolLesson(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
-class SchoolClass(var name: String, var color: Int)
+class SchoolClass(var color: Int)
 
 @Serializable
-class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime: Time)
+class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime: Time, var schoolClassId: String)
 {
     val delta get() = endTime - startTime
 }
 
-var fallbackSchoolClasses = mutableListOf(
-    SchoolClass("12º K", Color.parseColor("#7fe390"))
+var fallbackSchoolClasses = mutableMapOf(
+    "12º K" to SchoolClass(Color.parseColor("#7fe390")),
+    "12º L" to SchoolClass(Color.parseColor("#8ff390"))
 )
 
 val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemática", Color.parseColor("#7f98e3")),
@@ -69,35 +70,35 @@ val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemáti
 
 val fallbackSchedule = mutableMapOf(
     Calendar.MONDAY to mutableListOf(
-    ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
-    ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
-    ScheduleBlock("FSC", Time(17, 20), Time(18, 50)),
+    ScheduleBlock("MAT", Time(14, 0), Time(15, 30), "12º K"),
+    ScheduleBlock("EF", Time(15, 40), Time(17, 10), "12º K"),
+    ScheduleBlock("FSC", Time(17, 20), Time(18, 50), "12º K"),
     ),
     Calendar.TUESDAY to mutableListOf(
-        ScheduleBlock("PT", Time(13, 15), Time(13, 50)),
-        ScheduleBlock("PT", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("FSC", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("MAT", Time(17, 20), Time(18, 50)),
+        ScheduleBlock("PT", Time(13, 15), Time(13, 50), "12º K"),
+        ScheduleBlock("PT", Time(14, 0), Time(15, 30), "12º K"),
+        ScheduleBlock("FSC", Time(15, 40), Time(17, 10), "12º K"),
+        ScheduleBlock("MAT", Time(17, 20), Time(18, 50), "12º K"),
     ),
     Calendar.WEDNESDAY to mutableListOf(),
     Calendar.THURSDAY to mutableListOf(
-        ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("PT", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
+        ScheduleBlock("MAT", Time(14, 0), Time(15, 30), "12º K"),
+        ScheduleBlock("PT", Time(15, 40), Time(17, 10), "12º K"),
+        ScheduleBlock("AINF", Time(17, 20), Time(18, 50), "12º K"),
     ),
     Calendar.FRIDAY to mutableListOf(
-        ScheduleBlock("FSC", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
+        ScheduleBlock("FSC", Time(14, 0), Time(15, 30), "12º K"),
+        ScheduleBlock("EF", Time(15, 40), Time(17, 10), "12º K"),
+        ScheduleBlock("AINF", Time(17, 20), Time(18, 50), "12º K"),
     ),
     Calendar.SATURDAY to mutableListOf(),
     Calendar.SUNDAY to mutableListOf()
 )
 
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
-typealias Schedule = MutableLiveData<MutableMap<Int, DayOfWeekSchedule>>
-typealias SchoolLessons = MutableLiveData<MutableMap<String, SchoolLesson>>
-typealias SchoolClasses = MutableLiveData<MutableList<SchoolClass>>
+typealias SchoolSchedule = MutableMap<Int, DayOfWeekSchedule>
+typealias SchoolLessons = MutableMap<String, SchoolLesson>
+typealias SchoolClasses = MutableMap<String, SchoolClass>
 
 fun getContrastingColor(color: Int): Int
 {
@@ -127,6 +128,10 @@ fun getDarkerColor(color: Int): Int {
 fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
     actions(this)
     this.value = this.value
+}
+
+fun MutableLiveData<Boolean>.notify() {
+    this.value = this.value?.not()
 }
 
 class App : Application() {

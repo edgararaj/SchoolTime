@@ -6,19 +6,17 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.vtec.schooltime.R
 import com.vtec.schooltime.databinding.ActivitySecondaryBinding
 
-class LessonListActivity: AppCompatActivity() {
+class ClassListActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySecondaryBinding
 
-    class Contract : ActivityResultContract<Unit, Pair<String?, String?>>() {
-        override fun createIntent(context: Context, input: Unit?) = Intent(context, LessonListActivity::class.java)
+    class Contract : ActivityResultContract<Unit, String>() {
+        override fun createIntent(context: Context, input: Unit?) = Intent(context, ClassListActivity::class.java)
 
-        override fun parseResult(resultCode: Int, intent: Intent?) : Pair<String?, String?> {
-            val schoolLessonId = intent?.getStringExtra("school_lesson_id")
-            val schoolClassId = intent?.getStringExtra("school_class_id")
-            return Pair(schoolLessonId, schoolClassId)
-        }
+        override fun parseResult(resultCode: Int, intent: Intent?) = intent?.getStringExtra("school_class_id")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -37,5 +35,10 @@ class LessonListActivity: AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val graph = navController.navInflater.inflate(R.navigation.secondary_navigation)
+        graph.startDestination = R.id.nav_class_list
+        navController.graph = graph
     }
 }
