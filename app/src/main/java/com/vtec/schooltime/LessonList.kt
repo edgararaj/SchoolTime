@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.activities.LessonEditActivity
 import com.vtec.schooltime.databinding.UniversalCardBinding
 
-class LessonListAdapter(private val schoolLessons: SchoolLessons, private val mode: LessonVH.Mode) : RecyclerView.Adapter<LessonVH>() {
+class LessonListAdapter(private val schoolLessons: SchoolLessons, private val onSelectAndFinishActivity: ((String) -> Unit)?, private val mode: LessonVH.Mode) : RecyclerView.Adapter<LessonVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonVH {
         val binding = UniversalCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return LessonVH(binding)
@@ -18,7 +18,7 @@ class LessonListAdapter(private val schoolLessons: SchoolLessons, private val mo
 
     override fun onBindViewHolder(holder: LessonVH, position: Int) {
         schoolLessons.toList()[position].second.let {
-            holder.bind(it, mode)
+            holder.bind(it, onSelectAndFinishActivity, mode)
         }
     }
 
@@ -46,7 +46,7 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
         Display, EditOnClick, SelectAndFinishActivity
     }
 
-    fun bind(schoolLesson: SchoolLesson?, mode: Mode)
+    fun bind(schoolLesson: SchoolLesson?, onSelectAndFinishActivity: ((String) -> Unit)?, mode: Mode)
     {
         if (schoolLesson == null)
         {
@@ -68,6 +68,10 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
                     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                     vibrator.vibrate(App.littleVibrationEffect)
                     context.startActivity(intent)
+                }
+                else
+                {
+                    if (onSelectAndFinishActivity != null) onSelectAndFinishActivity(schoolLesson.shortName)
                 }
             }
         }

@@ -13,6 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
 import com.vtec.schooltime.activities.DayOfWeekEditActivity
 import com.vtec.schooltime.databinding.FragmentScheduleBinding
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class ScheduleFragment : Fragment() {
     private var _binding: FragmentScheduleBinding? = null
@@ -30,7 +36,7 @@ class ScheduleFragment : Fragment() {
         {
             val action = { adapterPosition: Int ->
                 val intent = Intent(context, DayOfWeekEditActivity::class.java).apply {
-                    putExtra("day_of_week", adapterPosition + 2)
+                    putExtra("day_of_week", if (adapterPosition == 6) 1 else (adapterPosition + 2))
                 }
                 startActivity(intent)
             }
@@ -45,6 +51,56 @@ class ScheduleFragment : Fragment() {
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
         binding.daysOfWeek.addItemDecoration(ItemDecoration(1))
+
+        binding.fabRestore.setOnClickListener {
+            val file = File(context?.getExternalFilesDir(null), "classes.json")
+            val outStream = FileOutputStream(file)
+            Json.encodeToStream(fallbackSchoolClasses, outStream)
+            MainActivity.schoolClasses = Json.decodeFromStream(FileInputStream(file))
+
+            MainActivity.lessons.clear()
+            run {
+                val lessonsFile = File(context?.getExternalFilesDir(null), "lessons.json")
+                val lessonsOutputStream = FileOutputStream(lessonsFile)
+                Json.encodeToStream(fallbackSchoolLessons, lessonsOutputStream)
+                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
+                init.forEach { (t, u) -> MainActivity.lessons[t] = u }
+            }
+
+            MainActivity.schedule.clear()
+            run {
+                val scheduleFile = File(context?.getExternalFilesDir(null), "schedule.json")
+                val scheduleOutputStream = FileOutputStream(scheduleFile)
+                Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
+                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+                init.forEach { (t, u) ->
+                    if (MainActivity.schedule[t] == null) MainActivity.schedule[t] = mutableListOf()
+                    u.forEach { MainActivity.schedule[t]?.add(it) }
+                }
+            }
+
+            MainActivity.schedule.forEach { entry ->
+                entry.value.sortBy { it.startTime }
+            }
+
+            MainActivity.didSchoolClassesUpdate.notify()
+            MainActivity.didLessonsUpdate.notify()
+            MainActivity.didSchedulesUpdate.notify()
+        }
+
+        binding.fabApply.setOnClickListener {
+            val file = File(context?.getExternalFilesDir(null), "classes.json")
+            val outStream = FileOutputStream(file)
+            Json.encodeToStream(MainActivity.schoolClasses, outStream)
+
+            val lessonsFile = File(context?.getExternalFilesDir(null), "lessons.json")
+            val lessonsOutputStream = FileOutputStream(lessonsFile)
+            Json.encodeToStream(MainActivity.lessons, lessonsOutputStream)
+
+            val scheduleFile = File(context?.getExternalFilesDir(null), "schedule.json")
+            val scheduleOutputStream = FileOutputStream(scheduleFile)
+            Json.encodeToStream(MainActivity.schedule, scheduleOutputStream)
+        }
 
         MainActivity.didLessonsUpdate.observe(viewLifecycleOwner, {
             adapter.notifyDataSetChanged()

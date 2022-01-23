@@ -61,25 +61,25 @@ class LessonEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener 
 
     override fun onBackPressed() {
         if (binding.shortLessonNameEdit.error.isNullOrEmpty() && binding.longLessonNameEdit.error.isNullOrEmpty())
-             {
-                val newSchoolLessonId = binding.shortLessonNameEdit.text.toString()
-                val schoolLesson = MainActivity.lessons[baseSchoolLessonId]
-                if (schoolLesson == null || newSchoolLessonId != baseSchoolLessonId)
-                {
-                    MainActivity.lessons[newSchoolLessonId] = SchoolLesson(newSchoolLessonId, schoolLessonCard.longName, schoolLessonCard.color)
-                    if (newSchoolLessonId != baseSchoolLessonId)
-                        MainActivity.lessons.remove(baseSchoolLessonId)
-
-                    MainActivity.didLessonsUpdate.notify()
-                }
-                else
-                {
-                    schoolLesson.apply {
-                        longName = schoolLessonCard.longName
-                        color = schoolLessonCard.color
-                    }
+        {
+            val newSchoolLessonId = binding.shortLessonNameEdit.text.toString()
+            val schoolLesson = MainActivity.lessons[baseSchoolLessonId]
+            if (schoolLesson == null || newSchoolLessonId != baseSchoolLessonId)
+            {
+                MainActivity.lessons[newSchoolLessonId] = SchoolLesson(newSchoolLessonId, schoolLessonCard.longName, schoolLessonCard.color)
+                if (newSchoolLessonId != baseSchoolLessonId)
+                    MainActivity.lessons.remove(baseSchoolLessonId)
+            }
+            else
+            {
+                schoolLesson.apply {
+                    longName = schoolLessonCard.longName
+                    color = schoolLessonCard.color
                 }
             }
+
+            MainActivity.didLessonsUpdate.notify()
+        }
         super.onBackPressed()
     }
 
@@ -109,7 +109,7 @@ class LessonEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener 
         val schoolLesson = MainActivity.lessons[baseSchoolLessonId]
 
         schoolLessonCard = LessonVH(binding.displayCard)
-        schoolLessonCard.bind(schoolLesson, LessonVH.Mode.Display)
+        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
         binding.longLessonNameEdit.setText(schoolLessonCard.longName)
 
         val color = schoolLesson?.color ?: Color.BLACK

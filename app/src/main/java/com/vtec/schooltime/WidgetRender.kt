@@ -17,6 +17,7 @@ import java.util.*
 
 fun updateWidget(context: Context, views: RemoteViews)
 {
+    /*
     GlobalScope.launch(Dispatchers.IO) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val city = preferences.getString("weather_location", "")
@@ -30,6 +31,7 @@ fun updateWidget(context: Context, views: RemoteViews)
             .getJSONObject("Day").getInt("Icon")
         Log.d("------------", "$forecastIcon")
     }
+     */
 
     var text = ""
     var bgColor = context.getColor(R.color.app_bg)

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Vibrator
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -45,11 +46,14 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.root.setBackgroundColor(bgColor)
             binding.lessonName.setTextColor(contrastyFgColor)
             binding.lessonName.text = schoolLesson.longName
-            binding.className.setTextColor(contrastyFgColor)
-            binding.className.text = scheduleBlock.schoolClassId
+            if (MainActivity.schoolClasses.size != 1)
+            {
+                binding.className.setTextColor(contrastyFgColor)
+                binding.className.text = scheduleBlock.schoolClassId
+            }
 
             val darkerBgColor = getDarkerColor(bgColor)
-            binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
+            //binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
             binding.innerCard.setBackgroundColor(darkerBgColor)
 
             binding.startTime.setTextColor(contrastyFgColor)

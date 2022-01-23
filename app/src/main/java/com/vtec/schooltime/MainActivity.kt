@@ -74,29 +74,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val file = File(getExternalFilesDir(null), "classes.json")
-        val outStream = FileOutputStream(file)
-        Json.encodeToStream(fallbackSchoolClasses, outStream)
         schoolClasses = Json.decodeFromStream(FileInputStream(file))
 
-        for (schoolClass in schoolClasses)
-        {
-            run {
-                val lessonsFile = File(getExternalFilesDir(null), "lessons_${schoolClass.key}.json")
-                val lessonsOutputStream = FileOutputStream(lessonsFile)
-                Json.encodeToStream(fallbackSchoolLessons, lessonsOutputStream)
-                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
-                init.forEach { (t, u) -> lessons[t] = u }
-            }
+        run {
+            val lessonsFile = File(getExternalFilesDir(null), "lessons.json")
+            val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
+            init.forEach { (t, u) -> lessons[t] = u }
+        }
 
-            run {
-                val scheduleFile = File(getExternalFilesDir(null), "schedule_${schoolClass.key}.json")
-                val scheduleOutputStream = FileOutputStream(scheduleFile)
-                Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
-                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
-                init.forEach { (t, u) ->
-                    if (schedule[t] == null) schedule[t] = mutableListOf()
-                    u.forEach { schedule[t]?.add(it) }
-                }
+        run {
+            val scheduleFile = File(getExternalFilesDir(null), "schedule.json")
+            val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+            init.forEach { (t, u) ->
+                if (schedule[t] == null) schedule[t] = mutableListOf()
+                u.forEach { schedule[t]?.add(it) }
             }
         }
 

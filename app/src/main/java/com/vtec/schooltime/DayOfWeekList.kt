@@ -2,6 +2,7 @@ package com.vtec.schooltime
 
 import android.content.Context
 import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,8 @@ class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val sho
     }
 
     override fun onBindViewHolder(holder: DayOfWeekVH, position: Int) {
-        val entry = schedule.toList()[position]
-        holder.bind(entry.second, entry.first, null)
+        val dayOfWeek = if (position == 6) 1 else (position + 2)
+        schedule[dayOfWeek]?.let { holder.bind(it, dayOfWeek, null) }
     }
 
     override fun getItemCount() = schedule.let { if (!showWeekend && it.size > 5) 5 else it.size }

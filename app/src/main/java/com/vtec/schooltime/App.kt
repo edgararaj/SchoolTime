@@ -57,8 +57,7 @@ class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime
 }
 
 var fallbackSchoolClasses = mutableMapOf(
-    "12º K" to SchoolClass(Color.parseColor("#7fe390")),
-    "12º L" to SchoolClass(Color.parseColor("#8ff390"))
+    "12º K" to SchoolClass(Color.parseColor("#7fe390"))
 )
 
 val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemática", Color.parseColor("#7f98e3")),
