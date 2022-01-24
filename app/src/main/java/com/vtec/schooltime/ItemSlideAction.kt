@@ -3,9 +3,7 @@ package com.vtec.schooltime
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Vibrator
-import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.graphics.toRectF
 import androidx.recyclerview.widget.ItemTouchHelper

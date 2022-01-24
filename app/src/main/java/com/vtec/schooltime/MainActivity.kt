@@ -2,6 +2,7 @@ package com.vtec.schooltime
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
@@ -18,6 +19,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.util.*
 
 class ItemDecoration(private val columns: Int): RecyclerView.ItemDecoration()
@@ -71,22 +73,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val file = File(getExternalFilesDir(null), "classes.json")
-        schoolClasses = Json.decodeFromStream(FileInputStream(file))
+        try {
+            val file = File(getExternalFilesDir(null), "classes.json")
+            schoolClasses = Json.decodeFromStream(FileInputStream(file))
 
-        run {
-            val lessonsFile = File(getExternalFilesDir(null), "lessons.json")
-            val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
-            init.forEach { (t, u) -> lessons[t] = u }
-        }
-
-        run {
-            val scheduleFile = File(getExternalFilesDir(null), "schedule.json")
-            val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
-            init.forEach { (t, u) ->
-                if (schedule[t] == null) schedule[t] = mutableListOf()
-                u.forEach { schedule[t]?.add(it) }
+            lessons.clear()
+            run {
+                val lessonsFile = File(getExternalFilesDir(null), "lessons.json")
+                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
+                init.forEach { (t, u) -> lessons[t] = u }
             }
+
+            schedule.clear()
+            run {
+                val scheduleFile = File(getExternalFilesDir(null), "schedule.json")
+                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+                init.forEach { (t, u) ->
+                    if (schedule[t] == null) schedule[t] = mutableListOf()
+                    u.forEach { schedule[t]?.add(it) }
+                }
+            }
+        } catch (ex: FileNotFoundException)
+        {
+            Log.d("FileIO", "App data not found!")
         }
 
         schedule.forEach { entry ->

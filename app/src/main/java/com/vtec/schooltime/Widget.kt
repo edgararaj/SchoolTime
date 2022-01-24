@@ -18,18 +18,20 @@ class Widget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
-        context?.applicationContext?.let {
-            it.startForegroundService(Intent(it, WidgetUpdateService::class.java))
+        if (context != null)
+        {
+            context.startService(Intent(context, WidgetUpdateService::class.java))
 
             val observer = Observer<Any> {
                 val views = RemoteViews(context.packageName, R.layout.widget)
-                updateWidget(context, views)
+                drawWidget(context, views)
                 val widget = ComponentName(context, Widget::class.java)
                 AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
             }
 
             MainActivity.didLessonsUpdate.observeForever(observer)
             MainActivity.didSchedulesUpdate.observeForever(observer)
+
         }
     }
 
@@ -50,7 +52,7 @@ class Widget : AppWidgetProvider() {
         {
             appWidgetIds?.forEach { appWidgetId ->
                 val views = RemoteViews(context.packageName, R.layout.widget)
-                updateWidget(context, views)
+                drawWidget(context, views)
                 appWidgetManager?.updateAppWidget(appWidgetId, views)
             }
         }
@@ -75,10 +77,7 @@ class Widget : AppWidgetProvider() {
                 }
                 sp.edit().putLong("firstClickTime", System.currentTimeMillis()).apply()
 
-                val views = RemoteViews(context.packageName, R.layout.widget)
-                updateWidget(context, views)
-                val widget = ComponentName(context, Widget::class.java)
-                AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+                updateWidget(context)
             }
         }
     }

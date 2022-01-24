@@ -5,9 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.os.VibrationEffect
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import kotlinx.serialization.Serializable
 import java.util.*
@@ -142,7 +140,7 @@ class App : Application() {
     private fun createNotificationChannel(context: Context)
     {
         val channel = NotificationChannel(notificationChannelId, "Example", NotificationManager.IMPORTANCE_LOW)
-        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager = context.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
     }
 }

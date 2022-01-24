@@ -2,11 +2,9 @@ package com.vtec.schooltime
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.activities.LessonEditActivity
 import com.vtec.schooltime.activities.ScheduleBlockEditActivity

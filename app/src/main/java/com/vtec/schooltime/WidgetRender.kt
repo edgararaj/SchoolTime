@@ -1,119 +1,118 @@
 package com.vtec.schooltime
 
 import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.text.Html
+import android.util.Log
 import android.widget.RemoteViews
+import androidx.preference.PreferenceManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.FileNotFoundException
+import java.net.URL
 import java.util.*
 
-fun updateWidget(context: Context, views: RemoteViews)
+fun getTextAndColor(context: Context): Pair<String, Int>
 {
-    /*
-    GlobalScope.launch(Dispatchers.IO) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val city = preferences.getString("weather_location", "")
-        val apikey = "GnGNpZOydb8WwGfJc9q5tFh2xaABmxGc"
-        val locationSearch =
-            URL("https://dataservice.accuweather.com/locations/v1/cities/search?q=$city&apikey=$apikey").readText()
-        val locationKey = JSONArray(locationSearch).getJSONObject(0).getInt("Key")
-        val forecast =
-            URL("https://dataservice.accuweather.com/forecasts/v1/daily/1day/$locationKey?apikey=$apikey").readText()
-        val forecastIcon = JSONObject(forecast).getJSONArray("DailyForecasts").getJSONObject(0)
-            .getJSONObject("Day").getInt("Icon")
-        Log.d("------------", "$forecastIcon")
-    }
-     */
-
     var text = ""
     var bgColor = context.getColor(R.color.app_bg)
 
-    run {
-        val calendar = Calendar.getInstance()
-        val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-        val schedule = MainActivity.schedule
-        val schoolLessons = MainActivity.lessons
+    val calendar = Calendar.getInstance()
+    val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+    val schedule = MainActivity.schedule
+    val schoolLessons = MainActivity.lessons
 
-        val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
-        for (scheduleBlock in scheduleBlocks) {
-            val startDeltaTime = scheduleBlock.startTime - currentTime
-            val language = Locale.getDefault().language
-            if (startDeltaTime > 0) {
+    val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+    for (scheduleBlock in scheduleBlocks) {
+        val startDeltaTime = scheduleBlock.startTime - currentTime
+        val language = Locale.getDefault().language
+        if (startDeltaTime > 0) {
+            val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId]
+            if (schoolLesson != null) {
+                val time =
+                    if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
+                val timeNameResId =
+                    if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
+                val timeName = context.getString(timeNameResId)
+                val widgetLessonStartingString =
+                    context.getString(R.string.widget_lesson_starting)
+
+                text = when (language) {
+                    "pt" -> widgetLessonStartingString.format(
+                        schoolLesson.shortName,
+                        time,
+                        timeName
+                    )
+                    else -> widgetLessonStartingString.format(
+                        schoolLesson.shortName,
+                        time,
+                        timeName
+                    )
+                }
+            }
+            break
+        } else {
+            val endDeltaTime = scheduleBlock.endTime - currentTime
+            if (endDeltaTime > 0) {
                 val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId]
                 if (schoolLesson != null) {
-                    val time =
-                        if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
+                    bgColor = schoolLesson.color
                     val timeNameResId =
-                        if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
+                        if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
                     val timeName = context.getString(timeNameResId)
-                    val widgetLessonStartingString =
-                        context.getString(R.string.widget_lesson_starting)
+                    val faltar =
+                        if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
 
                     text = when (language) {
-                        "pt" -> widgetLessonStartingString.format(
-                            schoolLesson.shortName,
-                            time,
-                            timeName
-                        )
-                        else -> widgetLessonStartingString.format(
-                            schoolLesson.shortName,
-                            time,
-                            timeName
-                        )
+                        "pt" -> if (endDeltaTime.hour == 0)
+                            context.getString(R.string.widget_lesson_ending_minutes).format(
+                                faltar,
+                                endDeltaTime.minute,
+                                timeName,
+                                schoolLesson.shortName
+                            )
+                        else
+                            context.getString(R.string.widget_lesson_ending_hours).format(
+                                faltar,
+                                endDeltaTime.hour,
+                                endDeltaTime.minute,
+                                schoolLesson.shortName
+                            )
+                        else -> if (endDeltaTime.hour == 0)
+                            context.getString(R.string.widget_lesson_ending_minutes)
+                                .format(endDeltaTime.minute, timeName, schoolLesson.shortName)
+                        else
+                            context.getString(R.string.widget_lesson_ending_hours).format(
+                                endDeltaTime.hour,
+                                endDeltaTime.minute,
+                                schoolLesson.shortName
+                            )
                     }
                 }
                 break
-            } else {
-                val endDeltaTime = scheduleBlock.endTime - currentTime
-                if (endDeltaTime > 0) {
-                    val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId]
-                    if (schoolLesson != null) {
-                        bgColor = schoolLesson.color
-                        val timeNameResId =
-                            if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
-                        val timeName = context.getString(timeNameResId)
-                        val faltar =
-                            if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
-
-                        text = when (language) {
-                            "pt" -> if (endDeltaTime.hour == 0)
-                                context.getString(R.string.widget_lesson_ending_minutes).format(
-                                    faltar,
-                                    endDeltaTime.minute,
-                                    timeName,
-                                    schoolLesson.shortName
-                                )
-                            else
-                                context.getString(R.string.widget_lesson_ending_hours).format(
-                                    faltar,
-                                    endDeltaTime.hour,
-                                    endDeltaTime.minute,
-                                    schoolLesson.shortName
-                                )
-                            else -> if (endDeltaTime.hour == 0)
-                                context.getString(R.string.widget_lesson_ending_minutes)
-                                    .format(endDeltaTime.minute, timeName, schoolLesson.shortName)
-                            else
-                                context.getString(R.string.widget_lesson_ending_hours).format(
-                                    endDeltaTime.hour,
-                                    endDeltaTime.minute,
-                                    schoolLesson.shortName
-                                )
-                        }
-                    }
-                    break
-                } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
-                    val deltaTime = currentTime - scheduleBlock.endTime
-                    if (deltaTime <= Time(0, 5)) {
-                        text = "Acabaram-se as aulas por hoje!<br>Parabéns! 🎆"
-                        bgColor = context.getColor(R.color.finished)
-                    }
+            } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
+                val deltaTime = currentTime - scheduleBlock.endTime
+                if (deltaTime <= Time(0, 5)) {
+                    text = "Acabaram-se as aulas por hoje!<br>Parabéns! 🎆"
+                    bgColor = context.getColor(R.color.finished)
                 }
             }
         }
     }
 
+    return Pair(text, bgColor)
+}
+
+fun drawWidget(context: Context, views: RemoteViews)
+{
+    val (text, bgColor) = getTextAndColor(context)
     views.setTextViewText(R.id.text, Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT))
     views.setInt(R.id.bg, "setColorFilter", bgColor)
     val contrastyFgColor = getContrastingColor(bgColor)
@@ -131,4 +130,41 @@ fun updateWidget(context: Context, views: RemoteViews)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         views.setOnClickPendingIntent(R.id.edit_button, pendingIntent)
     }
+}
+
+fun updateWidget(context: Context)
+{
+    val views = RemoteViews(context.packageName, R.layout.widget)
+
+    GlobalScope.launch(Dispatchers.IO) {
+        val imageRes = getWeatherForecastImageRes(context)
+        drawWidget(context, views)
+        views.setImageViewResource(R.id.edit_button, imageRes)
+        val widget = ComponentName(context, Widget::class.java)
+        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+    }
+
+    drawWidget(context, views)
+    val widget = ComponentName(context, Widget::class.java)
+    AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+}
+
+fun getWeatherForecastImageRes(context: Context): Int
+{
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val city = preferences.getString("weather_location", "")
+    val apikey = "mCVa6F7nH7OaRcuK9RDoC4PrcL7JvzFE"
+    var result = R.drawable.edit_icon
+    try {
+        val locationSearch = URL("https://dataservice.accuweather.com/locations/v1/cities/search?q=$city&apikey=$apikey").readText()
+        val locationKey = JSONArray(locationSearch).getJSONObject(0).getInt("Key")
+        val forecast = URL("https://dataservice.accuweather.com/forecasts/v1/daily/1day/$locationKey?apikey=$apikey").readText()
+        val hasPrecipitation = JSONObject(forecast).getJSONArray("DailyForecasts").getJSONObject(0).getJSONObject("Day").getBoolean("HasPrecipitation")
+        if (hasPrecipitation) result = R.drawable.umbrella_icon
+    } catch (ex: FileNotFoundException)
+    {
+        Log.d("HTTPS", "Failed to fetch weather forecast!")
+    }
+
+    return result
 }
