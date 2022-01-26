@@ -37,6 +37,7 @@ class WidgetUpdateService: Service() {
         applicationContext.registerReceiver(broadcastReceiver, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
             addAction(Intent.ACTION_TIME_TICK)
+            addAction(Intent.ACTION_SCREEN_ON)
         })
         return START_NOT_STICKY
     }

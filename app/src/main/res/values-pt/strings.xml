@@ -7,6 +7,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="settings">Configurações</string>
+    <string name="weather">Meteorologia</string>
+    <string name="city">Cidade</string>
+    <string name="widget">Widget</string>
 
     <string name="schedule">Horário</string>
     <string name="lesson_list">Disciplinas</string>
@@ -29,14 +32,24 @@
     <string name="duration">Duração</string>
     <string name="unnamed">Sem nome</string>
 
+    <string name="appearance">Aparência</string>
+
     <string name="minute">minuto</string>
     <string name="minutes">minutos</string>
     <string name="hour">hora</string>
     <string name="hours">horas</string>
 
+    <string name="theme">Tema</string>
+    <string name="dark">Escuro</string>
+    <string name="light">Claro</string>
+    <string name="follow_system">Seguir o sistema</string>
+
     <string name="weekend_school">Mostrar fim de semana</string>
     <string name="lock_duration">Bloquear duração</string>
-    <string name="weather_location">Localização climática</string>
+    <string name="weather_location">Localização meteorológica</string>
+    <string name="hide_weather_icon">Esconder icone</string>
+    <string name="open_link">Abrir endereço em duplo clique</string>
+    <string name="customization">Costumização</string>
 
     <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
     <!--    Aula de PT começa em 5 minutos-->

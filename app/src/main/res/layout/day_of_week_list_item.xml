@@ -13,7 +13,7 @@
             android:id="@+id/day_of_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="12dp"
             android:textAlignment="center"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="10dp"
                 android:src="@drawable/add_icon"
                 app:tint="@color/app_fg" />
 

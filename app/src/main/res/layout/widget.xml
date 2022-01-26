@@ -8,13 +8,14 @@
 		android:id="@+id/bg"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:alpha="0.3"
 		android:src="@drawable/round_corners_bg"/>
 
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="horizontal"
-		android:layout_marginHorizontal="20dp"
+		android:layout_marginHorizontal="15dp"
 		android:gravity="center">
 
 		<TextView
@@ -28,10 +29,10 @@
 			android:layout_marginRight="10dp"/>
 
 		<ImageView
-			android:id="@+id/edit_button"
-			android:layout_width="27dp"
-			android:layout_height="27dp"
-			android:src="@drawable/edit_icon"/>
+			android:id="@+id/activity_button"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/widget_edit_icon"/>
 
 	</LinearLayout>
 

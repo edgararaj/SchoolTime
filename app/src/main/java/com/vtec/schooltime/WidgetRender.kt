@@ -12,7 +12,6 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.net.URL
@@ -110,14 +109,17 @@ fun getTextAndColor(context: Context): Pair<String, Int>
     return Pair(text, bgColor)
 }
 
-fun drawWidget(context: Context, views: RemoteViews)
+fun updateSchoolWidget(context: Context, views: RemoteViews)
 {
     val (text, bgColor) = getTextAndColor(context)
+//    if (bgColor == context.getColor(R.color.app_bg))
+//        views.setViewVisibility(R.id.bg, View.GONE)
+
     views.setTextViewText(R.id.text, Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT))
     views.setInt(R.id.bg, "setColorFilter", bgColor)
     val contrastyFgColor = getContrastingColor(bgColor)
     views.setTextColor(R.id.text, contrastyFgColor)
-    views.setInt(R.id.edit_button, "setColorFilter", contrastyFgColor)
+    views.setInt(R.id.activity_button, "setColorFilter", contrastyFgColor)
 
     run {
         val intent = Intent(context, Widget::class.java).apply { action = tapAction }
@@ -128,7 +130,26 @@ fun drawWidget(context: Context, views: RemoteViews)
     run {
         val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        views.setOnClickPendingIntent(R.id.edit_button, pendingIntent)
+        views.setOnClickPendingIntent(R.id.activity_button, pendingIntent)
+    }
+}
+
+fun drawWidgetActivityButton(context: Context, views: RemoteViews)
+{
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    if (preferences.getBoolean("hide_weather", false)) {
+        views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
+        val widget = ComponentName(context, Widget::class.java)
+        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+    }
+    else
+    {
+        GlobalScope.launch(Dispatchers.IO) {
+            val resId = getWidgetActivityButtonRes(context)
+            views.setImageViewResource(R.id.activity_button, resId)
+            val widget = ComponentName(context, Widget::class.java)
+            AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+        }
     }
 }
 
@@ -136,35 +157,70 @@ fun updateWidget(context: Context)
 {
     val views = RemoteViews(context.packageName, R.layout.widget)
 
-    GlobalScope.launch(Dispatchers.IO) {
-        val imageRes = getWeatherForecastImageRes(context)
-        drawWidget(context, views)
-        views.setImageViewResource(R.id.edit_button, imageRes)
-        val widget = ComponentName(context, Widget::class.java)
-        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
-    }
+    drawWidgetActivityButton(context, views)
+    updateSchoolWidget(context, views)
 
-    drawWidget(context, views)
     val widget = ComponentName(context, Widget::class.java)
     AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
 }
 
-fun getWeatherForecastImageRes(context: Context): Int
+/*
+val iconBitmapCache = mutableMapOf<String, Bitmap>()
+
+fun getWeatherForecastIconBitmap(context: Context): Bitmap?
 {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    val city = preferences.getString("weather_location", "")
-    val apikey = "mCVa6F7nH7OaRcuK9RDoC4PrcL7JvzFE"
-    var result = R.drawable.edit_icon
+    val iconCode = getWeatherForecastIconCode(context) ?: return null
+    iconBitmapCache[iconCode]?.let { return it }
+
+    var bitmap: Bitmap? = null
+
     try {
-        val locationSearch = URL("https://dataservice.accuweather.com/locations/v1/cities/search?q=$city&apikey=$apikey").readText()
-        val locationKey = JSONArray(locationSearch).getJSONObject(0).getInt("Key")
-        val forecast = URL("https://dataservice.accuweather.com/forecasts/v1/daily/1day/$locationKey?apikey=$apikey").readText()
-        val hasPrecipitation = JSONObject(forecast).getJSONArray("DailyForecasts").getJSONObject(0).getJSONObject("Day").getBoolean("HasPrecipitation")
-        if (hasPrecipitation) result = R.drawable.umbrella_icon
-    } catch (ex: FileNotFoundException)
+        val imageStream = URL("https://openweathermap.org/img/wn/$iconCode@2x.png").openConnection().getInputStream()
+        bitmap = BitmapFactory.decodeStream(imageStream)
+        if (bitmap != null) iconBitmapCache[iconCode] = bitmap
+    } catch (ex: FileNotFoundException) {
+        Log.d("HTTPS", "Failed to fetch weather forecast icon!")
+    }
+
+    return bitmap
+}
+ */
+
+
+fun getWidgetActivityButtonRes(context: Context): Int
+{
+    val iconCode = getWeatherForecastIconCode(context) ?: return R.drawable.widget_edit_icon
+
+    return when (iconCode)
     {
+        "01d" -> R.drawable.clear_sky_day_icon
+        "01n" -> R.drawable.clear_sky_night_icon
+        "02d" -> R.drawable.few_clouds_day_icon
+        "02n" -> R.drawable.few_clouds_night_icon
+        "03d", "03n" -> R.drawable.scattered_clouds_icon
+        "04d", "04n" -> R.drawable.broken_clouds_icon
+        "09d", "09n" -> R.drawable.shower_rain_icon
+        "10d", "10n" -> R.drawable.rain_icon
+        "11d", "11n" -> R.drawable.thunderstorm_icon
+        "13d", "13n" -> R.drawable.snow_icon
+        "50d", "50n" -> R.drawable.mist_icon
+        else -> R.drawable.widget_edit_icon
+    }
+}
+
+fun getWeatherForecastIconCode(context: Context): String?
+{
+    val lat = MainActivity.weatherLocation.value?.lat
+    val lon = MainActivity.weatherLocation.value?.lon
+    val apikey = "cc752389952464c89015c0c7aa74fab1"
+    var iconCode: String? = null
+
+    try {
+        val forecast = URL("https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&cnt=1&units=metric&appid=$apikey").readText()
+        iconCode = JSONObject(forecast).getJSONArray("list").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getString("icon")
+    } catch (ex: FileNotFoundException) {
         Log.d("HTTPS", "Failed to fetch weather forecast!")
     }
 
-    return result
+    return iconCode
 }

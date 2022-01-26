@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-    <SwitchPreference
-        app:defaultValue="false"
-        app:key="weekend_school"
+    <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/weekend_school"/>
-    <SwitchPreference
-        app:defaultValue="false"
-        app:key="lock_duration"
+        app:title="@string/schedule">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="weekend_school"
+            app:iconSpaceReserved="false"
+            app:title="@string/weekend_school"/>
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="lock_duration"
+            app:iconSpaceReserved="false"
+            app:title="@string/lock_duration"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/lock_duration"/>
-    <EditTextPreference
-        app:defaultValue="Braga"
-        app:key="weather_location"
+        app:title="@string/appearance">
+        <ListPreference
+            app:defaultValue="follow_system"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:key="theme"
+            app:iconSpaceReserved="false"
+            app:title="@string/theme"
+            app:useSimpleSummaryProvider="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/weather_location"/>
-
+        app:title="@string/widget">
+<!--        <Preference-->
+<!--            app:key="widget_customization"-->
+<!--            app:iconSpaceReserved="false"-->
+<!--            app:title="@string/customization"/>-->
+        <EditTextPreference
+            app:defaultValue="https://aecarlosamarante.pt/Horarios_ESCA/Tur1A_12K.pdf"
+            app:key="open_link"
+            app:iconSpaceReserved="false"
+            app:title="@string/open_link"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/weather">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="hide_weather"
+            app:iconSpaceReserved="false"
+            app:title="@string/hide_weather_icon"/>
+        <Preference
+            app:key="weather_location"
+            app:iconSpaceReserved="false"
+            app:title="@string/weather_location"/>
+    </PreferenceCategory>
 </PreferenceScreen>

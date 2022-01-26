@@ -76,7 +76,7 @@ class BounceEdgeEffectFactory : RecyclerView.EdgeEffectFactory() {
             private fun createAnim() = SpringAnimation(recyclerView, SpringAnimation.TRANSLATION_Y)
                 .setSpring(SpringForce()
                     .setFinalPosition(0f)
-                    .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY)
+                    .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
                     .setStiffness(SpringForce.STIFFNESS_LOW)
                 )
 

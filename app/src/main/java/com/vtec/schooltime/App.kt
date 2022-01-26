@@ -4,9 +4,13 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.VibrationEffect
+import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
 import kotlinx.serialization.Serializable
 import java.util.*
 
@@ -122,11 +126,16 @@ fun getDarkerColor(color: Int): Int {
     })
 }
 
-fun MutableLiveData<Boolean>.notify() {
-    this.value = this.value?.not()
+fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
+    actions(this)
+    this.value = this.value
 }
 
-class App : Application() {
+fun <T> MutableLiveData<T>.notify() {
+    this.value = this.value
+}
+
+class App : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         const val notificationChannelId = "SchoolTime"
         val littleVibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
@@ -135,6 +144,19 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel(applicationContext)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        updateTheme(preferences.getString("theme", "") ?: "")
+        preferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    private fun updateTheme(themeKey: String)
+    {
+        when (themeKey) {
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
     }
 
     private fun createNotificationChannel(context: Context)
@@ -142,5 +164,9 @@ class App : Application() {
         val channel = NotificationChannel(notificationChannelId, "Example", NotificationManager.IMPORTANCE_LOW)
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == "theme") updateTheme(sharedPreferences?.getString(key, "") ?: "")
     }
 }

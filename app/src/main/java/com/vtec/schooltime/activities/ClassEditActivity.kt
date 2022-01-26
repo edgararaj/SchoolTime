@@ -138,7 +138,7 @@ class ClassEditActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                         setSlidersProgress(color)
 
                         // occult keyboard
-                        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        val inputMethodManager = getSystemService(InputMethodManager::class.java)
                         inputMethodManager.hideSoftInputFromWindow(binding.hexColorEdit.windowToken, 0)
 
                         return true

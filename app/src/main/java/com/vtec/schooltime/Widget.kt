@@ -2,13 +2,12 @@ package com.vtec.schooltime
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 
 const val tapAction = "com.vtec.schooltime.TAP"
 
@@ -22,22 +21,22 @@ class Widget : AppWidgetProvider() {
         {
             context.startService(Intent(context, WidgetUpdateService::class.java))
 
-            val observer = Observer<Any> {
-                val views = RemoteViews(context.packageName, R.layout.widget)
-                drawWidget(context, views)
-                val widget = ComponentName(context, Widget::class.java)
-                AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+            MainActivity.didLessonsUpdate.observeForever {
+                updateWidget(context)
             }
-
-            MainActivity.didLessonsUpdate.observeForever(observer)
-            MainActivity.didSchedulesUpdate.observeForever(observer)
-
+            MainActivity.didSchedulesUpdate.observeForever {
+                updateWidget(context)
+            }
+            MainActivity.weatherLocation.observeForever {
+                val views = RemoteViews(context.packageName, R.layout.widget)
+                drawWidgetActivityButton(context, views)
+            }
         }
     }
 
     override fun onDisabled(context: Context?) {
         super.onDisabled(context)
-        context?.applicationContext?.let {
+        context?.let {
             it.stopService(Intent(it, WidgetUpdateService::class.java))
         }
     }
@@ -52,7 +51,7 @@ class Widget : AppWidgetProvider() {
         {
             appWidgetIds?.forEach { appWidgetId ->
                 val views = RemoteViews(context.packageName, R.layout.widget)
-                drawWidget(context, views)
+                updateSchoolWidget(context, views)
                 appWidgetManager?.updateAppWidget(appWidgetId, views)
             }
         }
@@ -69,9 +68,14 @@ class Widget : AppWidgetProvider() {
 
                 if (System.currentTimeMillis() - sp.getLong("firstClickTime", 0) <= doubleClickWindow)
                 {
-                    Intent(Intent.ACTION_VIEW, Uri.parse("https://aecarlosamarante.pt/Horarios_ESCA/Tur1A_12K.pdf")).let {
-                        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(it)
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                    val link = preferences.getString("open_link", "") ?: ""
+                    if (link.isNotEmpty())
+                    {
+                        Intent(Intent.ACTION_VIEW, Uri.parse(link)).let {
+                            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(it)
+                        }
                     }
                     return
                 }

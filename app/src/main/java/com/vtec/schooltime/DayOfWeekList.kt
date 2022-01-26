@@ -47,7 +47,7 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
         {
             binding.addButton.visibility = View.VISIBLE
             binding.addButton.setOnClickListener {
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                val vibrator = context.getSystemService(Vibrator::class.java)
                 vibrator.vibrate(App.littleVibrationEffect)
                 editLauncher.launch(Unit)
             }

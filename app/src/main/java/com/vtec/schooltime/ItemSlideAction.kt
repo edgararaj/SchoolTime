@@ -15,7 +15,7 @@ import kotlin.math.tanh
 class ItemSlideAction(private val context: Context, private val editIcon: Drawable, private val deleteAction: Boolean, private val action: (Int) -> Unit, private val onMoveEvent: ((recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) -> Boolean)?) : ItemTouchHelper.Callback() {
     private var slideActionState = false
     private var slideComplete = false
-    private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    private val vibrator = context.getSystemService(Vibrator::class.java)
     private val baseBgColor = context.getColor(R.color.app_bg2)
 
     override fun getMovementFlags(

@@ -10,7 +10,8 @@
 
     <include
         android:id="@+id/school_lesson_card"
-        layout="@layout/universal_card"/>
+        layout="@layout/universal_card"
+        style="@style/SmallCard"/>
 
     <LinearLayout
         android:layout_width="match_parent"

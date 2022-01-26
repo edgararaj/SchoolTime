@@ -7,6 +7,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="settings">Settings</string>
+    <string name="weather">Weather</string>
+    <string name="city">City</string>
+    <string name="widget">Widget</string>
 
     <string name="schedule">Schedule</string>
     <string name="lesson_list">Lessons</string>
@@ -34,9 +37,19 @@
     <string name="hour">hour</string>
     <string name="hours">hours</string>
 
+    <string name="appearance">Appearance</string>
+
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="follow_system">Follow system</string>
+
     <string name="weekend_school">Show weekends</string>
     <string name="lock_duration">Lock duration</string>
     <string name="weather_location">Weather location</string>
+    <string name="hide_weather_icon">Hide weather icon</string>
+    <string name="open_link">Open link on double tap</string>
+    <string name="customization">Customization</string>
 
     <!--    "<b>%s</b> lesson starts in <b>%d %s</b>"-->
     <!--    PT lesson starts in 5 minutes-->

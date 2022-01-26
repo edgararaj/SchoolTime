@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.view.marginTop
@@ -42,12 +43,15 @@ class ItemDecoration(private val columns: Int): RecyclerView.ItemDecoration()
     }
 }
 
+data class LocationEntry(val name: String, val country: String, val lat: Double, val lon: Double)
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     companion object {
+        var weatherLocation: MutableLiveData<LocationEntry> = MutableLiveData(LocationEntry("Braga", "PT", 41.5510583, -8.4280045))
         var schoolClasses: SchoolClasses = mutableMapOf()
         var schedule: SchoolSchedule = mutableMapOf()
         val lessons: SchoolLessons = mutableMapOf()

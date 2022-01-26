@@ -58,12 +58,12 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.endTime.setTextColor(contrastyFgColor)
             binding.endTime.text = scheduleBlock.endTime.toString()
 
+            val vibrator = context.getSystemService(Vibrator::class.java)
             binding.root.setOnClickListener {
                 val intent = Intent(context, LessonEditActivity::class.java).apply {
                     putExtra("school_lesson_id", scheduleBlock.schoolLessonId)
                 }
 
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 vibrator.vibrate(App.littleVibrationEffect)
                 context.startActivity(intent)
             }
@@ -74,7 +74,6 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
                     putExtra("schedule_block_position", adapterPosition)
                 }
 
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 vibrator.vibrate(App.littleVibrationEffect)
                 context.startActivity(intent)
             }

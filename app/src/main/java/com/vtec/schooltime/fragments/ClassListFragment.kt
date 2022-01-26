@@ -60,14 +60,14 @@ class ClassListFragment : Fragment() {
             binding.schoolClasses.edgeEffectFactory = BounceEdgeEffectFactory()
             binding.schoolClasses.addItemDecoration(ItemDecoration(2))
 
-            binding.fab.setOnClickListener {
+            binding.fab.root.setOnClickListener {
                 val intent = Intent(requireContext(), ClassEditActivity::class.java).apply { }
 
-                val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                val vibrator = requireContext().getSystemService(Vibrator::class.java)
                 vibrator.vibrate(App.littleVibrationEffect)
                 startActivity(intent)
             }
-            binding.fab.show()
+            binding.fab.root.show()
 
             MainActivity.didSchoolClassesUpdate.observe(viewLifecycleOwner, {
                 adapter.notifyDataSetChanged()

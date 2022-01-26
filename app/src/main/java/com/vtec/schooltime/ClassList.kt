@@ -64,7 +64,7 @@ class ClassVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHold
                         putExtra("school_class_id", schoolClass.first)
                     }
 
-                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                    val vibrator = context.getSystemService(Vibrator::class.java)
                     vibrator.vibrate(App.littleVibrationEffect)
                     context.startActivity(intent)
                 }
