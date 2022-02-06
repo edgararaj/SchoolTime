@@ -44,9 +44,13 @@
     <string name="light">Light</string>
     <string name="follow_system">Follow system</string>
 
+    <string name="icon">Icon</string>
+    <string name="edit_icon">Edit icon</string>
+    <string name="no_icon">No icon</string>
+
     <string name="weekend_school">Show weekends</string>
     <string name="lock_duration">Lock duration</string>
-    <string name="weather_location">Weather location</string>
+    <string name="location">Location</string>
     <string name="hide_weather_icon">Hide weather icon</string>
     <string name="open_link">Open link on double tap</string>
     <string name="customization">Customization</string>
@@ -56,7 +60,7 @@
     <string name="widget_lesson_starting">&lt;b&gt;%s&lt;/b&gt; lesson starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
     <!--    "<b>%02d:%02d</b> until <b>%s</b> ends"-->
     <!--    2:50 until PT ends-->
-    <string name="widget_lesson_ending_hours">&lt;b&gt;%02d:%02d&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>
+    <string name="widget_lesson_ending_hours" formatted="false"><b>%02d:%02d</b> until <b>%s</b> ends</string>
     <!--    "<b>%d %s</b> until <b>%s</b> ends"-->
     <!--    5 minutes until PT ends-->
     <string name="widget_lesson_ending_minutes">&lt;b&gt;%d %s&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.VibrationEffect
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
@@ -119,6 +118,19 @@ fun getColorTransitionState(value1: Int, value2: Int, fraction: Float): Int
     )
 }
 
+fun getColorsTransitionState(values: IntArray, fraction: Float): Int
+{
+    val valuesIndex = ((values.size - 1) * fraction).toInt()
+    if (valuesIndex > 0)
+    {
+        return getColorTransitionState(values[valuesIndex - 1], values[valuesIndex], fraction)
+    }
+    else if (values.size > 1)
+        return getColorTransitionState(values[valuesIndex], values[valuesIndex + 1], fraction)
+
+    return 0
+}
+
 fun getDarkerColor(color: Int): Int {
     return Color.HSVToColor(FloatArray(3).apply {
         Color.colorToHSV(color, this)
@@ -161,7 +173,7 @@ class App : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private fun createNotificationChannel(context: Context)
     {
-        val channel = NotificationChannel(notificationChannelId, "Example", NotificationManager.IMPORTANCE_LOW)
+        val channel = NotificationChannel(notificationChannelId, notificationChannelId, NotificationManager.IMPORTANCE_LOW)
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
     }

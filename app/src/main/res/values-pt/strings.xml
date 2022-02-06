@@ -44,9 +44,13 @@
     <string name="light">Claro</string>
     <string name="follow_system">Seguir o sistema</string>
 
+    <string name="icon">Ícone</string>
+    <string name="edit_icon">Ícone editar</string>
+    <string name="no_icon">Sem ícone</string>
+
     <string name="weekend_school">Mostrar fim de semana</string>
     <string name="lock_duration">Bloquear duração</string>
-    <string name="weather_location">Localização meteorológica</string>
+    <string name="location">Localização</string>
     <string name="hide_weather_icon">Esconder icone</string>
     <string name="open_link">Abrir endereço em duplo clique</string>
     <string name="customization">Costumização</string>

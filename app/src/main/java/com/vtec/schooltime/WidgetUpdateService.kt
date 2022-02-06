@@ -1,17 +1,13 @@
 package com.vtec.schooltime
 
 import android.app.Service
-import android.appwidget.AppWidgetManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.preference.PreferenceManager
-import kotlinx.coroutines.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.net.URL
 
 class WidgetUpdateService: Service() {
     private val tag = javaClass.simpleName
@@ -31,9 +27,10 @@ class WidgetUpdateService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val notification = NotificationCompat.Builder(this, App.notificationChannelId).build()
 
+        val notification = NotificationCompat.Builder(this, App.notificationChannelId).build()
         startForeground(1, notification)
+
         applicationContext.registerReceiver(broadcastReceiver, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
             addAction(Intent.ACTION_TIME_TICK)

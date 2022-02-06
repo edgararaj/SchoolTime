@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ColorPickerSeekBar">
-        <attr name="android:text"/>
-        <attr name="android:textColor"/>
-        <attr name="android:textSize"/>
+        <attr name="type" format="enum">
+            <enum name="hue" value="1"/>
+            <enum name="saturation" value="2"/>
+            <enum name="value" value="3"/>
+        </attr>
+        <attr name="startColor" format="color"/>
+        <attr name="endColor" format="color"/>
     </declare-styleable>
 </resources>

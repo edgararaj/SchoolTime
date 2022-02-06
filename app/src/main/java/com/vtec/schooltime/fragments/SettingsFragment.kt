@@ -3,9 +3,9 @@ package com.vtec.schooltime.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import com.vtec.schooltime.MainActivity
 import com.vtec.schooltime.R
 import com.vtec.schooltime.activities.WeatherActivity
@@ -20,7 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference<SwitchPreference>("hide_weather")?.setOnPreferenceClickListener {
+        findPreference<ListPreference>("widget_icon")?.setOnPreferenceClickListener {
             MainActivity.weatherLocation.notify()
             true
         }

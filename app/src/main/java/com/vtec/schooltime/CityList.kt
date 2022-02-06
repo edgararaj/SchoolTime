@@ -5,15 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.CityCardBinding
-import com.vtec.schooltime.databinding.UniversalCardBinding
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.net.URL
-import java.util.logging.LogRecord
 
 class CityListAdapter : RecyclerView.Adapter<CityVH>() {
     val cityNamesList: MutableList<LocationEntry> = mutableListOf()

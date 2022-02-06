@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.view.marginTop
@@ -20,7 +19,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.util.*
 
 class ItemDecoration(private val columns: Int): RecyclerView.ItemDecoration()
@@ -97,9 +95,9 @@ class MainActivity : AppCompatActivity() {
                     u.forEach { schedule[t]?.add(it) }
                 }
             }
-        } catch (ex: FileNotFoundException)
+        } catch (ex: Exception)
         {
-            Log.d("FileIO", "App data not found!")
+            Log.d("FileIO", "App data not found or incorrect!")
         }
 
         schedule.forEach { entry ->

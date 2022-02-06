@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.text.Html
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
@@ -137,19 +138,28 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
 fun drawWidgetActivityButton(context: Context, views: RemoteViews)
 {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    if (preferences.getBoolean("hide_weather", false)) {
-        views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
-        val widget = ComponentName(context, Widget::class.java)
-        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
-    }
-    else
+    val widgetIcon = preferences.getString("widget_icon", "")
+    if (widgetIcon == "weather")
     {
         GlobalScope.launch(Dispatchers.IO) {
             val resId = getWidgetActivityButtonRes(context)
+            views.setViewVisibility(R.id.activity_button, View.VISIBLE)
             views.setImageViewResource(R.id.activity_button, resId)
             val widget = ComponentName(context, Widget::class.java)
             AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
         }
+    }
+    else
+    {
+        if (widgetIcon == "no_icon")
+            views.setViewVisibility(R.id.activity_button, View.GONE)
+        else
+        {
+            views.setViewVisibility(R.id.activity_button, View.VISIBLE)
+            views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
+        }
+        val widget = ComponentName(context, Widget::class.java)
+        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
     }
 }
 
