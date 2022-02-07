@@ -95,8 +95,7 @@ class MainActivity : AppCompatActivity() {
                     u.forEach { schedule[t]?.add(it) }
                 }
             }
-        } catch (ex: Exception)
-        {
+        } catch (ex: Exception) {
             Log.d("FileIO", "App data not found or incorrect!")
         }
 

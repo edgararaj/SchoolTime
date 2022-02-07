@@ -35,6 +35,7 @@ class DayOfWeekEditActivity: AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.day_of_week)
 
         val dayOfWeek = intent.getIntExtra("day_of_week", -1)
         val schoolLessonListSelector = registerForActivityResult(LessonListActivity.Contract()) { (schoolLessonId, schoolClassId) ->

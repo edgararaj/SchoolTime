@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.vtec.schooltime.MainActivity
 import com.vtec.schooltime.R
 import com.vtec.schooltime.activities.WeatherActivity
+import com.vtec.schooltime.activities.WidgetCustomizationActivity
 import com.vtec.schooltime.notify
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -25,10 +26,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-//        findPreference<SwitchPreference>("widget_customization")?.setOnPreferenceClickListener {
-//            startActivity(Intent(context, WidgetActivity::class.java))
-//            true
-//        }
+        findPreference<Preference>("widget_customization")?.setOnPreferenceClickListener {
+            startActivity(Intent(context, WidgetCustomizationActivity::class.java))
+            true
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

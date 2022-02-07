@@ -29,18 +29,14 @@
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/widget">
-<!--        <Preference-->
-<!--            app:key="widget_customization"-->
-<!--            app:iconSpaceReserved="false"-->
-<!--            app:title="@string/customization"/>-->
-        <ListPreference
-            app:defaultValue="weather"
-            app:entries="@array/widget_icon_entries"
-            app:entryValues="@array/widget_icon_values"
-            app:key="widget_icon"
+        <Preference
+            app:key="widget_customization"
             app:iconSpaceReserved="false"
-            app:title="@string/icon"
-            app:useSimpleSummaryProvider="true"/>
+            app:title="@string/customization"/>
+        <SwitchPreference
+            app:key="end_of_school_msg"
+            app:iconSpaceReserved="false"
+            app:title="@string/show_end_of_school_msg"/>
         <EditTextPreference
             app:defaultValue="https://aecarlosamarante.pt/Horarios_ESCA/Tur1A_12K.pdf"
             app:key="open_link"

@@ -51,6 +51,7 @@ class ClassEditActivity : AppCompatActivity(), ColorPicker {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.school_class)
 
         schoolClassId = intent.getStringExtra("school_class_id")
         if (schoolClassId != null)

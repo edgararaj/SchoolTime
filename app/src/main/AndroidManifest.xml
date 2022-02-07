@@ -31,6 +31,7 @@
         <activity android:name=".activities.LessonListActivity"/>
         <activity android:name=".activities.ClassListActivity"/>
         <activity android:name=".activities.WeatherActivity"/>
+        <activity android:name=".activities.WidgetCustomizationActivity"/>
 
         <receiver android:name=".Widget" android:exported="false">
             <intent-filter>

@@ -62,6 +62,7 @@ class LessonEditActivity : AppCompatActivity(), ColorPicker {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = context.getString(R.string.school_lesson)
 
         baseSchoolLessonId = intent.getStringExtra("school_lesson_id")
         if (baseSchoolLessonId != null)

@@ -18,6 +18,64 @@ import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
 
+fun getBeforeLessonText(context: Context, schoolLesson: SchoolLesson, startDeltaTime: Time): String
+{
+    val time = if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
+    val timeNameResId = if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
+    val timeName = context.getString(timeNameResId)
+    val widgetLessonStartingString =
+        context.getString(R.string.widget_lesson_starting)
+
+    return when (Locale.getDefault().language) {
+        "pt" -> widgetLessonStartingString.format(
+            schoolLesson.shortName,
+            time,
+            timeName
+        )
+        else -> widgetLessonStartingString.format(
+            schoolLesson.shortName,
+            time,
+            timeName
+        )
+    }
+}
+
+fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, endDeltaTime: Time): Pair<String, Int>
+{
+    val bgColor = schoolLesson.color
+    val timeNameResId = if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
+    val timeName = context.getString(timeNameResId)
+    val faltar = if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
+
+    val text = when (Locale.getDefault().language) {
+        "pt" -> if (endDeltaTime.hour == 0)
+            context.getString(R.string.widget_lesson_ending_minutes).format(
+                faltar,
+                endDeltaTime.minute,
+                timeName,
+                schoolLesson.shortName
+            )
+        else
+            context.getString(R.string.widget_lesson_ending_hours).format(
+                faltar,
+                endDeltaTime.hour,
+                endDeltaTime.minute,
+                schoolLesson.shortName
+            )
+        else -> if (endDeltaTime.hour == 0)
+            context.getString(R.string.widget_lesson_ending_minutes)
+                .format(endDeltaTime.minute, timeName, schoolLesson.shortName)
+        else
+            context.getString(R.string.widget_lesson_ending_hours).format(
+                endDeltaTime.hour,
+                endDeltaTime.minute,
+                schoolLesson.shortName
+            )
+    }
+
+    return Pair(text, bgColor)
+}
+
 fun getTextAndColor(context: Context): Pair<String, Int>
 {
     var text = ""
@@ -31,71 +89,17 @@ fun getTextAndColor(context: Context): Pair<String, Int>
 
     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
     for (scheduleBlock in scheduleBlocks) {
+        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
         val startDeltaTime = scheduleBlock.startTime - currentTime
-        val language = Locale.getDefault().language
         if (startDeltaTime > 0) {
-            val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId]
-            if (schoolLesson != null) {
-                val time =
-                    if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
-                val timeNameResId =
-                    if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
-                val timeName = context.getString(timeNameResId)
-                val widgetLessonStartingString =
-                    context.getString(R.string.widget_lesson_starting)
-
-                text = when (language) {
-                    "pt" -> widgetLessonStartingString.format(
-                        schoolLesson.shortName,
-                        time,
-                        timeName
-                    )
-                    else -> widgetLessonStartingString.format(
-                        schoolLesson.shortName,
-                        time,
-                        timeName
-                    )
-                }
-            }
+            text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
             break
         } else {
             val endDeltaTime = scheduleBlock.endTime - currentTime
             if (endDeltaTime > 0) {
-                val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId]
-                if (schoolLesson != null) {
-                    bgColor = schoolLesson.color
-                    val timeNameResId =
-                        if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
-                    val timeName = context.getString(timeNameResId)
-                    val faltar =
-                        if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
-
-                    text = when (language) {
-                        "pt" -> if (endDeltaTime.hour == 0)
-                            context.getString(R.string.widget_lesson_ending_minutes).format(
-                                faltar,
-                                endDeltaTime.minute,
-                                timeName,
-                                schoolLesson.shortName
-                            )
-                        else
-                            context.getString(R.string.widget_lesson_ending_hours).format(
-                                faltar,
-                                endDeltaTime.hour,
-                                endDeltaTime.minute,
-                                schoolLesson.shortName
-                            )
-                        else -> if (endDeltaTime.hour == 0)
-                            context.getString(R.string.widget_lesson_ending_minutes)
-                                .format(endDeltaTime.minute, timeName, schoolLesson.shortName)
-                        else
-                            context.getString(R.string.widget_lesson_ending_hours).format(
-                                endDeltaTime.hour,
-                                endDeltaTime.minute,
-                                schoolLesson.shortName
-                            )
-                    }
-                }
+                val result = getDuringLessonTextAndColor(context, schoolLesson, startDeltaTime)
+                text = result.first
+                bgColor = result.second
                 break
             } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
                 val deltaTime = currentTime - scheduleBlock.endTime

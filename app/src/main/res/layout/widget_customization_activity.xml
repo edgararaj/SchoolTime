@@ -8,10 +8,25 @@
         android:id="@+id/app_bar_main"
         layout="@layout/app_bar_main" />
 
-    <include
-        android:id="@+id/display_card"
-        layout="@layout/universal_card"
-        style="@style/SmallCard"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/dummy_wall"
+            android:scaleType="centerCrop"/>
+
+        <include
+            android:id="@+id/widget"
+            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            layout="@layout/widget"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="15dp"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,28 +38,24 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/edit"
+            android:text="@string/customize"
             android:layout_marginBottom="10dp"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <Spinner
+            android:id="@+id/custom_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/class_name_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:maxLines="1"
-                android:inputType="text"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp"/>
 
         <include
             android:id="@+id/color_picker"
             layout="@layout/color_picker"/>
+
+        <Button
+            android:id="@+id/fab_restore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

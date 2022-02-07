@@ -65,6 +65,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.schedule_block)
 
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
         scheduleBlockPosition = intent.getIntExtra("schedule_block_position", -1)

@@ -26,6 +26,7 @@ class WeatherActivity: AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.weather)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         val graph = navController.navInflater.inflate(R.navigation.secondary_navigation)

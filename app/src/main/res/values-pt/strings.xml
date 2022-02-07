@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SchoolTime</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
     <string name="settings">Configurações</string>
     <string name="weather">Meteorologia</string>
     <string name="city">Cidade</string>
@@ -18,8 +13,11 @@
     <string name="long_name">Nome longo</string>
     <string name="short_name">Nome curto</string>
     <string name="name">Nome</string>
-    <string name="edit_lesson">Editar disciplina</string>
-    <string name="edit_class">Editar turma</string>
+    <string name="edit">Editar</string>
+    <string name="school_class">Turma</string>
+    <string name="school_lesson">Disciplina</string>
+    <string name="day_of_week">Dia da semana</string>
+    <string name="schedule_block">Bloco do horário</string>
     <string name="name_exists">Este nome já existe</string>
     <string name="name_empty">Por favor especifique um nome</string>
     <string name="pick_bg_color">Escolhe a cor de fundo</string>
@@ -54,6 +52,13 @@
     <string name="hide_weather_icon">Esconder icone</string>
     <string name="open_link">Abrir endereço em duplo clique</string>
     <string name="customization">Costumização</string>
+    <string name="customize">Costumize</string>
+    <string name="show_end_of_school_msg">Mostrar mensagem de fim de aulas</string>
+
+    <string name="before_lesson">Antes da aula</string>
+    <string name="during_lesson">Durante a aula</string>
+    <string name="end_of_school">No fim da escola</string>
+    <string name="free_day">Dia livre</string>
 
     <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
     <!--    Aula de PT começa em 5 minutos-->
