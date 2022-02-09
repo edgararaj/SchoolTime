@@ -12,16 +12,4 @@
         <item>follow_system</item>
     </string-array>
 
-    <string-array name="widget_icon_entries">
-        <item>@string/edit_icon</item>
-        <item>@string/weather</item>
-        <item>@string/no_icon</item>
-    </string-array>
-
-    <string-array name="widget_icon_values">
-        <item>edit_icon</item>
-        <item>weather</item>
-        <item>no_icon</item>
-    </string-array>
-
 </resources>

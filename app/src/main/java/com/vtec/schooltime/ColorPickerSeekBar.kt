@@ -121,10 +121,7 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
             invalidate()
         }
 
-    interface OnSeekBarChangeListener {
-        fun onSeekBarChanged(seekBar: ColorPickerSeekBar)
-    }
-    var onSeekBarChangeListener: OnSeekBarChangeListener? = null
+    lateinit var onSeekBarChangeListener: (ColorPickerSeekBar) -> Unit
 
     enum class Type {
         Custom, Hue, Saturation, Value
@@ -302,15 +299,16 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
         val y = event.y.roundToInt()
         val scale: Float
         val distance = abs(trackY - y)
-        val sensitivity = -tanh((distance - 150) / 700.0) + 1
+        val sensitivity = -tanh((distance - 150) / 400.0) + 1
         val otherX: Int
+
         if (sensitivity > 1) {
-            dragX = event.x.roundToInt()
             otherX = x
-        }
-        else {
+            dragX = x
+        } else {
             otherX = (dragX + (x - dragX) * sensitivity).toInt()
         }
+
         if (layoutDirection == LAYOUT_DIRECTION_RTL) {
             if (x > width - paddingRight && sensitivity > 1) {
                 scale = 0.0f
@@ -337,7 +335,7 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
         val newProgress = (scale * (max - min) + min).toInt()
         if (newProgress != progress) {
             progress = newProgress
-            onSeekBarChangeListener?.onSeekBarChanged(this)
+            onSeekBarChangeListener(this)
         }
     }
 }

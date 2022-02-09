@@ -97,7 +97,7 @@ fun getTextAndColor(context: Context): Pair<String, Int>
         } else {
             val endDeltaTime = scheduleBlock.endTime - currentTime
             if (endDeltaTime > 0) {
-                val result = getDuringLessonTextAndColor(context, schoolLesson, startDeltaTime)
+                val result = getDuringLessonTextAndColor(context, schoolLesson, endDeltaTime)
                 text = result.first
                 bgColor = result.second
                 break
@@ -155,10 +155,9 @@ fun drawWidgetActivityButton(context: Context, views: RemoteViews)
     }
     else
     {
-        if (widgetIcon == "no_icon")
+        if (widgetIcon == "no_icon") {
             views.setViewVisibility(R.id.activity_button, View.GONE)
-        else
-        {
+        } else {
             views.setViewVisibility(R.id.activity_button, View.VISIBLE)
             views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
         }

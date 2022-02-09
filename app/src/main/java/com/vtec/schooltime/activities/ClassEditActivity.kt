@@ -16,8 +16,7 @@ class ClassEditActivity : AppCompatActivity(), ColorPicker {
     private var schoolClassId: String? = null
     private lateinit var schoolClassCard: ClassVH
 
-    override fun setCardBackgroundColor(color: Int)
-    {
+    override fun onColorChange(color: Int) {
         schoolClassCard.color = color
     }
 

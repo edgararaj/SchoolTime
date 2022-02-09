@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,7 +25,7 @@
             android:layout_width="match_parent"
             layout="@layout/widget"
             android:layout_centerVertical="true"
-            android:layout_marginHorizontal="15dp"/>
+            android:layout_marginHorizontal="25dp"/>
 
     </RelativeLayout>
 
@@ -47,6 +48,52 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"/>
+
+        <LinearLayout
+            android:id="@+id/icon_type_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_type"
+                style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+            <Spinner
+                android:id="@+id/icon_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/color_picker_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/pick_color"
+                style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+            <Spinner
+                android:id="@+id/color_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <com.vtec.schooltime.ColorPickerSeekBar
+            android:id="@+id/alpha_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:type="value"/>
 
         <include
             android:id="@+id/color_picker"

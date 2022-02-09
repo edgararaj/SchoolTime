@@ -21,6 +21,9 @@
     <string name="name_exists">Este nome já existe</string>
     <string name="name_empty">Por favor especifique um nome</string>
     <string name="pick_bg_color">Escolhe a cor de fundo</string>
+    <string name="pick_color">Escolhe a cor</string>
+    <string name="background">Fundo</string>
+    <string name="foreground">Primeiro plano</string>
     <string name="invalid_hex">Cor hexadecimal inválida</string>
     <string name="color_wheel">Roda de cores</string>
     <string name="select">Selecionar</string>
@@ -42,9 +45,9 @@
     <string name="light">Claro</string>
     <string name="follow_system">Seguir o sistema</string>
 
-    <string name="icon">Ícone</string>
-    <string name="edit_icon">Ícone editar</string>
-    <string name="no_icon">Sem ícone</string>
+    <string name="widget_weather_icon">@string/weather</string>
+    <string name="widget_edit_icon">@string/edit</string>
+    <string name="widget_no_icon">Nenhum</string>
 
     <string name="weekend_school">Mostrar fim de semana</string>
     <string name="lock_duration">Bloquear duração</string>
@@ -54,6 +57,7 @@
     <string name="customization">Costumização</string>
     <string name="customize">Costumize</string>
     <string name="show_end_of_school_msg">Mostrar mensagem de fim de aulas</string>
+    <string name="icon_type">Tipo de icone</string>
 
     <string name="before_lesson">Antes da aula</string>
     <string name="during_lesson">Durante a aula</string>

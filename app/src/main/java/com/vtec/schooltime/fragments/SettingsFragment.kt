@@ -21,11 +21,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference<ListPreference>("widget_icon")?.setOnPreferenceClickListener {
-            MainActivity.weatherLocation.notify()
-            true
-        }
-
         findPreference<Preference>("widget_customization")?.setOnPreferenceClickListener {
             startActivity(Intent(context, WidgetCustomizationActivity::class.java))
             true

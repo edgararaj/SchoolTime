@@ -12,11 +12,11 @@ import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.vtec.schooltime.databinding.ColorPickerBinding
 
-internal interface ColorPicker : ColorPickerSeekBar.OnSeekBarChangeListener {
+internal interface ColorPicker {
     val colorPickerBinding: ColorPickerBinding
     val context: Context
 
-    fun setCardBackgroundColor(color: Int)
+    fun onColorChange(color: Int)
 
     fun setHexColorEditText(color: Int) {
         colorPickerBinding.hexColorEdit.setText("%02X%02X%02X".format(Color.red(color), Color.green(color), Color.blue(color)))
@@ -63,7 +63,7 @@ internal interface ColorPicker : ColorPickerSeekBar.OnSeekBarChangeListener {
                 .setPositiveButton(context.getString(R.string.select),
                     object : ColorEnvelopeListener {
                         override fun onColorSelected(envelope: ColorEnvelope, fromUser: Boolean) {
-                            setCardBackgroundColor(envelope.color)
+                            onColorChange(envelope.color)
                             setHexColorEditText(envelope.color)
                             setSlidersProgress(envelope.color)
                         }
@@ -86,7 +86,7 @@ internal interface ColorPicker : ColorPickerSeekBar.OnSeekBarChangeListener {
                     {
                         val string = "#" + textView.text.toString().padEnd(6, '0')
                         val color = Color.parseColor(string)
-                        setCardBackgroundColor(color)
+                        onColorChange(color)
                         setHexColorEditText(color)
                         setSlidersProgress(color)
 
@@ -101,12 +101,12 @@ internal interface ColorPicker : ColorPickerSeekBar.OnSeekBarChangeListener {
             }
         })
 
-        colorPickerBinding.hueSlider.onSeekBarChangeListener = this
-        colorPickerBinding.saturationSlider.onSeekBarChangeListener = this
-        colorPickerBinding.valueSlider.onSeekBarChangeListener = this
+        colorPickerBinding.hueSlider.onSeekBarChangeListener = { onSeekBarChanged(it) }
+        colorPickerBinding.saturationSlider.onSeekBarChangeListener = { onSeekBarChanged(it) }
+        colorPickerBinding.valueSlider.onSeekBarChangeListener = { onSeekBarChanged(it) }
     }
 
-    override fun onSeekBarChanged(seekBar: ColorPickerSeekBar) {
+    private fun onSeekBarChanged(seekBar: ColorPickerSeekBar) {
         var hsv = FloatArray(3)
         when (seekBar.id)
         {
@@ -126,9 +126,12 @@ internal interface ColorPicker : ColorPickerSeekBar.OnSeekBarChangeListener {
                 colorPickerBinding.hueSlider.value = seekBar.field
                 colorPickerBinding.saturationSlider.value = seekBar.field
             }
+            R.id.alpha_slider -> {
+
+            }
         }
         val color = Color.HSVToColor(hsv)
-        setCardBackgroundColor(color)
+        onColorChange(color)
         setHexColorEditText(color)
     }
 }

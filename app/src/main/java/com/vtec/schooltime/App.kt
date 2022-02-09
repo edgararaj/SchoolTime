@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.VibrationEffect
 import androidx.appcompat.app.AppCompatDelegate
@@ -146,6 +147,8 @@ fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
 fun <T> MutableLiveData<T>.notify() {
     this.value = this.value
 }
+
+val Context.isDarkMode get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
 class App : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {

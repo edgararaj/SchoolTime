@@ -57,6 +57,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_bg_color"
+            android:layout_marginBottom="5dp"
+            style="@style/TextAppearance.MaterialComponents.Body2"/>
+
         <include
             android:id="@+id/color_picker"
             layout="@layout/color_picker"/>

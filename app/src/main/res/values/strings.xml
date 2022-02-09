@@ -21,6 +21,9 @@
     <string name="name_exists">This name already exists</string>
     <string name="name_empty">Please specify a name</string>
     <string name="pick_bg_color">Pick background color</string>
+    <string name="pick_color">Pick color</string>
+    <string name="background">Background</string>
+    <string name="foreground">Foreground</string>
     <string name="invalid_hex">Invalid hexadecimal color</string>
     <string name="color_wheel">Color wheel</string>
     <string name="select">Select</string>
@@ -42,9 +45,9 @@
     <string name="light">Light</string>
     <string name="follow_system">Follow system</string>
 
-    <string name="icon">Icon</string>
-    <string name="edit_icon">Edit icon</string>
-    <string name="no_icon">No icon</string>
+    <string name="widget_weather_icon">Weather</string>
+    <string name="widget_edit_icon">Edit</string>
+    <string name="widget_no_icon">None</string>
 
     <string name="weekend_school">Show weekends</string>
     <string name="lock_duration">Lock duration</string>
@@ -54,6 +57,7 @@
     <string name="customization">Customization</string>
     <string name="customize">Customize</string>
     <string name="show_end_of_school_msg">Show end of school message</string>
+    <string name="icon_type">Icon type</string>
 
     <string name="before_lesson">Before lesson</string>
     <string name="during_lesson">During lesson</string>

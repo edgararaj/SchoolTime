@@ -17,8 +17,7 @@ class LessonEditActivity : AppCompatActivity(), ColorPicker {
     private var baseSchoolLessonId: String? = null
     private lateinit var schoolLessonCard: LessonVH
 
-    override fun setCardBackgroundColor(color: Int)
-    {
+    override fun onColorChange(color: Int) {
         schoolLessonCard.color = color
     }
 
