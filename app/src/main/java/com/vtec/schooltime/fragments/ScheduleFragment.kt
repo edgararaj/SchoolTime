@@ -1,6 +1,7 @@
 package com.vtec.schooltime.fragments
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,10 @@ import kotlinx.serialization.json.encodeToStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.*
+
+fun adapterPosToDayOfWeek(pos: Int) = if (pos == 6) 1 else (pos + 2)
+fun dayOfWeekToAdapterPos(dow: Int) = if (dow == 1) 6 else (dow - 2)
 
 class ScheduleFragment : Fragment() {
     private var _binding: FragmentScheduleBinding? = null
@@ -36,7 +41,7 @@ class ScheduleFragment : Fragment() {
         {
             val action = { adapterPosition: Int ->
                 val intent = Intent(context, DayOfWeekEditActivity::class.java).apply {
-                    putExtra("day_of_week", if (adapterPosition == 6) 1 else (adapterPosition + 2))
+                    putExtra("day_of_week", adapterPosToDayOfWeek(adapterPosition))
                 }
                 startActivity(intent)
             }
@@ -45,12 +50,16 @@ class ScheduleFragment : Fragment() {
         }
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val adapter = DayOfWeekListAdapter(MainActivity.schedule, preferences.getBoolean("weekend_school", false))
+        val calendar = Calendar.getInstance()
+        val adapterPosOfCurrentDayOfWeek = dayOfWeekToAdapterPos(calendar.get(Calendar.DAY_OF_WEEK))
+        val adapter = DayOfWeekListAdapter(MainActivity.schedule, preferences.getBoolean("weekend_school", false), adapterPosOfCurrentDayOfWeek)
 
         binding.daysOfWeek.adapter = adapter
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
         binding.daysOfWeek.addItemDecoration(ItemDecoration(1))
+
+        binding.daysOfWeek.scrollToPosition(adapterPosOfCurrentDayOfWeek)
 
         binding.fabRestore.setOnClickListener {
             val file = File(context?.getExternalFilesDir(null), "classes.json")

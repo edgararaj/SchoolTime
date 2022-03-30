@@ -32,6 +32,7 @@
     <string name="ends_at">Acaba às</string>
     <string name="duration">Duração</string>
     <string name="unnamed">Sem nome</string>
+    <string name="transparency">Transparência</string>
 
     <string name="appearance">Aparência</string>
 
@@ -63,6 +64,7 @@
     <string name="during_lesson">Durante a aula</string>
     <string name="end_of_school">No fim da escola</string>
     <string name="free_day">Dia livre</string>
+    <string name="fallback_end_of_school_msg">Acabaram-se as aulas por hoje!&lt;br&gt;Parabéns! 🎆</string>
 
     <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
     <!--    Aula de PT começa em 5 minutos-->

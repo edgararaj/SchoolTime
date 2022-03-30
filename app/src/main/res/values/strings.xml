@@ -32,6 +32,7 @@
     <string name="ends_at">Ends at</string>
     <string name="duration">Duration</string>
     <string name="unnamed">Unnamed</string>
+    <string name="transparency">Transparency</string>
 
     <string name="minute">minute</string>
     <string name="minutes">minutes</string>
@@ -63,6 +64,7 @@
     <string name="during_lesson">During lesson</string>
     <string name="end_of_school">End of the school</string>
     <string name="free_day">Free day</string>
+    <string name="fallback_end_of_school_msg">Classes are over for today!&lt;br&gt;Congratulations! 🎆</string>
 
     <!--    "<b>%s</b> lesson starts in <b>%d %s</b>"-->
     <!--    PT lesson starts in 5 minutes-->

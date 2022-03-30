@@ -8,12 +8,20 @@ import android.net.Uri
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.preference.PreferenceManager
+import com.vtec.schooltime.activities.WidgetCustomization
 
 const val tapAction = "com.vtec.schooltime.TAP"
 
 class Widget : AppWidgetProvider() {
     private val tag = javaClass.simpleName
     private val doubleClickWindow = 400
+
+    companion object {
+        var schedule: SchoolSchedule = mutableMapOf()
+        val lessons: SchoolLessons = mutableMapOf()
+        var customization: WidgetCustomization = mutableMapOf()
+        var iconType: Int? = null
+    }
 
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
@@ -29,7 +37,8 @@ class Widget : AppWidgetProvider() {
             }
             MainActivity.weatherLocation.observeForever {
                 val views = RemoteViews(context.packageName, R.layout.widget)
-                drawWidgetActivityButton(context, views)
+                if (iconType == R.string.widget_weather_icon)
+                    updateWidgetWeatherIcon(context, views)
             }
         }
     }
@@ -62,7 +71,12 @@ class Widget : AppWidgetProvider() {
         if (context != null && intent != null)
         {
             Log.d(tag, "Received " + intent.action)
-            if (intent.action == tapAction)
+            if (intent.action == Intent.ACTION_BOOT_COMPLETED)
+            {
+                context.startService(Intent(context, WidgetUpdateService::class.java))
+                updateWidget(context)
+            }
+            else if (intent.action == tapAction)
             {
                 val sp = context.getSharedPreferences(tag, Context.MODE_PRIVATE)
 

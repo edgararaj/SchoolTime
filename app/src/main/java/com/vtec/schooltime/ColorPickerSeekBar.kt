@@ -7,6 +7,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.math.MathUtils
 import kotlin.math.*
 
@@ -14,6 +16,8 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
     private val textRect = Rect()
     private val hueShaderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private lateinit var alphaBar: Bitmap
 
     private val bigThumbRadius = 12 * resources.displayMetrics.density
     private val smallThumbRadius = 8 * resources.displayMetrics.density
@@ -124,7 +128,7 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
     lateinit var onSeekBarChangeListener: (ColorPickerSeekBar) -> Unit
 
     enum class Type {
-        Custom, Hue, Saturation, Value
+        Custom, Hue, Saturation, Value, Alpha
     }
 
     init {
@@ -171,6 +175,13 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
                 invalidate()
             }
         }
+
+        if (context != null) {
+            val drawable = AppCompatResources.getDrawable(context, R.drawable.alpha_bar)
+            if (drawable != null) {
+                alphaBar = drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            }
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -182,18 +193,28 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
     }
 
     override fun onDraw(canvas: Canvas) {
-        hueShaderPaint.shader = LinearGradient(0f, 0f, width.toFloat(), 0f, barColors, null, Shader.TileMode.CLAMP)
-        hueShaderPaint.strokeWidth = trackStrokeWidth
-        hueShaderPaint.strokeCap = Paint.Cap.ROUND
         val x = paddingLeft + field * availableWidth
-        canvas.drawLine(paddingLeft.toFloat(), trackY, (right - paddingRight).toFloat(), trackY, hueShaderPaint)
+        if (type == Type.Alpha) {
+            val path = Path().apply {
+                addRoundRect(paddingLeft.toFloat() - trackStrokeWidth / 2, trackY - trackStrokeWidth / 2, (right - paddingRight).toFloat() + trackStrokeWidth / 2, trackY + trackStrokeWidth / 2, trackStrokeWidth / 2, trackStrokeWidth / 2, Path.Direction.CW)
+            }
+            canvas.save()
+            canvas.clipPath(path)
+            canvas.drawBitmap(alphaBar, paddingLeft.toFloat() - bigTrackStrokeWidth / 2, trackY - bigTrackStrokeWidth / 2, Paint())
+            canvas.restore()
+        } else {
+            hueShaderPaint.shader = LinearGradient(0f, 0f, width.toFloat(), 0f, barColors, null, Shader.TileMode.CLAMP)
+            hueShaderPaint.strokeWidth = trackStrokeWidth
+            hueShaderPaint.strokeCap = Paint.Cap.ROUND
+            canvas.drawLine(paddingLeft.toFloat(), trackY, (right - paddingRight).toFloat(), trackY, hueShaderPaint)
+        }
 
         val color = when (type)
         {
             Type.Hue -> Color.HSVToColor(floatArrayOf(field * 360, saturation, value))
             Type.Saturation -> Color.HSVToColor(floatArrayOf(hue, field, value))
             Type.Value -> Color.HSVToColor(floatArrayOf(hue, saturation, dimField(field)))
-            else -> 0
+            else -> context.getColor(R.color.app_fg)
         }
 
         textPaint.strokeCap = Paint.Cap.ROUND

@@ -9,11 +9,14 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import org.json.JSONObject
+import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
@@ -42,7 +45,6 @@ fun getBeforeLessonText(context: Context, schoolLesson: SchoolLesson, startDelta
 
 fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, endDeltaTime: Time): Pair<String, Int>
 {
-    val bgColor = schoolLesson.color
     val timeNameResId = if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
     val timeName = context.getString(timeNameResId)
     val faltar = if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
@@ -73,19 +75,22 @@ fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, en
             )
     }
 
-    return Pair(text, bgColor)
+    return Pair(text, schoolLesson.color)
 }
 
-fun getTextAndColor(context: Context): Pair<String, Int>
+fun getWidgetSchoolState(context: Context): WidgetSchoolState
 {
-    var text = ""
-    var bgColor = context.getColor(R.color.app_bg)
+    var text = Widget.customization[R.string.free_day]?.customMsg ?: ""
+    var bgColor = Widget.customization[R.string.free_day]?.bgColor ?: context.getColor(R.color.app_bg)
+    var fgColor = Widget.customization[R.string.free_day]?.fgColor ?: context.getColor(R.color.app_fg)
+    var alpha = Widget.customization[R.string.free_day]?.alpha ?: 1f
+    var iconType = Widget.customization[R.string.free_day]?.iconType ?: R.string.widget_edit_icon
 
     val calendar = Calendar.getInstance()
     val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
     val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-    val schedule = MainActivity.schedule
-    val schoolLessons = MainActivity.lessons
+    val schedule = Widget.schedule
+    val schoolLessons = Widget.lessons
 
     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
     for (scheduleBlock in scheduleBlocks) {
@@ -93,6 +98,12 @@ fun getTextAndColor(context: Context): Pair<String, Int>
         val startDeltaTime = scheduleBlock.startTime - currentTime
         if (startDeltaTime > 0) {
             text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
+            Widget.customization[R.string.before_lesson]?.let {
+                it.bgColor?.let { bgColor = it }
+                it.fgColor?.let { fgColor = it }
+                alpha = it.alpha
+                iconType = it.iconType
+            }
             break
         } else {
             val endDeltaTime = scheduleBlock.endTime - currentTime
@@ -100,31 +111,60 @@ fun getTextAndColor(context: Context): Pair<String, Int>
                 val result = getDuringLessonTextAndColor(context, schoolLesson, endDeltaTime)
                 text = result.first
                 bgColor = result.second
+                fgColor = getContrastingColor(bgColor)
+                Widget.customization[R.string.during_lesson]?.let {
+                    alpha = it.alpha
+                    iconType = it.iconType
+                }
                 break
             } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
                 val deltaTime = currentTime - scheduleBlock.endTime
                 if (deltaTime <= Time(0, 5)) {
-                    text = "Acabaram-se as aulas por hoje!<br>Parabéns! 🎆"
-                    bgColor = context.getColor(R.color.finished)
+                    text = context.getString(R.string.fallback_end_of_school_msg)
+                    Widget.customization[R.string.end_of_school]?.let {
+                        it.bgColor?.let { bgColor = it }
+                        it.fgColor?.let { fgColor = it }
+                        alpha = it.alpha
+                        iconType = it.iconType
+                    }
                 }
             }
         }
     }
 
-    return Pair(text, bgColor)
+    return WidgetSchoolState(text, bgColor, fgColor, alpha, iconType)
 }
+
+class WidgetSchoolState(val text: String, val bgColor: Int, val fgColor: Int, val alpha: Float, val iconType: Int)
 
 fun updateSchoolWidget(context: Context, views: RemoteViews)
 {
-    val (text, bgColor) = getTextAndColor(context)
-//    if (bgColor == context.getColor(R.color.app_bg))
-//        views.setViewVisibility(R.id.bg, View.GONE)
+    val widgetSchoolState = getWidgetSchoolState(context)
 
-    views.setTextViewText(R.id.text, Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT))
-    views.setInt(R.id.bg, "setColorFilter", bgColor)
-    val contrastyFgColor = getContrastingColor(bgColor)
-    views.setTextColor(R.id.text, contrastyFgColor)
-    views.setInt(R.id.activity_button, "setColorFilter", contrastyFgColor)
+    views.setTextViewText(R.id.text, Html.fromHtml(widgetSchoolState.text, Html.FROM_HTML_MODE_COMPACT))
+    views.setInt(R.id.bg, "setColorFilter", widgetSchoolState.bgColor)
+    views.setInt(R.id.bg, "setAlpha", (widgetSchoolState.alpha * 255).toInt())
+    views.setTextColor(R.id.text, widgetSchoolState.fgColor)
+
+    Widget.iconType = widgetSchoolState.iconType
+    if (widgetSchoolState.iconType != R.string.widget_no_icon)
+    {
+        views.setInt(R.id.activity_button, "setColorFilter", widgetSchoolState.fgColor)
+        when (widgetSchoolState.iconType)
+        {
+            R.string.widget_weather_icon -> {
+                updateWidgetWeatherIcon(context, views)
+            }
+            else -> {
+                views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
+                views.setViewVisibility(R.id.activity_button, View.VISIBLE)
+            }
+        }
+    }
+    else
+    {
+        views.setViewVisibility(R.id.activity_button, View.GONE)
+    }
 
     run {
         val intent = Intent(context, Widget::class.java).apply { action = tapAction }
@@ -139,28 +179,12 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     }
 }
 
-fun drawWidgetActivityButton(context: Context, views: RemoteViews)
+fun updateWidgetWeatherIcon(context: Context, views: RemoteViews)
 {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    val widgetIcon = preferences.getString("widget_icon", "")
-    if (widgetIcon == "weather")
-    {
-        GlobalScope.launch(Dispatchers.IO) {
-            val resId = getWidgetActivityButtonRes(context)
-            views.setViewVisibility(R.id.activity_button, View.VISIBLE)
-            views.setImageViewResource(R.id.activity_button, resId)
-            val widget = ComponentName(context, Widget::class.java)
-            AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
-        }
-    }
-    else
-    {
-        if (widgetIcon == "no_icon") {
-            views.setViewVisibility(R.id.activity_button, View.GONE)
-        } else {
-            views.setViewVisibility(R.id.activity_button, View.VISIBLE)
-            views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
-        }
+    GlobalScope.launch(Dispatchers.IO) {
+        val resId = getWidgetActivityButtonRes(context)
+        views.setImageViewResource(R.id.activity_button, resId)
+        views.setViewVisibility(R.id.activity_button, View.VISIBLE)
         val widget = ComponentName(context, Widget::class.java)
         AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
     }
@@ -168,9 +192,38 @@ fun drawWidgetActivityButton(context: Context, views: RemoteViews)
 
 fun updateWidget(context: Context)
 {
-    val views = RemoteViews(context.packageName, R.layout.widget)
+    try {
+        Widget.lessons.clear()
+        run {
+            val lessonsFile = File(context.getExternalFilesDir(null), "lessons.json")
+            val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
+            init.forEach { (t, u) -> Widget.lessons[t] = u }
+        }
 
-    drawWidgetActivityButton(context, views)
+        Widget.schedule.clear()
+        run {
+            val scheduleFile = File(context.getExternalFilesDir(null), "schedule.json")
+            val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+            init.forEach { (t, u) ->
+                if (Widget.schedule[t] == null) Widget.schedule[t] = mutableListOf()
+                u.forEach { Widget.schedule[t]?.add(it) }
+            }
+        }
+
+        run {
+            val file = File(context.getExternalFilesDir(null), "widget_customization.json")
+            Widget.customization = Json.decodeFromStream(FileInputStream(file))
+        }
+
+    } catch (ex: Exception) {
+        Log.d("FileIO", "App data not found or incorrect!")
+    }
+
+    Widget.schedule.forEach { entry ->
+        entry.value.sortBy { it.startTime }
+    }
+
+    val views = RemoteViews(context.packageName, R.layout.widget)
     updateSchoolWidget(context, views)
 
     val widget = ComponentName(context, Widget::class.java)
@@ -202,9 +255,7 @@ fun getWeatherForecastIconBitmap(context: Context): Bitmap?
 
 fun getWidgetActivityButtonRes(context: Context): Int
 {
-    val iconCode = getWeatherForecastIconCode(context) ?: return R.drawable.widget_edit_icon
-
-    return when (iconCode)
+    return when (getWeatherForecastIconCode(context))
     {
         "01d" -> R.drawable.clear_sky_day_icon
         "01n" -> R.drawable.clear_sky_night_icon

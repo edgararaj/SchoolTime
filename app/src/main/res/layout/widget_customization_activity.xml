@@ -14,6 +14,7 @@
         android:layout_height="200dp">
 
         <ImageView
+            android:id="@+id/dummy_wall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/dummy_wall"
@@ -69,6 +70,20 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/transparency"
+            android:layout_marginBottom="5dp"
+            style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+        <com.vtec.schooltime.ColorPickerSeekBar
+            android:id="@+id/alpha_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:type="alpha"
+            android:layout_marginBottom="30dp"/>
+
         <LinearLayout
             android:id="@+id/color_picker_header"
             android:layout_width="match_parent"
@@ -88,12 +103,6 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
-
-        <com.vtec.schooltime.ColorPickerSeekBar
-            android:id="@+id/alpha_slider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:type="value"/>
 
         <include
             android:id="@+id/color_picker"

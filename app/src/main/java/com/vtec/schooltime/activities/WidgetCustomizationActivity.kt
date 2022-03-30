@@ -1,7 +1,9 @@
 package com.vtec.schooltime.activities
 
+import android.Manifest
+import android.app.WallpaperManager
 import android.content.Context
-import android.graphics.Color
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -9,13 +11,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.widget.doOnTextChanged
+import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import com.vtec.schooltime.*
-import com.vtec.schooltime.databinding.ClassEditActivityBinding
 import com.vtec.schooltime.databinding.WidgetCustomizationActivityBinding
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -24,17 +23,18 @@ import kotlinx.serialization.json.encodeToStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.*
 
 @Serializable
-class CustomField(var bgColor: Int?, var fgColor: Int?, var alpha: Float, var iconType: Int)
+class CustomField(var bgColor: Int?, var fgColor: Int?, var alpha: Float, var iconType: Int, var customMsg: String?)
 
 typealias WidgetCustomization = MutableMap<Int, CustomField>
 
 val fallbackWidgetCustomization: WidgetCustomization = mutableMapOf(
-    R.string.before_lesson to CustomField(null, null, 0.3f, R.string.widget_weather_icon),
-    R.string.during_lesson to CustomField(null, null, 1f, R.string.widget_weather_icon),
-    R.string.end_of_school to CustomField(null, null, 0.3f, R.string.widget_edit_icon),
-    R.string.free_day to CustomField(null, null, 0.3f, R.string.widget_no_icon)
+    R.string.before_lesson to CustomField(null, null, 0.7f, R.string.widget_weather_icon, null),
+    R.string.during_lesson to CustomField(null, null, 1f, R.string.widget_weather_icon, null),
+    R.string.end_of_school to CustomField(null, null, 0.7f, R.string.widget_edit_icon, null),
+    R.string.free_day to CustomField(null, null, 0f, R.string.widget_no_icon, null)
 )
 
 class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
@@ -74,6 +74,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
     override fun onBackPressed() {
         val file = File(getExternalFilesDir(null), "widget_customization.json")
         Json.encodeToStream(customization, FileOutputStream(file))
+        MainActivity.didSchedulesUpdate.notify()
         super.onBackPressed()
     }
 
@@ -118,19 +119,71 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
                     setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
 
-                    val text = getBeforeLessonText(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                    var text: String? = null
+
+                    val calendar = Calendar.getInstance()
+                    val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+                    val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                    val schedule = MainActivity.schedule
+                    val schoolLessons = MainActivity.lessons
+
+                    val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+                    for (scheduleBlock in scheduleBlocks) {
+                        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+                        val startDeltaTime = scheduleBlock.startTime - currentTime
+                        if (startDeltaTime > 0) {
+                            text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
+                            break
+                        }
+                    }
+
+                    if (text == null)
+                    {
+                        text = getBeforeLessonText(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                    }
+
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                 }
                 R.string.during_lesson -> {
                     colorTypeValues = mutableListOf()
 
-                    val (text, bgColor) = getDuringLessonTextAndColor(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                    var text: String? = null
+                    var bgColor: Int? = null
+
+                    val calendar = Calendar.getInstance()
+                    val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+                    val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                    val schedule = MainActivity.schedule
+                    val schoolLessons = MainActivity.lessons
+
+                    val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+                    for (scheduleBlock in scheduleBlocks) {
+                        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+                        val startDeltaTime = scheduleBlock.startTime - currentTime
+                        val endDeltaTime = scheduleBlock.endTime - currentTime
+                        if (endDeltaTime > 0 && startDeltaTime <= 0) {
+                            val result = getDuringLessonTextAndColor(context, schoolLesson, endDeltaTime)
+                            text = result.first
+                            bgColor = result.second
+                            break
+                        }
+                    }
+
+                    if (text == null || bgColor == null)
+                    {
+                        val otherResult = getDuringLessonTextAndColor(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                        text = otherResult.first
+                        bgColor = otherResult.second
+                    }
+
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                     setWidgetBackgroundColor(bgColor)
                     setWidgetForegroundColor(getContrastingColor(bgColor))
                 }
                 R.string.end_of_school -> {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
+
+                    binding.widget.text.text = it.customMsg
                     setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
                     setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
                 }
@@ -173,9 +226,15 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.widget)
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            binding.dummyWall.setImageDrawable(WallpaperManager.getInstance(context).drawable)
+        }
+
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (preferences.getBoolean("end_of_school_msg", false))
             customFieldValues.add(R.string.end_of_school)
+
+        fallbackWidgetCustomization[R.string.end_of_school]?.customMsg = Html.fromHtml(getString(R.string.fallback_end_of_school_msg), Html.FROM_HTML_MODE_COMPACT).toString()
 
         try {
             val file = File(getExternalFilesDir(null), "widget_customization.json")

@@ -20,7 +20,7 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
         val scheduleBlock = dayOfWeekSchedule.getOrNull(position)
         if (scheduleBlock != null)
         {
-            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta) * 25
+            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta) * 30
             holder.bind(scheduleBlock, dayOfWeek, stretch)
         }
     }

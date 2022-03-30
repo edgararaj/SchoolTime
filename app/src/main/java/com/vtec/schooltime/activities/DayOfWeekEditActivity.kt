@@ -67,13 +67,13 @@ class DayOfWeekEditActivity: AppCompatActivity() {
 
             val itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
-            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, schoolLessonListSelector)
+            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolLessonListSelector)
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule[dayOfWeek]
             if (schedule != null)
-                dayOfWeekCard.bind(schedule, dayOfWeek, schoolLessonListSelector)
+                dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolLessonListSelector)
         }
 
         MainActivity.didLessonsUpdate.observe(this, observer)

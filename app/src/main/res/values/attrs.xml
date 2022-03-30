@@ -5,6 +5,7 @@
             <enum name="hue" value="1"/>
             <enum name="saturation" value="2"/>
             <enum name="value" value="3"/>
+            <enum name="alpha" value="4"/>
         </attr>
         <attr name="startColor" format="color"/>
         <attr name="endColor" format="color"/>

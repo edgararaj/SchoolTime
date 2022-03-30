@@ -31,16 +31,16 @@ class WidgetUpdateService: Service() {
         val notification = NotificationCompat.Builder(this, App.notificationChannelId).build()
         startForeground(1, notification)
 
-        applicationContext.registerReceiver(broadcastReceiver, IntentFilter().apply {
+        registerReceiver(broadcastReceiver, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
             addAction(Intent.ACTION_TIME_TICK)
             addAction(Intent.ACTION_SCREEN_ON)
         })
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     override fun onDestroy() {
-        applicationContext.unregisterReceiver(broadcastReceiver)
+        unregisterReceiver(broadcastReceiver)
         return super.onDestroy()
     }
 }
