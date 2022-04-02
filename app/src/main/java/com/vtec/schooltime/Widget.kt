@@ -25,9 +25,10 @@ class Widget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
+        logCallback(tag, "onEnabled")
         if (context != null)
         {
-            context.startService(Intent(context, WidgetUpdateService::class.java))
+            context.startForegroundService(Intent(context, WidgetUpdateService::class.java))
 
             MainActivity.didLessonsUpdate.observeForever {
                 updateWidget(context)
@@ -45,6 +46,7 @@ class Widget : AppWidgetProvider() {
 
     override fun onDisabled(context: Context?) {
         super.onDisabled(context)
+        logCallback(tag, "onDisabled")
         context?.let {
             it.stopService(Intent(it, WidgetUpdateService::class.java))
         }
@@ -56,6 +58,7 @@ class Widget : AppWidgetProvider() {
         appWidgetIds: IntArray?
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        logCallback(tag, "onUpdate")
         if (context != null)
         {
             appWidgetIds?.forEach { appWidgetId ->
@@ -68,15 +71,11 @@ class Widget : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
+        logCallback(tag, "onReceive")
         if (context != null && intent != null)
         {
             Log.d(tag, "Received " + intent.action)
-            if (intent.action == Intent.ACTION_BOOT_COMPLETED)
-            {
-                context.startService(Intent(context, WidgetUpdateService::class.java))
-                updateWidget(context)
-            }
-            else if (intent.action == tapAction)
+            if (intent.action == tapAction)
             {
                 val sp = context.getSharedPreferences(tag, Context.MODE_PRIVATE)
 
@@ -96,6 +95,7 @@ class Widget : AppWidgetProvider() {
                 sp.edit().putLong("firstClickTime", System.currentTimeMillis()).apply()
 
                 updateWidget(context)
+                context.startForegroundService(Intent(context, WidgetUpdateService::class.java))
             }
         }
     }

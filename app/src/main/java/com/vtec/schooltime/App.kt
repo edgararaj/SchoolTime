@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.VibrationEffect
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
@@ -138,6 +139,11 @@ fun getDarkerColor(color: Int): Int {
         this[2] *= 0.95f
     })
 }
+
+fun logCallback(tag: String, msg: String) {
+    Log.d(tag, "------- [$msg] -------")
+}
+
 
 fun <T> MutableLiveData<T>.mutation(actions: (MutableLiveData<T>) -> Unit) {
     actions(this)

@@ -270,6 +270,30 @@ fun getWidgetActivityButtonRes(context: Context): Int
         "50d", "50n" -> R.drawable.mist_icon
         else -> R.drawable.widget_edit_icon
     }
+    /*
+    return when (getWeatherForecastIconCode(context))
+    {
+        "01d" -> R.drawable.a_3d_clear_sky_daymdpi
+        "01n" -> R.drawable.a_3d_clear_sky_nightmdpi
+        "02d" -> R.drawable.a_3d_few_clouds_daymdpi
+        "02n" -> R.drawable.a_3d_few_clouds_nightmdpi
+        "03d" -> R.drawable.a_3d_scattered_cloudsmdpi
+        "03n" -> R.drawable.a_3d_scattered_clouds_nightmdpi
+        "04d" -> R.drawable.a_3d_broken_cloudsmdpi
+        "04n" -> R.drawable.a_3d_broken_clouds_nightmdpi
+        "09d" -> R.drawable.a_3d_shower_rainmdpi
+        "09n" -> R.drawable.a_3d_shower_rain_nightmdpi
+        "10d" -> R.drawable.a_3d_rainmdpi
+        "10n" -> R.drawable.a_3d_rain_nightmdpi
+        "11d" -> R.drawable.a_3d_thunderstormmdpi
+        "11n" -> R.drawable.a_3d_thunderstorm_nightmdpi
+        "13d" -> R.drawable.a_3d_snow_iconmdpi
+        "13n" -> R.drawable.a_3d_snow_icon_nightmdpi
+        "50d" -> R.drawable.a_3d_mistmdpi
+        "50n" -> R.drawable.a_3d_mist_nightmdpi
+        else -> R.drawable.widget_edit_icon
+    }
+     */
 }
 
 fun getWeatherForecastIconCode(context: Context): String?
