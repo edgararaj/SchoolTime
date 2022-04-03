@@ -78,6 +78,50 @@ fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, en
     return Pair(text, schoolLesson.color)
 }
 
+class ScheduleBlockSearch(val type: Int, val schoolLesson: SchoolLesson?, val deltaTime: Time?, val scheduleBlockIndex: Int?)
+
+fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolLessons: SchoolLessons): ScheduleBlockSearch {
+    val calendar = Calendar.getInstance()
+    /*
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    calendar.set(Calendar.HOUR_OF_DAY, 15)
+    calendar.set(Calendar.MINUTE, 50)
+     */
+    val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+
+    var type = R.string.free_day
+    var schoolLesson: SchoolLesson? = null
+    var deltaTime: Time? = null
+    var scheduleBlockIndex: Int? = null
+
+    val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+    for (scheduleBlock in scheduleBlocks) {
+        schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+        val startDeltaTime = scheduleBlock.startTime - currentTime
+        if (startDeltaTime > 0) {
+            type = R.string.before_lesson
+            deltaTime = startDeltaTime
+            break
+        } else {
+            val endDeltaTime = scheduleBlock.endTime - currentTime
+            if (endDeltaTime > 0) {
+                type = R.string.during_lesson
+                deltaTime = endDeltaTime
+                scheduleBlockIndex = scheduleBlocks.indexOf(scheduleBlock)
+                break
+            } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
+                val deltaTime = currentTime - scheduleBlock.endTime
+                if (deltaTime <= Time(0, 5)) {
+                    type = R.string.end_of_school
+                }
+            }
+        }
+    }
+
+    return ScheduleBlockSearch(type, schoolLesson, deltaTime, scheduleBlockIndex)
+}
+
 fun getWidgetSchoolState(context: Context): WidgetSchoolState
 {
     var text = Widget.customization[R.string.free_day]?.customMsg ?: ""
@@ -86,48 +130,35 @@ fun getWidgetSchoolState(context: Context): WidgetSchoolState
     var alpha = Widget.customization[R.string.free_day]?.alpha ?: 1f
     var iconType = Widget.customization[R.string.free_day]?.iconType ?: R.string.widget_edit_icon
 
-    val calendar = Calendar.getInstance()
-    val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-    val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-    val schedule = Widget.schedule
-    val schoolLessons = Widget.lessons
-
-    val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
-    for (scheduleBlock in scheduleBlocks) {
-        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
-        val startDeltaTime = scheduleBlock.startTime - currentTime
-        if (startDeltaTime > 0) {
-            text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
+    val scheduleBlockSearch = getCurrentScheduleBlock(Widget.schedule, Widget.lessons)
+    when (scheduleBlockSearch.type)
+    {
+        R.string.before_lesson -> {
+            text = getBeforeLessonText(context, scheduleBlockSearch.schoolLesson!!, scheduleBlockSearch.deltaTime!!)
             Widget.customization[R.string.before_lesson]?.let {
                 it.bgColor?.let { bgColor = it }
                 it.fgColor?.let { fgColor = it }
                 alpha = it.alpha
                 iconType = it.iconType
             }
-            break
-        } else {
-            val endDeltaTime = scheduleBlock.endTime - currentTime
-            if (endDeltaTime > 0) {
-                val result = getDuringLessonTextAndColor(context, schoolLesson, endDeltaTime)
-                text = result.first
-                bgColor = result.second
-                fgColor = getContrastingColor(bgColor)
-                Widget.customization[R.string.during_lesson]?.let {
-                    alpha = it.alpha
-                    iconType = it.iconType
-                }
-                break
-            } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
-                val deltaTime = currentTime - scheduleBlock.endTime
-                if (deltaTime <= Time(0, 5)) {
-                    text = context.getString(R.string.fallback_end_of_school_msg)
-                    Widget.customization[R.string.end_of_school]?.let {
-                        it.bgColor?.let { bgColor = it }
-                        it.fgColor?.let { fgColor = it }
-                        alpha = it.alpha
-                        iconType = it.iconType
-                    }
-                }
+        }
+        R.string.during_lesson -> {
+            val result = getDuringLessonTextAndColor(context, scheduleBlockSearch.schoolLesson!!, scheduleBlockSearch.deltaTime!!)
+            text = result.first
+            bgColor = result.second
+            fgColor = getContrastingColor(bgColor)
+            Widget.customization[R.string.during_lesson]?.let {
+                alpha = it.alpha
+                iconType = it.iconType
+            }
+        }
+        R.string.end_of_school -> {
+            text = context.getString(R.string.fallback_end_of_school_msg)
+            Widget.customization[R.string.end_of_school]?.let {
+                it.bgColor?.let { bgColor = it }
+                it.fgColor?.let { fgColor = it }
+                alpha = it.alpha
+                iconType = it.iconType
             }
         }
     }

@@ -66,9 +66,9 @@
     <string name="free_day">Dia livre</string>
     <string name="fallback_end_of_school_msg">Acabaram-se as aulas por hoje!&lt;br&gt;Parabéns! 🎆</string>
 
-    <!--    "Aula de <b>%s</b> começa em <br><b>%d %s</b>"-->
-    <!--    Aula de PT começa em 5 minutos-->
-    <string name="widget_lesson_starting">Aula de &lt;b&gt;%s&lt;/b&gt; começa em &lt;br&gt;&lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "<b>%s</b> começa em <b>%d %s</b>"-->
+    <!--    PT começa em 5 minutos-->
+    <string name="widget_lesson_starting">&lt;b&gt;%s&lt;/b&gt; começa em &lt;b&gt;%d %s&lt;/b&gt;</string>
     <!--    "%s <b>%02d:%02d</b> para acabar <b>%s</b>"-->
     <!--    Faltam 2:50 para acabar PT-->
     <string name="widget_lesson_ending_hours">%s &lt;b&gt;%02d:%02d&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>

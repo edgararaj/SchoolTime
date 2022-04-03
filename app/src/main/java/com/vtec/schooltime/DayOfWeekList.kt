@@ -3,6 +3,7 @@ package com.vtec.schooltime
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,14 +37,21 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         binding.dayOfWeek.text = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
+        var currentScheduleBlockIndex : Int? = null
         if (currentDayOfWeek)
         {
-            binding.base.strokeWidth = 3
+            binding.base.strokeWidth = 2
             binding.base.strokeColor = context.getColor(R.color.app_fg)
             binding.dayOfWeek.setTypeface(null, Typeface.BOLD)
+
+            val scheduleBlockSearch = getCurrentScheduleBlock(MainActivity.schedule, MainActivity.lessons)
+            if (scheduleBlockSearch.type == R.string.during_lesson)
+            {
+                currentScheduleBlockIndex = scheduleBlockSearch.scheduleBlockIndex
+            }
         }
 
-        val adapter = ScheduleBlockListAdapter(schedule, dayOfWeek, MainActivity.calculateSmallestScheduleBlockDelta())
+        val adapter = ScheduleBlockListAdapter(schedule, dayOfWeek, MainActivity.calculateSmallestScheduleBlockDelta(), currentScheduleBlockIndex)
         binding.scheduleBlocks.adapter = adapter
         binding.scheduleBlocks.layoutManager = LinearLayoutManager(context)
 

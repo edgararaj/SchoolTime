@@ -3,14 +3,18 @@ package com.vtec.schooltime
 import android.content.Context
 import android.content.Intent
 import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.marginLeft
+import androidx.core.view.setMargins
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.activities.LessonEditActivity
 import com.vtec.schooltime.activities.ScheduleBlockEditActivity
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
 
-class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val smallestScheduleBlockDelta: Int) : RecyclerView.Adapter<ScheduleBlockVH>() {
+class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule, private val dayOfWeek: Int, private val smallestScheduleBlockDelta: Int, private val currentScheduleBlockIndex: Int?) : RecyclerView.Adapter<ScheduleBlockVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBlockVH {
         val binding = ScheduleBlockListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ScheduleBlockVH(binding)
@@ -21,7 +25,7 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
         if (scheduleBlock != null)
         {
             val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta) * 30
-            holder.bind(scheduleBlock, dayOfWeek, stretch)
+            holder.bind(scheduleBlock, dayOfWeek, stretch, currentScheduleBlockIndex == position)
         }
     }
 
@@ -31,7 +35,7 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
 class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
-    fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int)
+    fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int, currentBlock: Boolean)
     {
         val schoolLesson = MainActivity.lessons[scheduleBlock.schoolLessonId]
         if (schoolLesson != null)
@@ -39,6 +43,14 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             val bgColor = schoolLesson.color
             val contrastyFgColor = getContrastingColor(bgColor)
             binding.root.setBackgroundColor(bgColor)
+            if (currentBlock)
+            {
+                (binding.root.layoutParams as ViewGroup.MarginLayoutParams).setMargins(10, -15, 10, 10)
+            }
+            else
+            {
+                (binding.root.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 2)
+            }
             binding.lessonName.setTextColor(contrastyFgColor)
             binding.lessonName.text = schoolLesson.longName
             if (MainActivity.schoolClasses.size != 1)

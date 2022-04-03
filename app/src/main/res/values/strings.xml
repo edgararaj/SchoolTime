@@ -66,9 +66,9 @@
     <string name="free_day">Free day</string>
     <string name="fallback_end_of_school_msg">Classes are over for today!&lt;br&gt;Congratulations! 🎆</string>
 
-    <!--    "<b>%s</b> lesson starts in <b>%d %s</b>"-->
-    <!--    PT lesson starts in 5 minutes-->
-    <string name="widget_lesson_starting">&lt;b&gt;%s&lt;/b&gt; lesson starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "<b>%s</b> starts in <b>%d %s</b>"-->
+    <!--    PT starts in 5 minutes-->
+    <string name="widget_lesson_starting">&lt;b&gt;%s&lt;/b&gt; starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
     <!--    "<b>%02d:%02d</b> until <b>%s</b> ends"-->
     <!--    2:50 until PT ends-->
     <string name="widget_lesson_ending_hours">&lt;b&gt;%02d:%02d&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>

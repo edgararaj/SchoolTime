@@ -35,6 +35,7 @@ class WidgetUpdateService: Service() {
             addAction(Intent.ACTION_TIME_CHANGED)
             addAction(Intent.ACTION_TIME_TICK)
             addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
         })
         return START_STICKY
     }
