@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.ActivityMainBinding
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
@@ -50,7 +51,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var weatherLocation: MutableLiveData<LocationEntry> = MutableLiveData(LocationEntry("Braga", "PT", 41.5510583, -8.4280045))
-        var schoolClasses: SchoolClasses = mutableMapOf()
         var schedule: SchoolSchedule = mutableMapOf()
         val lessons: SchoolLessons = mutableMapOf()
         var didLessonsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -75,25 +75,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         try {
-            val file = File(getExternalFilesDir(null), "classes.json")
-            schoolClasses = Json.decodeFromStream(FileInputStream(file))
-
-            lessons.clear()
-            run {
-                val lessonsFile = File(getExternalFilesDir(null), "lessons.json")
-                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
-                init.forEach { (t, u) -> lessons[t] = u }
-            }
+            val data = File(getExternalFilesDir(null), "data.hdvt").readText().split("|")
 
             schedule.clear()
             run {
-                val scheduleFile = File(getExternalFilesDir(null), "schedule.json")
-                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+                val init = Json.decodeFromString<SchoolSchedule>(data[0])
                 init.forEach { (t, u) ->
                     if (schedule[t] == null) schedule[t] = mutableListOf()
                     u.forEach { schedule[t]?.add(it) }
                 }
             }
+
+            lessons.clear()
+            run {
+                val init = Json.decodeFromString<SchoolLessons>(data[1])
+                init.forEach { (t, u) -> lessons[t] = u }
+            }
+
         } catch (ex: Exception) {
             Log.d("FileIO", "App data not found or incorrect!")
         }

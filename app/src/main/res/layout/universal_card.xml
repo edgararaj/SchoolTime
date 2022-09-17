@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/SmallGridCard">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/short_name"
+                style="@style/TextAppearance.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:text="MAT" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/name"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:id="@+id/long_name"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:gravity="center"/>
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="Literacia Fotografica da Fisica Mesnagemm sdjksdj sdjksjd sjdksjd djskdj fdf  "/>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

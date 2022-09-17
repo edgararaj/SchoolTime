@@ -22,7 +22,6 @@
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/schedule_block_margin"
             android:layout_marginBottom="@dimen/schedule_block_margin"
             android:overScrollMode="never"/>
 
@@ -32,7 +31,7 @@
             style="@style/ScheduleBlock"
             app:cardElevation="3dp"
             android:layout_height="40dp"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="5dp"
             android:layout_marginHorizontal="@dimen/schedule_block_margin"
             android:layout_marginBottom="@dimen/schedule_block_margin">
 
@@ -40,8 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="10dp"
-                android:src="@drawable/add_icon"
+                android:padding="5dp"
+                android:src="@drawable/plus_icon"
                 app:tint="@color/app_fg" />
 
         </com.google.android.material.card.MaterialCardView>

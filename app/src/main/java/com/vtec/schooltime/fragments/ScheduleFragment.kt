@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -13,13 +14,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
 import com.vtec.schooltime.activities.DayOfWeekEditActivity
+import com.vtec.schooltime.activities.LessonListActivity
 import com.vtec.schooltime.databinding.FragmentScheduleBinding
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.*
 import java.util.*
 
 fun adapterPosToDayOfWeek(pos: Int) = if (pos == 6) 1 else (pos + 2)
@@ -29,6 +31,37 @@ class ScheduleFragment : Fragment() {
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 12 && data?.data != null)
+        {
+            data.data?.let { uri ->
+                val contentResolver = binding.root.context.contentResolver
+                val data = readTextFromUri(uri, contentResolver).split("|")
+                MainActivity.schedule.clear()
+                run {
+                    val init = Json.decodeFromString<SchoolSchedule>(data[0])
+                    init.forEach { (t, u) ->
+                        if (MainActivity.schedule[t] == null) MainActivity.schedule[t] = mutableListOf()
+                        u.forEach { MainActivity.schedule[t]?.add(it) }
+                    }
+                }
+                MainActivity.lessons.clear()
+                run {
+                    val init = Json.decodeFromString<SchoolLessons>(data[1])
+                    init.forEach { (t, u) -> MainActivity.lessons[t] = u }
+                }
+            }
+        }
+
+        MainActivity.schedule.forEach { entry ->
+            entry.value.sortBy { it.startTime }
+        }
+
+        MainActivity.didSchedulesUpdate.notify()
+        MainActivity.didLessonsUpdate.notify()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +69,7 @@ class ScheduleFragment : Fragment() {
     ): View {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
-        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_icon)
+        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.pen_icon)
         if (icon != null)
         {
             val action = { adapterPosition: Int ->
@@ -61,62 +94,27 @@ class ScheduleFragment : Fragment() {
 
         binding.daysOfWeek.scrollToPosition(adapterPosOfCurrentDayOfWeek)
 
-        binding.fabRestore.setOnClickListener {
-            val file = File(context?.getExternalFilesDir(null), "classes.json")
-            val outStream = FileOutputStream(file)
-            Json.encodeToStream(fallbackSchoolClasses, outStream)
-            MainActivity.schoolClasses = Json.decodeFromStream(FileInputStream(file))
-
-            MainActivity.lessons.clear()
-            run {
-                val lessonsFile = File(context?.getExternalFilesDir(null), "lessons.json")
-                val lessonsOutputStream = FileOutputStream(lessonsFile)
-                Json.encodeToStream(fallbackSchoolLessons, lessonsOutputStream)
-                val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
-                init.forEach { (t, u) -> MainActivity.lessons[t] = u }
+        binding.fabLoadJson.setOnClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "application/json"
             }
 
-            MainActivity.schedule.clear()
-            run {
-                val scheduleFile = File(context?.getExternalFilesDir(null), "schedule.json")
-                val scheduleOutputStream = FileOutputStream(scheduleFile)
-                Json.encodeToStream(fallbackSchedule, scheduleOutputStream)
-                val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
-                init.forEach { (t, u) ->
-                    if (MainActivity.schedule[t] == null) MainActivity.schedule[t] = mutableListOf()
-                    u.forEach { MainActivity.schedule[t]?.add(it) }
-                }
-            }
-
-            MainActivity.schedule.forEach { entry ->
-                entry.value.sortBy { it.startTime }
-            }
-
-            MainActivity.didLessonsUpdate.notify()
-            MainActivity.didSchedulesUpdate.notify()
+            startActivityForResult(intent, 12)
         }
 
         binding.fabApply.setOnClickListener {
-            val file = File(context?.getExternalFilesDir(null), "classes.json")
-            val outStream = FileOutputStream(file)
-            Json.encodeToStream(MainActivity.schoolClasses, outStream)
-
-            val lessonsFile = File(context?.getExternalFilesDir(null), "lessons.json")
-            val lessonsOutputStream = FileOutputStream(lessonsFile)
-            Json.encodeToStream(MainActivity.lessons, lessonsOutputStream)
-
-            val scheduleFile = File(context?.getExternalFilesDir(null), "schedule.json")
-            val scheduleOutputStream = FileOutputStream(scheduleFile)
-            Json.encodeToStream(MainActivity.schedule, scheduleOutputStream)
+            val lessonsFile = File(context?.getExternalFilesDir(null), "data.hdvt")
+            lessonsFile.writeText(Json.encodeToString(MainActivity.schedule) + "|" + Json.encodeToString(MainActivity.lessons))
         }
 
-        MainActivity.didLessonsUpdate.observe(viewLifecycleOwner, {
+        MainActivity.didLessonsUpdate.observe(viewLifecycleOwner) {
             adapter.notifyDataSetChanged()
-        })
+        }
 
-        MainActivity.didSchedulesUpdate.observe(viewLifecycleOwner, {
+        MainActivity.didSchedulesUpdate.observe(viewLifecycleOwner) {
             adapter.notifyDataSetChanged()
-        })
+        }
 
         return binding.root
     }

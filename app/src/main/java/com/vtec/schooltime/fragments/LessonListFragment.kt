@@ -15,6 +15,12 @@ import com.vtec.schooltime.*
 import com.vtec.schooltime.activities.LessonEditActivity
 import com.vtec.schooltime.activities.LessonListActivity
 import com.vtec.schooltime.databinding.FragmentLessonListBinding
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class LessonListFragment : Fragment() {
     private var _binding: FragmentLessonListBinding? = null
@@ -35,7 +41,7 @@ class LessonListFragment : Fragment() {
 
         val adapter = LessonListAdapter(MainActivity.lessons, onLessonSelected, if (activity is LessonListActivity) LessonVH.Mode.SelectAndFinishActivity else LessonVH.Mode.EditOnClick)
 
-        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.delete_icon)
+        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.del_sweep_icon)
         if (icon != null)
         {
             val action = { adapterPosition: Int ->
@@ -44,7 +50,7 @@ class LessonListFragment : Fragment() {
                 MainActivity.schedule.forEach { (dayOfWeek, dayOfWeekSchedule) ->
                     val newDayOfWeekSchedule: DayOfWeekSchedule = mutableListOf()
                     dayOfWeekSchedule.forEach { scheduleBlock ->
-                        if (scheduleBlock.schoolLessonId != schoolLesson.first)
+                        if (scheduleBlock.id != schoolLesson.first)
                         {
                             newDayOfWeekSchedule.add(scheduleBlock)
                         }

@@ -16,8 +16,8 @@
     <string name="edit">Editar</string>
     <string name="school_class">Turma</string>
     <string name="school_lesson">Disciplina</string>
-    <string name="day_of_week">Dia da semana</string>
-    <string name="schedule_block">Bloco do horário</string>
+    <string name="day_of_week">Dia da Semana</string>
+    <string name="schedule_block">Bloco do Horário</string>
     <string name="name_exists">Este nome já existe</string>
     <string name="name_empty">Por favor especifique um nome</string>
     <string name="pick_bg_color">Escolhe a cor de fundo</string>
@@ -32,6 +32,7 @@
     <string name="ends_at">Acaba às</string>
     <string name="duration">Duração</string>
     <string name="unnamed">Sem nome</string>
+    <string name="unnamed_small">SN</string>
     <string name="transparency">Transparência</string>
 
     <string name="appearance">Aparência</string>

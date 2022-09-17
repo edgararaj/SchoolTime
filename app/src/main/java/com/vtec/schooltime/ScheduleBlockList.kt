@@ -37,7 +37,7 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
 
     fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int, currentBlock: Boolean)
     {
-        val schoolLesson = MainActivity.lessons[scheduleBlock.schoolLessonId]
+        val schoolLesson = MainActivity.lessons[scheduleBlock.id]
         if (schoolLesson != null)
         {
             val bgColor = schoolLesson.color
@@ -68,7 +68,7 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             val vibrator = context.getSystemService(Vibrator::class.java)
             binding.root.setOnClickListener {
                 val intent = Intent(context, LessonEditActivity::class.java).apply {
-                    putExtra("school_lesson_id", scheduleBlock.schoolLessonId)
+                    putExtra("school_lesson_id", scheduleBlock.id)
                 }
 
                 vibrator.vibrate(App.littleVibrationEffect)

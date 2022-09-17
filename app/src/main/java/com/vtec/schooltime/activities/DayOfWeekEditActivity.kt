@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
 import com.vtec.schooltime.databinding.DayOfWeekEditActivityBinding
 
@@ -53,7 +54,7 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         val dayOfWeekCard = DayOfWeekVH(binding.dayOfWeekCard)
         val schedule = MainActivity.schedule[dayOfWeek]
 
-        val icon = AppCompatResources.getDrawable(applicationContext, R.drawable.delete_icon)
+        val icon = AppCompatResources.getDrawable(applicationContext, R.drawable.del_sweep_icon)
         if (icon != null) {
             val action = { adapterPosition: Int ->
                 MainActivity.schedule[dayOfWeek]?.let { schedule ->

@@ -129,7 +129,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+                        val schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         if (startDeltaTime > 0) {
                             text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
@@ -158,7 +158,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+                        val schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         val endDeltaTime = scheduleBlock.endTime - currentTime
                         if (endDeltaTime > 0 && startDeltaTime <= 0) {

@@ -31,14 +31,25 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
     var color: Int = Color.BLACK
         set(value) {
             binding.root.setCardBackgroundColor(value)
+
             val contrastyFgColor = getContrastingColor(value)
-            binding.name.setTextColor(contrastyFgColor)
+            binding.longName.setTextColor(contrastyFgColor)
+
+            binding.shortName.setTextColor(value)
+            binding.badge.setCardBackgroundColor(contrastyFgColor)
+
             field = value
         }
 
     var longName: String = context.getString(R.string.unnamed)
         set(value) {
-            binding.name.text = value
+            binding.longName.text = value
+            field = value
+        }
+
+    var shortName: String = context.getString(R.string.unnamed_small)
+        set(value) {
+            binding.shortName.text = value
             field = value
         }
 
@@ -51,11 +62,13 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
         if (schoolLesson == null)
         {
             longName = longName
+            shortName = shortName
             color = color
         }
         else
         {
             longName = schoolLesson.longName
+            shortName = schoolLesson.shortName
             color = schoolLesson.color
 
             if (mode != Mode.Display) binding.root.setOnClickListener {

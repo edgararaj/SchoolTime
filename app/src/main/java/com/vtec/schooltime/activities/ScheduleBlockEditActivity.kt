@@ -70,7 +70,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
         scheduleBlockPosition = intent.getIntExtra("schedule_block_position", -1)
         val scheduleBlock = MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)
-        val schoolLesson = MainActivity.lessons[scheduleBlock?.schoolLessonId]
+        val schoolLesson = MainActivity.lessons[scheduleBlock?.id]
 
         if (scheduleBlock == null || schoolLesson == null) return
 

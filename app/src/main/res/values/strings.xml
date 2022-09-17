@@ -16,8 +16,8 @@
     <string name="edit">Edit</string>
     <string name="school_class">Class</string>
     <string name="school_lesson">Lesson</string>
-    <string name="day_of_week">Day of the week</string>
-    <string name="schedule_block">Schedule block</string>
+    <string name="day_of_week">Day of Week</string>
+    <string name="schedule_block">Schedule Block</string>
     <string name="name_exists">This name already exists</string>
     <string name="name_empty">Please specify a name</string>
     <string name="pick_bg_color">Pick background color</string>
@@ -32,6 +32,7 @@
     <string name="ends_at">Ends at</string>
     <string name="duration">Duration</string>
     <string name="unnamed">Unnamed</string>
+    <string name="unnamed_small">UN</string>
     <string name="transparency">Transparency</string>
 
     <string name="minute">minute</string>

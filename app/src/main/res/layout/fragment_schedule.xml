@@ -16,12 +16,12 @@
             android:scrollbars="none"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_restore"
+            android:id="@+id/fab_load_json"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@drawable/restore_icon" />
+            android:src="@drawable/attach_icon" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_apply"

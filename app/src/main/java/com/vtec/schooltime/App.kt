@@ -3,16 +3,20 @@ package com.vtec.schooltime
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Color
+import android.net.Uri
 import android.os.VibrationEffect
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import kotlinx.serialization.Serializable
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.util.*
 
 @Serializable
@@ -51,56 +55,14 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 class SchoolLesson(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
-class SchoolClass(var color: Int)
-
-@Serializable
-class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var duration: Time)
+class ScheduleBlock(val id: String, var startTime: Time, var duration: Time)
 {
     val endTime get() = startTime + duration
 }
 
-var fallbackSchoolClasses = mutableMapOf(
-    "12º K" to SchoolClass(Color.parseColor("#7fe390"))
-)
-
-val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemática", Color.parseColor("#7f98e3")),
-    "EF" to SchoolLesson("EF", "Educação Física", Color.parseColor("#e3cc7f")),
-    "FSC" to SchoolLesson("FSC", "Física", Color.parseColor("#e3cc7f")),
-    "PT" to SchoolLesson("PT", "Português", Color.parseColor("#e37f7f")),
-    "AINF" to SchoolLesson("AINF", "Aplicações Informáticas", Color.parseColor("#7fe390"))
-)
-
-val fallbackSchedule = mutableMapOf(
-    Calendar.MONDAY to mutableListOf(
-    ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
-    ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
-    ScheduleBlock("FSC", Time(17, 20), Time(18, 50)),
-    ),
-    Calendar.TUESDAY to mutableListOf(
-        ScheduleBlock("PT", Time(13, 15), Time(13, 50)),
-        ScheduleBlock("PT", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("FSC", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("MAT", Time(17, 20), Time(18, 50)),
-    ),
-    Calendar.WEDNESDAY to mutableListOf(),
-    Calendar.THURSDAY to mutableListOf(
-        ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("PT", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
-    ),
-    Calendar.FRIDAY to mutableListOf(
-        ScheduleBlock("FSC", Time(14, 0), Time(15, 30)),
-        ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
-    ),
-    Calendar.SATURDAY to mutableListOf(),
-    Calendar.SUNDAY to mutableListOf()
-)
-
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias SchoolSchedule = MutableMap<Int, DayOfWeekSchedule>
 typealias SchoolLessons = MutableMap<String, SchoolLesson>
-typealias SchoolClasses = MutableMap<String, SchoolClass>
 
 fun getContrastingColor(color: Int): Int
 {
@@ -118,6 +80,20 @@ fun getColorTransitionState(value1: Int, value2: Int, fraction: Float): Int
         getTransitionState(Color.green(value1), Color.green(value2), fraction),
         getTransitionState(Color.blue(value1), Color.blue(value2), fraction)
     )
+}
+
+fun readTextFromUri(uri: Uri, contentResolver: ContentResolver): String {
+    val stringBuilder = StringBuilder()
+    contentResolver.openInputStream(uri)?.use { inputStream ->
+        BufferedReader(InputStreamReader(inputStream)).use { reader ->
+            var line: String? = reader.readLine()
+            while (line != null) {
+                stringBuilder.append(line)
+                line = reader.readLine()
+            }
+        }
+    }
+    return stringBuilder.toString()
 }
 
 fun getColorsTransitionState(values: IntArray, fraction: Float): Int

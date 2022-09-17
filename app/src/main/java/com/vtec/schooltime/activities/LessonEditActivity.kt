@@ -90,6 +90,7 @@ class LessonEditActivity : AppCompatActivity(), ColorPicker {
         }
 
         binding.shortLessonNameEdit.doOnTextChanged { text, start, before, count ->
+            schoolLessonCard.shortName = text.toString()
             val schoolLesson = MainActivity.lessons[text.toString()]
             if (text.isNullOrEmpty())
                 binding.shortLessonNameEdit.error = getString(R.string.name_empty)

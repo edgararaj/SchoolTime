@@ -12,6 +12,7 @@ import android.widget.RemoteViews
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.json.JSONObject
@@ -97,7 +98,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolLessons: SchoolLesso
 
     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
     for (scheduleBlock in scheduleBlocks) {
-        schoolLesson = schoolLessons[scheduleBlock.schoolLessonId] ?: continue
+        schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
         val startDeltaTime = scheduleBlock.startTime - currentTime
         if (startDeltaTime > 0) {
             type = R.string.before_lesson
@@ -224,21 +225,21 @@ fun updateWidgetWeatherIcon(context: Context, views: RemoteViews)
 fun updateWidget(context: Context)
 {
     try {
-        Widget.lessons.clear()
-        run {
-            val lessonsFile = File(context.getExternalFilesDir(null), "lessons.json")
-            val init = Json.decodeFromStream<SchoolLessons>(FileInputStream(lessonsFile))
-            init.forEach { (t, u) -> Widget.lessons[t] = u }
-        }
+        val data = File(context.getExternalFilesDir(null), "data.hdvt").readText().split("|")
 
         Widget.schedule.clear()
         run {
-            val scheduleFile = File(context.getExternalFilesDir(null), "schedule.json")
-            val init = Json.decodeFromStream<SchoolSchedule>(FileInputStream(scheduleFile))
+            val init = Json.decodeFromString<SchoolSchedule>(data[0])
             init.forEach { (t, u) ->
                 if (Widget.schedule[t] == null) Widget.schedule[t] = mutableListOf()
                 u.forEach { Widget.schedule[t]?.add(it) }
             }
+        }
+
+        Widget.lessons.clear()
+        run {
+            val init = Json.decodeFromString<SchoolLessons>(data[1])
+            init.forEach { (t, u) -> Widget.lessons[t] = u }
         }
 
         run {
