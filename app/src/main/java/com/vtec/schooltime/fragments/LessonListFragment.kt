@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vtec.schooltime.*
-import com.vtec.schooltime.activities.ClassListActivity
 import com.vtec.schooltime.activities.LessonEditActivity
 import com.vtec.schooltime.activities.LessonListActivity
 import com.vtec.schooltime.databinding.FragmentLessonListBinding
@@ -21,20 +20,10 @@ class LessonListFragment : Fragment() {
     private var _binding: FragmentLessonListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var classListSelector: ActivityResultLauncher<Unit>
-    private var schoolLessonId: String? = null
-    private var onClassSelected = { schoolLessonId: String ->
-        this.schoolLessonId = schoolLessonId
-        classListSelector.launch(Unit)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        classListSelector = registerForActivityResult(ClassListActivity.Contract()) { schoolClassId ->
-            activity?.setResult(0, Intent().putExtra("school_lesson_id", schoolLessonId).putExtra("school_class_id", schoolClassId))
-            activity?.finish()
-        }
+    private var onLessonSelected = { schoolLessonId: String ->
+        activity?.setResult(0, Intent().putExtra("school_lesson_id", schoolLessonId))
+        activity?.finish()
+        Unit
     }
 
     override fun onCreateView(
@@ -44,7 +33,7 @@ class LessonListFragment : Fragment() {
     ): View {
         _binding = FragmentLessonListBinding.inflate(inflater, container, false)
 
-        val adapter = LessonListAdapter(MainActivity.lessons, onClassSelected, if (activity is LessonListActivity) LessonVH.Mode.SelectAndFinishActivity else LessonVH.Mode.EditOnClick)
+        val adapter = LessonListAdapter(MainActivity.lessons, onLessonSelected, if (activity is LessonListActivity) LessonVH.Mode.SelectAndFinishActivity else LessonVH.Mode.EditOnClick)
 
         val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.delete_icon)
         if (icon != null)

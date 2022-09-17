@@ -43,7 +43,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
     override fun onBackPressed() {
         MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)?.apply {
             startTime = scheduleBlockStartTime
-            endTime = scheduleBlockEndTime
+            duration = scheduleBlockEndTime - scheduleBlockStartTime
         }
         MainActivity.didSchedulesUpdate.notify()
         super.onBackPressed()

@@ -15,15 +15,6 @@
     </group>
 
     <group
-        android:id="@+id/group2"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_class_list"
-            android:icon="@drawable/class_list_icon"
-            android:title="@string/class_list" />
-    </group>
-
-    <group
         android:id="@+id/group3"
         android:checkableBehavior="single">
         <item

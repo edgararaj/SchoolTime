@@ -38,12 +38,12 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         supportActionBar?.title = getString(R.string.day_of_week)
 
         val dayOfWeek = intent.getIntExtra("day_of_week", -1)
-        val schoolLessonListSelector = registerForActivityResult(LessonListActivity.Contract()) { (schoolLessonId, schoolClassId) ->
-            if (schoolLessonId != null && schoolClassId != null)
+        val schoolLessonListSelector = registerForActivityResult(LessonListActivity.Contract()) { schoolLessonId ->
+            if (schoolLessonId != null)
             {
                 binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
                 MainActivity.schedule[dayOfWeek]?.let {
-                    it.add(ScheduleBlock(schoolLessonId, Time(0, 0), Time(0, 0), schoolClassId))
+                    it.add(ScheduleBlock(schoolLessonId, Time(0, 0), Time(0, 0)))
                     it.sortBy { it.startTime }
                 }
                 MainActivity.didSchedulesUpdate.notify()
@@ -78,6 +78,5 @@ class DayOfWeekEditActivity: AppCompatActivity() {
 
         MainActivity.didLessonsUpdate.observe(this, observer)
         MainActivity.didSchedulesUpdate.observe(this, observer)
-        MainActivity.didSchoolClassesUpdate.observe(this, observer)
     }
 }

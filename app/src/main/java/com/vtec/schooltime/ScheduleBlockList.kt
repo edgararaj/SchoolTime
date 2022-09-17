@@ -24,7 +24,7 @@ class ScheduleBlockListAdapter(private val dayOfWeekSchedule: DayOfWeekSchedule,
         val scheduleBlock = dayOfWeekSchedule.getOrNull(position)
         if (scheduleBlock != null)
         {
-            val stretch = (scheduleBlock.delta.averageHour - smallestScheduleBlockDelta) * 30
+            val stretch = (scheduleBlock.duration.averageHour - smallestScheduleBlockDelta) * 30
             holder.bind(scheduleBlock, dayOfWeek, stretch, currentScheduleBlockIndex == position)
         }
     }
@@ -53,11 +53,6 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             }
             binding.lessonName.setTextColor(contrastyFgColor)
             binding.lessonName.text = schoolLesson.longName
-            if (MainActivity.schoolClasses.size != 1)
-            {
-                binding.className.setTextColor(contrastyFgColor)
-                binding.className.text = scheduleBlock.schoolClassId
-            }
 
             val darkerBgColor = getDarkerColor(bgColor)
             //binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))

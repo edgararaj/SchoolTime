@@ -54,9 +54,9 @@ class SchoolLesson(var shortName: String, var longName: String, var color: Int)
 class SchoolClass(var color: Int)
 
 @Serializable
-class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var endTime: Time, var schoolClassId: String)
+class ScheduleBlock(val schoolLessonId: String, var startTime: Time, var duration: Time)
 {
-    val delta get() = endTime - startTime
+    val endTime get() = startTime + duration
 }
 
 var fallbackSchoolClasses = mutableMapOf(
@@ -72,26 +72,26 @@ val fallbackSchoolLessons = mutableMapOf("MAT" to SchoolLesson("MAT", "Matemáti
 
 val fallbackSchedule = mutableMapOf(
     Calendar.MONDAY to mutableListOf(
-    ScheduleBlock("MAT", Time(14, 0), Time(15, 30), "12º K"),
-    ScheduleBlock("EF", Time(15, 40), Time(17, 10), "12º K"),
-    ScheduleBlock("FSC", Time(17, 20), Time(18, 50), "12º K"),
+    ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
+    ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
+    ScheduleBlock("FSC", Time(17, 20), Time(18, 50)),
     ),
     Calendar.TUESDAY to mutableListOf(
-        ScheduleBlock("PT", Time(13, 15), Time(13, 50), "12º K"),
-        ScheduleBlock("PT", Time(14, 0), Time(15, 30), "12º K"),
-        ScheduleBlock("FSC", Time(15, 40), Time(17, 10), "12º K"),
-        ScheduleBlock("MAT", Time(17, 20), Time(18, 50), "12º K"),
+        ScheduleBlock("PT", Time(13, 15), Time(13, 50)),
+        ScheduleBlock("PT", Time(14, 0), Time(15, 30)),
+        ScheduleBlock("FSC", Time(15, 40), Time(17, 10)),
+        ScheduleBlock("MAT", Time(17, 20), Time(18, 50)),
     ),
     Calendar.WEDNESDAY to mutableListOf(),
     Calendar.THURSDAY to mutableListOf(
-        ScheduleBlock("MAT", Time(14, 0), Time(15, 30), "12º K"),
-        ScheduleBlock("PT", Time(15, 40), Time(17, 10), "12º K"),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50), "12º K"),
+        ScheduleBlock("MAT", Time(14, 0), Time(15, 30)),
+        ScheduleBlock("PT", Time(15, 40), Time(17, 10)),
+        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
     ),
     Calendar.FRIDAY to mutableListOf(
-        ScheduleBlock("FSC", Time(14, 0), Time(15, 30), "12º K"),
-        ScheduleBlock("EF", Time(15, 40), Time(17, 10), "12º K"),
-        ScheduleBlock("AINF", Time(17, 20), Time(18, 50), "12º K"),
+        ScheduleBlock("FSC", Time(14, 0), Time(15, 30)),
+        ScheduleBlock("EF", Time(15, 40), Time(17, 10)),
+        ScheduleBlock("AINF", Time(17, 20), Time(18, 50)),
     ),
     Calendar.SATURDAY to mutableListOf(),
     Calendar.SUNDAY to mutableListOf()

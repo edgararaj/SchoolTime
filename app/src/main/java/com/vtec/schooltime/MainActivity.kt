@@ -55,13 +55,12 @@ class MainActivity : AppCompatActivity() {
         val lessons: SchoolLessons = mutableMapOf()
         var didLessonsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
         var didSchedulesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
-        var didSchoolClassesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
 
         fun calculateSmallestScheduleBlockDelta(): Int
         {
             var result = 0
             schedule.forEach { (key, value) ->
-                value.minByOrNull { scheduleBlock -> scheduleBlock.delta }?.delta?.averageHour?.let {
+                value.minByOrNull { scheduleBlock -> scheduleBlock.duration }?.duration?.averageHour?.let {
                     if (key == Calendar.MONDAY)
                         result = it
                     else if (it < result)

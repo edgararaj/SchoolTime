@@ -92,7 +92,6 @@ class ScheduleFragment : Fragment() {
                 entry.value.sortBy { it.startTime }
             }
 
-            MainActivity.didSchoolClassesUpdate.notify()
             MainActivity.didLessonsUpdate.notify()
             MainActivity.didSchedulesUpdate.notify()
         }
@@ -116,10 +115,6 @@ class ScheduleFragment : Fragment() {
         })
 
         MainActivity.didSchedulesUpdate.observe(viewLifecycleOwner, {
-            adapter.notifyDataSetChanged()
-        })
-
-        MainActivity.didSchoolClassesUpdate.observe(viewLifecycleOwner, {
             adapter.notifyDataSetChanged()
         })
 

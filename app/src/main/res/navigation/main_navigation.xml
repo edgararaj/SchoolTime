@@ -15,11 +15,6 @@
         android:label="@string/lesson_list"/>
 
     <fragment
-        android:id="@+id/nav_class_list"
-        android:name="com.vtec.schooltime.fragments.ClassListFragment"
-        android:label="@string/class_list"/>
-
-    <fragment
         android:id="@+id/weather_settings"
         android:name="com.vtec.schooltime.fragments.WeatherFragment"
         android:label="@string/weather" />
