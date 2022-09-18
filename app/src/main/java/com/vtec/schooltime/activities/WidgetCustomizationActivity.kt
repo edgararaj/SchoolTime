@@ -7,10 +7,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
@@ -47,6 +49,11 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
     private val iconTypeValues = mutableListOf(R.string.widget_weather_icon, R.string.widget_edit_icon, R.string.widget_no_icon)
     private lateinit var colorTypeValues: MutableList<Int>
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.widget_custom_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onColorChange(color: Int) {
         if (colorTypeValues[binding.colorType.selectedItemPosition] == R.string.foreground) {
             customization[customFieldValues[binding.customField.selectedItemPosition]]?.fgColor = color
@@ -71,16 +78,20 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
         binding.widget.activityButton.setColorFilter(color)
     }
 
-    override fun onBackPressed() {
-        val file = File(getExternalFilesDir(null), "widget_customization.json")
-        Json.encodeToStream(customization, FileOutputStream(file))
-        MainActivity.didSchedulesUpdate.notify()
-        super.onBackPressed()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
+            R.id.save -> {
+                try {
+                    val file = File(getExternalFilesDir(null), "widget_customization.json")
+                    Json.encodeToStream(customization, FileOutputStream(file))
+                } catch (e: Exception) {
+                    Toast.makeText(context, context.getString(R.string.save_fail), Toast.LENGTH_SHORT).show()
+                    return false
+                }
+                MainActivity.didSchedulesUpdate.notify()
+                Toast.makeText(context, context.getString(R.string.save_success), Toast.LENGTH_SHORT).show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

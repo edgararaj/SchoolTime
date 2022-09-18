@@ -37,12 +37,16 @@ class ScheduleFragment : Fragment() {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val adapter = DayOfWeekListAdapter(MainActivity.schedule, preferences.getBoolean("weekend_school", false))
+        val calendar = Calendar.getInstance()
+        val adapterPosOfCurrentDayOfWeek = dayOfWeekToAdapterPos(calendar.get(Calendar.DAY_OF_WEEK))
+        val adapter = DayOfWeekListAdapter(MainActivity.schedule, preferences.getBoolean("weekend_school", false), adapterPosOfCurrentDayOfWeek)
 
         binding.daysOfWeek.adapter = adapter
         binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext())
         binding.daysOfWeek.edgeEffectFactory = BounceEdgeEffectFactory()
         binding.daysOfWeek.addItemDecoration(ItemDecoration(1))
+
+        binding.daysOfWeek.scrollToPosition(adapterPosOfCurrentDayOfWeek)
 
         MainActivity.didSubjectsUpdate.observe(viewLifecycleOwner) {
             adapter.notifyDataSetChanged()

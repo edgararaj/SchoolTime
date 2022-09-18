@@ -222,11 +222,11 @@ internal class ColorPickerSeekBar(context: Context?, attrs: AttributeSet?) : Vie
         textPaint.color = context.getColor(R.color.app_fg)
         canvas.drawLine(x, trackY - thumbStretch, x, trackY + thumbStretch, textPaint)
 
-        textPaint.color = color
         textPaint.style = Paint.Style.FILL
         textPaint.textSize = textSize
         canvas.drawText(progress.toString(), x, trackY - thumbRadius - thumbStretch - textRect.height() / 2, textPaint)
 
+        textPaint.color = color
         textPaint.strokeWidth -= if (isPressed) 8 else 15
         canvas.drawLine(x, trackY - thumbStretch, x, trackY + thumbStretch, textPaint)
     }

@@ -19,6 +19,7 @@
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/clear_sky_night_icon.xml" value="0.25462962962962965" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/delete_icon.xml" value="0.21875" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/disk_icon.xml" value="0.1935" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/download_icon.xml" value="0.2995" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/drag_handle.xml" value="0.21875" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/dummy_wall.xml" value="0.1725" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/edit_icon.xml" value="0.21875" />
@@ -30,6 +31,7 @@
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/ic_menu_camera.xml" value="0.3314814814814815" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.3314814814814815" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.3314814814814815" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/import_export_icon.xml" value="0.2995" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/lesson_list_icon.xml" value="0.18796296296296297" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/lock_icon.xml" value="0.21875" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/drawable/mist_icon.xml" value="0.25462962962962965" />
@@ -78,6 +80,7 @@
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/menu/activity_main_drawer.xml" value="0.20260416666666667" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/menu/main.xml" value="0.3625" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/menu/main_menu.xml" value="0.23072916666666668" />
+        <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/menu/settings_menu.xml" value="0.3625" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21875" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3314814814814815" />
         <entry key="..\:/dev/AndroidStudio/SchoolTime/app/src/main/res/xml/settings.xml" value="0.20260416666666667" />

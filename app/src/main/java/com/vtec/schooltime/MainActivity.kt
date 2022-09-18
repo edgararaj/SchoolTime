@@ -80,35 +80,38 @@ class MainActivity : AppCompatActivity() {
     fun loadHDVT(string: String): Boolean
     {
         val data = string.split("|")
-        val newSchedule: SchoolSchedule = mutableMapOf()
-        val newSubjects: SchoolSubjects = mutableMapOf()
         try {
+            schedule.clear()
             run {
                 val init = Json.decodeFromString<SchoolSchedule>(data[0])
                 for (i in 1..7)
                 {
                     if (init.containsKey(i))
                     {
-                        if (newSchedule[i] == null) newSchedule[i] = init[i]?.toMutableList()!!
+                        if (schedule[i] == null) schedule[i] = init[i]?.toMutableList()!!
                     }
                     else
                     {
-                        newSchedule[i] = mutableListOf()
+                        schedule[i] = mutableListOf()
                     }
                 }
             }
+            subjects.clear()
             run {
-                val init = Json.decodeFromString<SchoolSubjects>(data[1])
-                init.forEach { (t, u) -> newSubjects[t] = u }
+                subjects = Json.decodeFromString(data[1])
             }
         }
         catch (e: java.lang.Exception)
         {
+            schedule.clear()
+            for (i in 1..7) {
+                schedule[i] = mutableListOf()
+            }
+            subjects.clear()
+            didSchedulesUpdate.notify()
+            didSubjectsUpdate.notify()
             return false
         }
-
-        schedule = newSchedule
-        subjects = newSubjects
 
         schedule.forEach { entry ->
             entry.value.sortBy { it.startTime }
@@ -145,7 +148,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId)
         {
-            R.id.load_hdvt -> {
+            R.id.import_export_hdvt -> {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "*/*"
@@ -154,8 +157,17 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, 12)
             }
             R.id.save_hdvt -> {
-                val subjectsFile = File(applicationContext.getExternalFilesDir(null), "data.hdvt")
-                subjectsFile.writeText(Json.encodeToString(schedule) + "|" + Json.encodeToString(subjects))
+                try {
+                    val subjectsFile = File(applicationContext.getExternalFilesDir(null), "data.hdvt")
+                    subjectsFile.writeText(Json.encodeToString(schedule) + "|" + Json.encodeToString(subjects))
+                }
+                catch (e: Exception)
+                {
+                    Toast.makeText(applicationContext, applicationContext.getString(R.string.save_fail), Toast.LENGTH_SHORT).show()
+                    return false
+                }
+
+                Toast.makeText(applicationContext, applicationContext.getString(R.string.save_success), Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)

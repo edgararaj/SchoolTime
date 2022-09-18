@@ -18,7 +18,7 @@ import com.vtec.schooltime.fragments.adapterPosToDayOfWeek
 import com.vtec.schooltime.fragments.dayOfWeekToAdapterPos
 import java.util.*
 
-class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val showWeekend: Boolean) : RecyclerView.Adapter<DayOfWeekVH>() {
+class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val showWeekend: Boolean, private val adapterPosOfCurrentDayOfWeek: Int?) : RecyclerView.Adapter<DayOfWeekVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayOfWeekVH {
         val binding = DayOfWeekListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DayOfWeekVH(binding)
@@ -26,7 +26,7 @@ class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val sho
 
     override fun onBindViewHolder(holder: DayOfWeekVH, position: Int) {
         val dayOfWeek = adapterPosToDayOfWeek(position)
-        schedule[dayOfWeek]?.let { holder.bind(it, dayOfWeek, true, null) }
+        schedule[dayOfWeek]?.let { holder.bind(it, dayOfWeek, adapterPosOfCurrentDayOfWeek == position, null) }
     }
 
     override fun getItemCount() = schedule.let { if (!showWeekend && it.size > 5) 5 else it.size }
@@ -35,10 +35,9 @@ class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val sho
 class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
-    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, showCurrentDayOfWeek: Boolean, editLauncher: ActivityResultLauncher<Unit>?)
+    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, currentDayOfWeek: Boolean, editLauncher: ActivityResultLauncher<Unit>?)
     {
         val calendar = Calendar.getInstance()
-        val realDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         binding.dayOfWeek.text = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
         var currentScheduleBlockIndex : Int? = null
@@ -58,9 +57,8 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
             }
         }
 
-        if (showCurrentDayOfWeek && dayOfWeek == realDayOfWeek)
+        if (currentDayOfWeek)
         {
-            Log.d("------------", "$showCurrentDayOfWeek $dayOfWeek $realDayOfWeek")
             binding.base.strokeWidth = 2
             binding.base.strokeColor = context.getColor(R.color.app_fg)
             binding.dayOfWeek.setTypeface(null, Typeface.BOLD)

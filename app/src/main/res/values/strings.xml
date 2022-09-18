@@ -60,8 +60,13 @@
     <string name="customize">Customize</string>
     <string name="show_end_of_school_msg">Show end of school message</string>
     <string name="icon_type">Icon type</string>
-    <string name="load_hdvt_file">Load HDVT File</string>
-    <string name="save_hdvt_file">Save HDVT File</string>
+    <string name="import_hdvt_file">Import HDVT File</string>
+    <string name="export_hdvt_file">Export HDVT File</string>
+    <string name="import_export_hdvt_file">Import/Export HDVT File</string>
+    <string name="save_widget_customization">Save Customization</string>
+    <string name="save_success">Saved Successfully</string>
+    <string name="save_fail">Failed Saving!</string>
+    <string name="save">Save</string>
 
     <string name="before_subject">Before subject</string>
     <string name="during_subject">During subject</string>
