@@ -1,9 +1,14 @@
 package com.vtec.schooltime
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.view.marginTop
@@ -16,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.vtec.schooltime.databinding.ActivityMainBinding
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
@@ -52,8 +58,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         var weatherLocation: MutableLiveData<LocationEntry> = MutableLiveData(LocationEntry("Braga", "PT", 41.5510583, -8.4280045))
         var schedule: SchoolSchedule = mutableMapOf()
-        val lessons: SchoolLessons = mutableMapOf()
-        var didLessonsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+        var subjects: SchoolSubjects = mutableMapOf()
+        var didSubjectsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
         var didSchedulesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
 
         fun calculateSmallestScheduleBlockDelta(): Int
@@ -71,33 +77,96 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    fun loadHDVT(string: String): Boolean
+    {
+        val data = string.split("|")
+        val newSchedule: SchoolSchedule = mutableMapOf()
+        val newSubjects: SchoolSubjects = mutableMapOf()
         try {
-            val data = File(getExternalFilesDir(null), "data.hdvt").readText().split("|")
-
-            schedule.clear()
             run {
                 val init = Json.decodeFromString<SchoolSchedule>(data[0])
-                init.forEach { (t, u) ->
-                    if (schedule[t] == null) schedule[t] = mutableListOf()
-                    u.forEach { schedule[t]?.add(it) }
+                for (i in 1..7)
+                {
+                    if (init.containsKey(i))
+                    {
+                        if (newSchedule[i] == null) newSchedule[i] = init[i]?.toMutableList()!!
+                    }
+                    else
+                    {
+                        newSchedule[i] = mutableListOf()
+                    }
                 }
             }
-
-            lessons.clear()
             run {
-                val init = Json.decodeFromString<SchoolLessons>(data[1])
-                init.forEach { (t, u) -> lessons[t] = u }
+                val init = Json.decodeFromString<SchoolSubjects>(data[1])
+                init.forEach { (t, u) -> newSubjects[t] = u }
             }
-
-        } catch (ex: Exception) {
-            Log.d("FileIO", "App data not found or incorrect!")
         }
+        catch (e: java.lang.Exception)
+        {
+            return false
+        }
+
+        schedule = newSchedule
+        subjects = newSubjects
 
         schedule.forEach { entry ->
             entry.value.sortBy { it.startTime }
+        }
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 12 && data?.data != null)
+        {
+            data.data?.let { uri ->
+                val contentResolver = binding.root.context.contentResolver
+                val data = readTextFromUri(uri, contentResolver)
+                if (!loadHDVT(data))
+                {
+                    Toast.makeText(applicationContext, "File is not HDVT!", Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    didSchedulesUpdate.notify()
+                    didSubjectsUpdate.notify()
+                    Toast.makeText(applicationContext, "HDVT File Loaded", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId)
+        {
+            R.id.load_hdvt -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                }
+
+                startActivityForResult(intent, 12)
+            }
+            R.id.save_hdvt -> {
+                val subjectsFile = File(applicationContext.getExternalFilesDir(null), "data.hdvt")
+                subjectsFile.writeText(Json.encodeToString(schedule) + "|" + Json.encodeToString(subjects))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (!loadHDVT(File(getExternalFilesDir(null), "data.hdvt").readText()))
+        {
+            Log.d("FileIO", "App data not found or incorrect!")
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

@@ -15,7 +15,7 @@ class DayOfWeekEditActivity: AppCompatActivity() {
     private lateinit var binding: DayOfWeekEditActivityBinding
 
     override fun onBackPressed() {
-        MainActivity.didLessonsUpdate.notify()
+        MainActivity.didSubjectsUpdate.notify()
         MainActivity.didSchedulesUpdate.notify()
         super.onBackPressed()
     }
@@ -39,12 +39,12 @@ class DayOfWeekEditActivity: AppCompatActivity() {
         supportActionBar?.title = getString(R.string.day_of_week)
 
         val dayOfWeek = intent.getIntExtra("day_of_week", -1)
-        val schoolLessonListSelector = registerForActivityResult(LessonListActivity.Contract()) { schoolLessonId ->
-            if (schoolLessonId != null)
+        val schoolSubjectListSelector = registerForActivityResult(SubjectListActivity.Contract()) { schoolSubjectId ->
+            if (schoolSubjectId != null)
             {
                 binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
                 MainActivity.schedule[dayOfWeek]?.let {
-                    it.add(ScheduleBlock(schoolLessonId, Time(0, 0), Time(0, 0)))
+                    it.add(ScheduleBlock(schoolSubjectId, Time(0, 0), Time(0, 0)))
                     it.sortBy { it.startTime }
                 }
                 MainActivity.didSchedulesUpdate.notify()
@@ -68,16 +68,16 @@ class DayOfWeekEditActivity: AppCompatActivity() {
 
             val itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
-            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolLessonListSelector)
+            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolSubjectListSelector)
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule[dayOfWeek]
             if (schedule != null)
-                dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolLessonListSelector)
+                dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolSubjectListSelector)
         }
 
-        MainActivity.didLessonsUpdate.observe(this, observer)
+        MainActivity.didSubjectsUpdate.observe(this, observer)
         MainActivity.didSchedulesUpdate.observe(this, observer)
     }
 }

@@ -9,13 +9,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/day_of_week"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:textAlignment="center"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/day_of_week"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:textAlignment="center"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+
+            <ImageView
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                android:padding="5dp"
+                android:src="@drawable/pen_icon"/>
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/schedule_blocks"

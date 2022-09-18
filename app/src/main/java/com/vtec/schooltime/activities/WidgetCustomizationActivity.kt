@@ -31,8 +31,8 @@ class CustomField(var bgColor: Int?, var fgColor: Int?, var alpha: Float, var ic
 typealias WidgetCustomization = MutableMap<Int, CustomField>
 
 val fallbackWidgetCustomization: WidgetCustomization = mutableMapOf(
-    R.string.before_lesson to CustomField(null, null, 0.7f, R.string.widget_weather_icon, null),
-    R.string.during_lesson to CustomField(null, null, 1f, R.string.widget_weather_icon, null),
+    R.string.before_subject to CustomField(null, null, 0.7f, R.string.widget_weather_icon, null),
+    R.string.during_subject to CustomField(null, null, 1f, R.string.widget_weather_icon, null),
     R.string.end_of_school to CustomField(null, null, 0.7f, R.string.widget_edit_icon, null),
     R.string.free_day to CustomField(null, null, 0f, R.string.widget_no_icon, null)
 )
@@ -43,7 +43,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
     private lateinit var binding: WidgetCustomizationActivityBinding
     private var customization: WidgetCustomization = mutableMapOf()
-    private val customFieldValues = mutableListOf(R.string.before_lesson, R.string.during_lesson, R.string.free_day)
+    private val customFieldValues = mutableListOf(R.string.before_subject, R.string.during_subject, R.string.free_day)
     private val iconTypeValues = mutableListOf(R.string.widget_weather_icon, R.string.widget_edit_icon, R.string.widget_no_icon)
     private lateinit var colorTypeValues: MutableList<Int>
 
@@ -94,7 +94,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
             if (iconType == R.string.widget_weather_icon)
                 binding.widget.activityButton.setImageResource(if (context.isDarkMode) R.drawable.clear_sky_night_icon else R.drawable.clear_sky_day_icon)
             else
-                binding.widget.activityButton.setImageResource(R.drawable.widget_edit_icon)
+                binding.widget.activityButton.setImageResource(R.drawable.pen_icon)
         }
     }
 
@@ -114,7 +114,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
             setWidgetAlpha(it.alpha)
 
             when (customFieldValue) {
-                R.string.before_lesson -> {
+                R.string.before_subject -> {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
                     setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
                     setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
@@ -125,26 +125,26 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
                     val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
                     val schedule = MainActivity.schedule
-                    val schoolLessons = MainActivity.lessons
+                    val schoolSubjects = MainActivity.subjects
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
+                        val schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         if (startDeltaTime > 0) {
-                            text = getBeforeLessonText(context, schoolLesson, startDeltaTime)
+                            text = getBeforeSubjectText(context, schoolSubject, startDeltaTime)
                             break
                         }
                     }
 
                     if (text == null)
                     {
-                        text = getBeforeLessonText(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                        text = getBeforeSubjectText(context, MainActivity.subjects.toList()[0].second, Time(0, 23))
                     }
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                 }
-                R.string.during_lesson -> {
+                R.string.during_subject -> {
                     colorTypeValues = mutableListOf()
 
                     var text: String? = null
@@ -154,15 +154,15 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
                     val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
                     val schedule = MainActivity.schedule
-                    val schoolLessons = MainActivity.lessons
+                    val schoolSubjects = MainActivity.subjects
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
+                        val schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         val endDeltaTime = scheduleBlock.endTime - currentTime
                         if (endDeltaTime > 0 && startDeltaTime <= 0) {
-                            val result = getDuringLessonTextAndColor(context, schoolLesson, endDeltaTime)
+                            val result = getDuringSubjectTextAndColor(context, schoolSubject, endDeltaTime)
                             text = result.first
                             bgColor = result.second
                             break
@@ -171,7 +171,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     if (text == null || bgColor == null)
                     {
-                        val otherResult = getDuringLessonTextAndColor(context, MainActivity.lessons.toList()[0].second, Time(0, 23))
+                        val otherResult = getDuringSubjectTextAndColor(context, MainActivity.subjects.toList()[0].second, Time(0, 23))
                         text = otherResult.first
                         bgColor = otherResult.second
                     }

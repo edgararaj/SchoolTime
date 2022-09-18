@@ -30,9 +30,9 @@
 
 		<ImageView
 			android:id="@+id/activity_button"
-			android:layout_width="45dp"
+			android:layout_width="40dp"
 			android:layout_height="match_parent"
-			android:src="@drawable/widget_edit_icon"
+			android:src="@drawable/pen_icon"
 			app:tint="@color/app_fg" />
 
 	</LinearLayout>

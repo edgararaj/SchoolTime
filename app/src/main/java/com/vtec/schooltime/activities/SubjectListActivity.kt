@@ -8,14 +8,14 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import com.vtec.schooltime.databinding.ActivitySecondaryBinding
 
-class LessonListActivity: AppCompatActivity() {
+class SubjectListActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySecondaryBinding
 
     class Contract : ActivityResultContract<Unit, String?>() {
-        override fun createIntent(context: Context, input: Unit?) = Intent(context, LessonListActivity::class.java)
+        override fun createIntent(context: Context, input: Unit?) = Intent(context, SubjectListActivity::class.java)
 
         override fun parseResult(resultCode: Int, intent: Intent?) : String? {
-            return intent?.getStringExtra("school_lesson_id")
+            return intent?.getStringExtra("school_subject_id")
         }
     }
 

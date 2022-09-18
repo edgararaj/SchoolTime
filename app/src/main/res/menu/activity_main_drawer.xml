@@ -9,9 +9,9 @@
             android:icon="@drawable/schedule_icon"
             android:title="@string/schedule" />
         <item
-            android:id="@+id/nav_lesson_list"
-            android:icon="@drawable/lesson_list_icon"
-            android:title="@string/lesson_list" />
+            android:id="@+id/nav_subject_list"
+            android:icon="@drawable/subject_list_icon"
+            android:title="@string/subject_list" />
     </group>
 
     <group

@@ -27,8 +27,8 @@
 
         <activity android:name=".activities.ScheduleBlockEditActivity"/>
         <activity android:name=".activities.DayOfWeekEditActivity"/>
-        <activity android:name=".activities.LessonEditActivity"/>
-        <activity android:name=".activities.LessonListActivity"/>
+        <activity android:name=".activities.SubjectEditActivity"/>
+        <activity android:name=".activities.SubjectListActivity"/>
         <activity android:name=".activities.WeatherActivity"/>
         <activity android:name=".activities.WidgetCustomizationActivity"/>
 

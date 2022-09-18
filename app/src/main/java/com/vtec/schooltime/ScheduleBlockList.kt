@@ -10,7 +10,7 @@ import androidx.core.view.marginLeft
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
-import com.vtec.schooltime.activities.LessonEditActivity
+import com.vtec.schooltime.activities.SubjectEditActivity
 import com.vtec.schooltime.activities.ScheduleBlockEditActivity
 import com.vtec.schooltime.databinding.ScheduleBlockListItemBinding
 
@@ -37,10 +37,10 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
 
     fun bind(scheduleBlock: ScheduleBlock, dayOfWeek: Int, stretch: Int, currentBlock: Boolean)
     {
-        val schoolLesson = MainActivity.lessons[scheduleBlock.id]
-        if (schoolLesson != null)
+        val schoolSubject = MainActivity.subjects[scheduleBlock.id]
+        if (schoolSubject != null)
         {
-            val bgColor = schoolLesson.color
+            val bgColor = schoolSubject.color
             val contrastyFgColor = getContrastingColor(bgColor)
             binding.root.setBackgroundColor(bgColor)
             if (currentBlock)
@@ -51,8 +51,8 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             {
                 (binding.root.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 2)
             }
-            binding.lessonName.setTextColor(contrastyFgColor)
-            binding.lessonName.text = schoolLesson.longName
+            binding.subjectName.setTextColor(contrastyFgColor)
+            binding.subjectName.text = schoolSubject.longName
 
             val darkerBgColor = getDarkerColor(bgColor)
             //binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
@@ -67,8 +67,8 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
 
             val vibrator = context.getSystemService(Vibrator::class.java)
             binding.root.setOnClickListener {
-                val intent = Intent(context, LessonEditActivity::class.java).apply {
-                    putExtra("school_lesson_id", scheduleBlock.id)
+                val intent = Intent(context, SubjectEditActivity::class.java).apply {
+                    putExtra("school_subject_id", scheduleBlock.id)
                 }
 
                 vibrator.vibrate(App.littleVibrationEffect)

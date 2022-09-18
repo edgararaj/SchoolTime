@@ -32,7 +32,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
             binding.duration.text = x.toString()
             field = x
         }
-    private lateinit var schoolLessonCard: LessonVH
+    private lateinit var schoolSubjectCard: SubjectVH
     private var lockDuration = false
     set(x)
     {
@@ -45,6 +45,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
             startTime = scheduleBlockStartTime
             duration = scheduleBlockEndTime - scheduleBlockStartTime
         }
+        MainActivity.schedule[dayOfWeek]?.sortBy { it.startTime }
         MainActivity.didSchedulesUpdate.notify()
         super.onBackPressed()
     }
@@ -70,12 +71,12 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         dayOfWeek = intent.getIntExtra("day_of_week", -1)
         scheduleBlockPosition = intent.getIntExtra("schedule_block_position", -1)
         val scheduleBlock = MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)
-        val schoolLesson = MainActivity.lessons[scheduleBlock?.id]
+        val schoolSubject = MainActivity.subjects[scheduleBlock?.id]
 
-        if (scheduleBlock == null || schoolLesson == null) return
+        if (scheduleBlock == null || schoolSubject == null) return
 
-        schoolLessonCard = LessonVH(binding.schoolLessonCard)
-        schoolLessonCard.bind(schoolLesson, null, LessonVH.Mode.Display)
+        schoolSubjectCard = SubjectVH(binding.schoolSubjectCard)
+        schoolSubjectCard.bind(schoolSubject, null, SubjectVH.Mode.Display)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         lockDuration = preferences.getBoolean("lock_duration", false)

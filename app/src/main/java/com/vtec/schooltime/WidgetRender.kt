@@ -22,29 +22,29 @@ import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
 
-fun getBeforeLessonText(context: Context, schoolLesson: SchoolLesson, startDeltaTime: Time): String
+fun getBeforeSubjectText(context: Context, schoolSubject: SchoolSubject, startDeltaTime: Time): String
 {
     val time = if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
     val timeNameResId = if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
     val timeName = context.getString(timeNameResId)
-    val widgetLessonStartingString =
-        context.getString(R.string.widget_lesson_starting)
+    val widgetSubjectStartingString =
+        context.getString(R.string.widget_subject_starting)
 
     return when (Locale.getDefault().language) {
-        "pt" -> widgetLessonStartingString.format(
-            schoolLesson.shortName,
+        "pt" -> widgetSubjectStartingString.format(
+            schoolSubject.shortName,
             time,
             timeName
         )
-        else -> widgetLessonStartingString.format(
-            schoolLesson.shortName,
+        else -> widgetSubjectStartingString.format(
+            schoolSubject.shortName,
             time,
             timeName
         )
     }
 }
 
-fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, endDeltaTime: Time): Pair<String, Int>
+fun getDuringSubjectTextAndColor(context: Context, schoolSubject: SchoolSubject, endDeltaTime: Time): Pair<String, Int>
 {
     val timeNameResId = if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
     val timeName = context.getString(timeNameResId)
@@ -52,36 +52,36 @@ fun getDuringLessonTextAndColor(context: Context, schoolLesson: SchoolLesson, en
 
     val text = when (Locale.getDefault().language) {
         "pt" -> if (endDeltaTime.hour == 0)
-            context.getString(R.string.widget_lesson_ending_minutes).format(
+            context.getString(R.string.widget_subject_ending_minutes).format(
                 faltar,
                 endDeltaTime.minute,
                 timeName,
-                schoolLesson.shortName
+                schoolSubject.shortName
             )
         else
-            context.getString(R.string.widget_lesson_ending_hours).format(
+            context.getString(R.string.widget_subject_ending_hours).format(
                 faltar,
                 endDeltaTime.hour,
                 endDeltaTime.minute,
-                schoolLesson.shortName
+                schoolSubject.shortName
             )
         else -> if (endDeltaTime.hour == 0)
-            context.getString(R.string.widget_lesson_ending_minutes)
-                .format(endDeltaTime.minute, timeName, schoolLesson.shortName)
+            context.getString(R.string.widget_subject_ending_minutes)
+                .format(endDeltaTime.minute, timeName, schoolSubject.shortName)
         else
-            context.getString(R.string.widget_lesson_ending_hours).format(
+            context.getString(R.string.widget_subject_ending_hours).format(
                 endDeltaTime.hour,
                 endDeltaTime.minute,
-                schoolLesson.shortName
+                schoolSubject.shortName
             )
     }
 
-    return Pair(text, schoolLesson.color)
+    return Pair(text, schoolSubject.color)
 }
 
-class ScheduleBlockSearch(val type: Int, val schoolLesson: SchoolLesson?, val deltaTime: Time?, val scheduleBlockIndex: Int?)
+class ScheduleBlockSearch(val type: Int, val schoolSubject: SchoolSubject?, val deltaTime: Time?, val scheduleBlockIndex: Int?)
 
-fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolLessons: SchoolLessons): ScheduleBlockSearch {
+fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubjects): ScheduleBlockSearch {
     val calendar = Calendar.getInstance()
     /*
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
@@ -92,22 +92,22 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolLessons: SchoolLesso
     val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
 
     var type = R.string.free_day
-    var schoolLesson: SchoolLesson? = null
+    var schoolSubject: SchoolSubject? = null
     var deltaTime: Time? = null
     var scheduleBlockIndex: Int? = null
 
     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
     for (scheduleBlock in scheduleBlocks) {
-        schoolLesson = schoolLessons[scheduleBlock.id] ?: continue
+        schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
         val startDeltaTime = scheduleBlock.startTime - currentTime
         if (startDeltaTime > 0) {
-            type = R.string.before_lesson
+            type = R.string.before_subject
             deltaTime = startDeltaTime
             break
         } else {
             val endDeltaTime = scheduleBlock.endTime - currentTime
             if (endDeltaTime > 0) {
-                type = R.string.during_lesson
+                type = R.string.during_subject
                 deltaTime = endDeltaTime
                 scheduleBlockIndex = scheduleBlocks.indexOf(scheduleBlock)
                 break
@@ -120,7 +120,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolLessons: SchoolLesso
         }
     }
 
-    return ScheduleBlockSearch(type, schoolLesson, deltaTime, scheduleBlockIndex)
+    return ScheduleBlockSearch(type, schoolSubject, deltaTime, scheduleBlockIndex)
 }
 
 fun getWidgetSchoolState(context: Context): WidgetSchoolState
@@ -131,24 +131,24 @@ fun getWidgetSchoolState(context: Context): WidgetSchoolState
     var alpha = Widget.customization[R.string.free_day]?.alpha ?: 1f
     var iconType = Widget.customization[R.string.free_day]?.iconType ?: R.string.widget_edit_icon
 
-    val scheduleBlockSearch = getCurrentScheduleBlock(Widget.schedule, Widget.lessons)
+    val scheduleBlockSearch = getCurrentScheduleBlock(Widget.schedule, Widget.subjects)
     when (scheduleBlockSearch.type)
     {
-        R.string.before_lesson -> {
-            text = getBeforeLessonText(context, scheduleBlockSearch.schoolLesson!!, scheduleBlockSearch.deltaTime!!)
-            Widget.customization[R.string.before_lesson]?.let {
+        R.string.before_subject -> {
+            text = getBeforeSubjectText(context, scheduleBlockSearch.schoolSubject!!, scheduleBlockSearch.deltaTime!!)
+            Widget.customization[R.string.before_subject]?.let {
                 it.bgColor?.let { bgColor = it }
                 it.fgColor?.let { fgColor = it }
                 alpha = it.alpha
                 iconType = it.iconType
             }
         }
-        R.string.during_lesson -> {
-            val result = getDuringLessonTextAndColor(context, scheduleBlockSearch.schoolLesson!!, scheduleBlockSearch.deltaTime!!)
+        R.string.during_subject -> {
+            val result = getDuringSubjectTextAndColor(context, scheduleBlockSearch.schoolSubject!!, scheduleBlockSearch.deltaTime!!)
             text = result.first
             bgColor = result.second
             fgColor = getContrastingColor(bgColor)
-            Widget.customization[R.string.during_lesson]?.let {
+            Widget.customization[R.string.during_subject]?.let {
                 alpha = it.alpha
                 iconType = it.iconType
             }
@@ -188,7 +188,7 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
                 updateWidgetWeatherIcon(context, views)
             }
             else -> {
-                views.setImageViewResource(R.id.activity_button, R.drawable.widget_edit_icon)
+                views.setImageViewResource(R.id.activity_button, R.drawable.pen_icon)
                 views.setViewVisibility(R.id.activity_button, View.VISIBLE)
             }
         }
@@ -236,10 +236,10 @@ fun updateWidget(context: Context)
             }
         }
 
-        Widget.lessons.clear()
+        Widget.subjects.clear()
         run {
-            val init = Json.decodeFromString<SchoolLessons>(data[1])
-            init.forEach { (t, u) -> Widget.lessons[t] = u }
+            val init = Json.decodeFromString<SchoolSubjects>(data[1])
+            init.forEach { (t, u) -> Widget.subjects[t] = u }
         }
 
         run {
@@ -300,7 +300,7 @@ fun getWidgetActivityButtonRes(context: Context): Int
         "11d", "11n" -> R.drawable.thunderstorm_icon
         "13d", "13n" -> R.drawable.snow_icon
         "50d", "50n" -> R.drawable.mist_icon
-        else -> R.drawable.widget_edit_icon
+        else -> R.drawable.pen_icon
     }
     /*
     return when (getWeatherForecastIconCode(context))

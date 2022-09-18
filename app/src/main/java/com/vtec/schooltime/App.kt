@@ -52,7 +52,7 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 }
 
 @Serializable
-class SchoolLesson(var shortName: String, var longName: String, var color: Int)
+class SchoolSubject(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
 class ScheduleBlock(val id: String, var startTime: Time, var duration: Time)
@@ -62,7 +62,7 @@ class ScheduleBlock(val id: String, var startTime: Time, var duration: Time)
 
 typealias DayOfWeekSchedule = MutableList<ScheduleBlock>
 typealias SchoolSchedule = MutableMap<Int, DayOfWeekSchedule>
-typealias SchoolLessons = MutableMap<String, SchoolLesson>
+typealias SchoolSubjects = MutableMap<String, SchoolSubject>
 
 fun getContrastingColor(color: Int): Int
 {

@@ -18,7 +18,7 @@ class Widget : AppWidgetProvider() {
 
     companion object {
         var schedule: SchoolSchedule = mutableMapOf()
-        val lessons: SchoolLessons = mutableMapOf()
+        val subjects: SchoolSubjects = mutableMapOf()
         var customization: WidgetCustomization = mutableMapOf()
         var iconType: Int? = null
     }
@@ -30,7 +30,7 @@ class Widget : AppWidgetProvider() {
         {
             context.startForegroundService(Intent(context, WidgetUpdateService::class.java))
 
-            MainActivity.didLessonsUpdate.observeForever {
+            MainActivity.didSubjectsUpdate.observeForever {
                 updateWidget(context)
             }
             MainActivity.didSchedulesUpdate.observeForever {

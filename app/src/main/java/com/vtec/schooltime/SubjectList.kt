@@ -7,25 +7,25 @@ import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vtec.schooltime.activities.LessonEditActivity
+import com.vtec.schooltime.activities.SubjectEditActivity
 import com.vtec.schooltime.databinding.UniversalCardBinding
 
-class LessonListAdapter(private val schoolLessons: SchoolLessons, private val onSelectAndFinishActivity: ((String) -> Unit)?, private val mode: LessonVH.Mode) : RecyclerView.Adapter<LessonVH>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonVH {
+class SubjectListAdapter(private val schoolSubjects: SchoolSubjects, private val onSelectAndFinishActivity: ((String) -> Unit)?, private val mode: SubjectVH.Mode) : RecyclerView.Adapter<SubjectVH>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectVH {
         val binding = UniversalCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LessonVH(binding)
+        return SubjectVH(binding)
     }
 
-    override fun onBindViewHolder(holder: LessonVH, position: Int) {
-        schoolLessons.toList()[position].second.let {
+    override fun onBindViewHolder(holder: SubjectVH, position: Int) {
+        schoolSubjects.toList()[position].second.let {
             holder.bind(it, onSelectAndFinishActivity, mode)
         }
     }
 
-    override fun getItemCount() = schoolLessons.size
+    override fun getItemCount() = schoolSubjects.size
 }
 
-class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHolder(binding.root) {
+class SubjectVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
     var color: Int = Color.BLACK
@@ -57,9 +57,9 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
         Display, EditOnClick, SelectAndFinishActivity
     }
 
-    fun bind(schoolLesson: SchoolLesson?, onSelectAndFinishActivity: ((String) -> Unit)?, mode: Mode)
+    fun bind(schoolSubject: SchoolSubject?, onSelectAndFinishActivity: ((String) -> Unit)?, mode: Mode)
     {
-        if (schoolLesson == null)
+        if (schoolSubject == null)
         {
             longName = longName
             shortName = shortName
@@ -67,15 +67,15 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
         }
         else
         {
-            longName = schoolLesson.longName
-            shortName = schoolLesson.shortName
-            color = schoolLesson.color
+            longName = schoolSubject.longName
+            shortName = schoolSubject.shortName
+            color = schoolSubject.color
 
             if (mode != Mode.Display) binding.root.setOnClickListener {
                 if (mode == Mode.EditOnClick)
                 {
-                    val intent = Intent(context, LessonEditActivity::class.java).apply {
-                        putExtra("school_lesson_id", schoolLesson.shortName)
+                    val intent = Intent(context, SubjectEditActivity::class.java).apply {
+                        putExtra("school_subject_id", schoolSubject.shortName)
                     }
 
                     val vibrator = context.getSystemService(Vibrator::class.java)
@@ -84,7 +84,7 @@ class LessonVH(private val binding: UniversalCardBinding) : RecyclerView.ViewHol
                 }
                 else
                 {
-                    if (onSelectAndFinishActivity != null) onSelectAndFinishActivity(schoolLesson.shortName)
+                    if (onSelectAndFinishActivity != null) onSelectAndFinishActivity(schoolSubject.shortName)
                 }
             }
         }

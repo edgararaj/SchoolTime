@@ -9,7 +9,7 @@
         layout="@layout/app_bar_main" />
 
     <include
-        android:id="@+id/school_lesson_card"
+        android:id="@+id/school_subject_card"
         layout="@layout/universal_card"
         style="@style/SmallCard"/>
 

@@ -10,9 +10,9 @@
         android:label="@string/schedule"/>
 
     <fragment
-        android:id="@+id/nav_lesson_list"
-        android:name="com.vtec.schooltime.fragments.LessonListFragment"
-        android:label="@string/lesson_list"/>
+        android:id="@+id/nav_subject_list"
+        android:name="com.vtec.schooltime.fragments.SubjectListFragment"
+        android:label="@string/subject_list"/>
 
     <fragment
         android:id="@+id/weather_settings"
