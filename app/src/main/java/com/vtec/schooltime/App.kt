@@ -15,8 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import kotlinx.serialization.Serializable
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.*
 import java.util.*
 
 @Serializable
@@ -94,6 +93,18 @@ fun readTextFromUri(uri: Uri, contentResolver: ContentResolver): String {
         }
     }
     return stringBuilder.toString()
+}
+
+fun alterDocument(uri: Uri, string: String, contentResolver: ContentResolver) {
+    try {
+        contentResolver.openFileDescriptor(uri, "w")?.use {
+            FileOutputStream(it.fileDescriptor).write(string.toByteArray())
+        }
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
 }
 
 fun getColorsTransitionState(values: IntArray, fraction: Float): Int

@@ -13,7 +13,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:paddingHorizontal="15dp"/>
+            android:text="Programaçção Functional"
+            android:paddingHorizontal="16dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/inner_card"
@@ -23,20 +24,28 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="80sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
                 android:gravity="center"
                 android:paddingVertical="5dp">
 
                 <TextView
                     android:id="@+id/start_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:paddingVertical="3dp"
+                    android:text="12:00"
+                    style="@style/TextAppearance.Overline"
+                    />
 
                 <TextView
                     android:id="@+id/end_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:paddingVertical="3dp"
+                    style="@style/TextAppearance.Overline"
+                    android:text="13:00"/>
 
             </LinearLayout>
 

@@ -103,6 +103,10 @@
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
+    <style name="TextAppearance.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:textSize">11dp</item>
+    </style>
+
     <style name="Widget.ColorSlider" parent="Widget.Slider">
         <item name="android:valueFrom">0</item>
         <item name="android:valueTo">255</item>

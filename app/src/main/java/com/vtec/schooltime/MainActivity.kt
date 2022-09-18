@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
@@ -121,21 +122,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 12 && data?.data != null)
-        {
-            data.data?.let { uri ->
-                val contentResolver = binding.root.context.contentResolver
+        if (data?.data == null) return
+        val contentResolver = binding.root.context.contentResolver
+        data.data?.let { uri ->
+            if (requestCode == 12) {
+                // Import HDVT
                 val data = readTextFromUri(uri, contentResolver)
-                if (!loadHDVT(data))
-                {
-                    Toast.makeText(applicationContext, "File is not HDVT!", Toast.LENGTH_SHORT).show()
-                }
-                else
-                {
+                if (!loadHDVT(data)) {
+                    Toast.makeText(applicationContext, "File is not HDVT!", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
                     didSchedulesUpdate.notify()
                     didSubjectsUpdate.notify()
-                    Toast.makeText(applicationContext, "HDVT File Loaded", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "HDVT File Loaded", Toast.LENGTH_SHORT)
+                        .show()
                 }
+            }
+            else if (requestCode == 13) {
+                // Export HDVT
+                alterDocument(
+                    uri,
+                    Json.encodeToString(schedule) + "|" + Json.encodeToString(subjects),
+                    contentResolver
+                )
             }
         }
     }
@@ -149,12 +158,31 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId)
         {
             R.id.import_export_hdvt -> {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "*/*"
-                }
+                val popup = PopupMenu(this, findViewById(R.id.import_export_hdvt))
+                popup.inflate(R.menu.import_export_menu)
+                popup.setOnMenuItemClickListener {
+                    when (it.itemId)
+                    {
+                        R.id.import_hdvt -> {
+                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "*/*"
+                            }
 
-                startActivityForResult(intent, 12)
+                            startActivityForResult(intent, 12)
+                        }
+                        R.id.export_hdvt -> {
+                            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "*/*"
+                                putExtra(Intent.EXTRA_TITLE, "data.hdvt")
+                            }
+                            startActivityForResult(intent, 13)
+                        }
+                    }
+                    true
+                }
+                popup.show()
             }
             R.id.save_hdvt -> {
                 try {

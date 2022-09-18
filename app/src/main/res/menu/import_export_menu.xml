@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/import_hdvt" android:icon="@drawable/attach_icon" app:showAsAction="always" android:title="@string/import_hdvt_file" />
+    <item android:id="@+id/export_hdvt" android:icon="@drawable/download_icon" app:showAsAction="always" android:title="@string/export_hdvt_file" />
+
+</menu>
