@@ -22,7 +22,7 @@ import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
 
-fun getBeforeSubjectText(context: Context, schoolSubject: SchoolSubject, startDeltaTime: Time): String
+fun getBeforeSubjectText(context: Context, startDeltaTime: Time): String
 {
     val time = if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
     val timeNameResId = if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
@@ -101,7 +101,7 @@ fun getWidgetSchoolState(context: Context, scheduleBlockSearch: ScheduleBlockSea
     when (scheduleBlockSearch.type)
     {
         R.string.before_subject -> {
-            text = getBeforeSubjectText(context, scheduleBlockSearch.schoolSubject!!, scheduleBlockSearch.deltaTime!!)
+            text = getBeforeSubjectText(context, scheduleBlockSearch.deltaTime!!)
             Widget.customization[R.string.before_subject]?.let {
                 it.bgColor?.let { bgColor = it }
                 it.fgColor?.let { fgColor = it }
@@ -145,28 +145,28 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     views.setInt(R.id.bg, "setAlpha", (widgetSchoolState.alpha * 255).toInt())
     views.setTextColor(R.id.text, widgetSchoolState.fgColor)
 
-    /*
     when (scheduleBlockSearch.type)
     {
         R.string.before_subject -> {
+            views.setTextViewText(R.id.long_name, scheduleBlockSearch.schoolSubject!!.longName)
+            views.setTextViewText(R.id.short_name, scheduleBlockSearch.schoolSubject.shortName)
             views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
-            views.setInt(R.id.badge, "setColorFilter", widgetSchoolState.fgColor)
-            views.setTextColor(R.id.short_name, widgetSchoolState.bgColor)
+            views.setTextColor(R.id.short_name, widgetSchoolState.fgColor)
 
             views.setViewVisibility(R.id.subject, View.VISIBLE)
 
             views.setViewVisibility(R.id.time_line, View.GONE)
         }
         R.string.during_subject -> {
+            views.setTextViewText(R.id.long_name, scheduleBlockSearch.schoolSubject!!.longName)
+            views.setTextViewText(R.id.short_name, scheduleBlockSearch.schoolSubject.shortName)
             views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
-            views.setInt(R.id.badge, "setCardBackgroundColor", widgetSchoolState.fgColor)
-            views.setTextColor(R.id.short_name, widgetSchoolState.bgColor)
+            views.setTextColor(R.id.short_name, widgetSchoolState.fgColor)
 
             views.setViewVisibility(R.id.subject, View.VISIBLE)
 
             views.setTextColor(R.id.startTime, widgetSchoolState.fgColor)
             views.setTextColor(R.id.endTime, widgetSchoolState.fgColor)
-            views.setInt(R.id.time_line_line, "setBackgroundColor", widgetSchoolState.fgColor)
 
             views.setViewVisibility(R.id.time_line, View.VISIBLE)
         }
@@ -179,7 +179,6 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
             views.setViewVisibility(R.id.time_line, View.GONE)
         }
     }
-     */
 
     Widget.iconType = widgetSchoolState.iconType
     if (widgetSchoolState.iconType != R.string.widget_no_icon)
@@ -217,7 +216,7 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
 fun updateWidgetWeatherIcon(context: Context, views: RemoteViews)
 {
     GlobalScope.launch(Dispatchers.IO) {
-        val resId = getWidgetActivityButtonRes(context)
+        val resId = getWidgetActivityButtonRes()
         views.setImageViewResource(R.id.activity_button, resId)
         views.setViewVisibility(R.id.activity_button, View.VISIBLE)
         val widget = ComponentName(context, Widget::class.java)
@@ -288,7 +287,7 @@ fun getWeatherForecastIconBitmap(context: Context): Bitmap?
  */
 
 
-fun getWidgetActivityButtonRes(context: Context): Int
+fun getWidgetActivityButtonRes(): Int
 {
     return when (getWeatherForecastIconCode())
     {

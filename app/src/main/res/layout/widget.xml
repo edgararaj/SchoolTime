@@ -15,8 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="horizontal"
-		android:layout_marginLeft="12dp"
-		android:layout_marginRight="14dp"
+		android:layout_marginHorizontal="12dp"
 		android:gravity="center">
 
 		<LinearLayout
@@ -30,22 +29,12 @@
 				android:id="@+id/subject"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
-				<com.google.android.material.card.MaterialCardView
-					android:id="@+id/badge"
+				<TextView
+					android:id="@+id/short_name"
+					style="@style/TextAppearance.MaterialComponents.Button"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical">
-
-					<TextView
-						android:id="@+id/short_name"
-						style="@style/TextAppearance.MaterialComponents.Button"
-						android:layout_width="wrap_content"
-						android:layout_height="match_parent"
-						android:paddingHorizontal="5dp"
-						android:text="MAT" />
-
-				</com.google.android.material.card.MaterialCardView>
-
+					android:text="MAT" />
 				<TextView
 					android:id="@+id/long_name"
 					android:layout_width="wrap_content"
@@ -61,7 +50,6 @@
 				android:textSize="20sp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="2dp"
 				android:textAlignment="textStart"
 				android:text="Starts in 35 minutes"/>
 
@@ -79,16 +67,10 @@
 				android:id="@+id/start_time"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:paddingBottom="12dp"
 				android:text="12:00"
 				style="@style/TextAppearance.Overline"
 				/>
-
-			<View
-				android:id="@+id/time_line_line"
-				android:layout_width="2dp"
-				android:layout_height="2dp"
-				android:background="#000"
-				android:layout_margin="5dp"/>
 
 			<TextView
 				android:id="@+id/end_time"

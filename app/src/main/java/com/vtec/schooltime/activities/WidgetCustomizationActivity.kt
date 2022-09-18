@@ -71,19 +71,16 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
     private fun setWidgetBackgroundColor(color: Int) {
         binding.widget.bg.setColorFilter(color)
-        binding.widget.shortName.setTextColor(color)
     }
 
     private fun setWidgetForegroundColor(color: Int) {
         binding.widget.text.setTextColor(color)
         binding.widget.activityButton.setColorFilter(color)
         binding.widget.longName.setTextColor(color)
-        binding.widget.badge.setCardBackgroundColor(color)
+        binding.widget.shortName.setTextColor(color)
 
         binding.widget.startTime.setTextColor(color)
         binding.widget.endTime.setTextColor(color)
-        binding.widget.timeLineLine.setBackgroundColor(color)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -153,18 +150,21 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         if (startDeltaTime > 0) {
-                            text = getBeforeSubjectText(context, schoolSubject, startDeltaTime)
+                            text = getBeforeSubjectText(context, startDeltaTime)
                             break
                         }
                     }
 
                     if (text == null)
                     {
-                        text = getBeforeSubjectText(context, MainActivity.subjects.toList()[0].second, Time(0, 23))
+                        text = getBeforeSubjectText(context, Time(0, 23))
                     }
+
+                    val subject = MainActivity.subjects.toList()[0].second
+                    binding.widget.shortName.text = subject.shortName
+                    binding.widget.longName.text = subject.longName
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                 }
@@ -181,11 +181,14 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     val schoolSubjects = MainActivity.subjects
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+                    var currentScheduleBlock: ScheduleBlock? = null
+                    var schoolSubject: SchoolSubject? = null
                     for (scheduleBlock in scheduleBlocks) {
-                        val schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
+                        schoolSubject = schoolSubjects[scheduleBlock.id] ?: continue
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         val endDeltaTime = scheduleBlock.endTime - currentTime
                         if (endDeltaTime > 0 && startDeltaTime <= 0) {
+                            currentScheduleBlock = scheduleBlock
                             val result = getDuringSubjectTextAndColor(context, schoolSubject, endDeltaTime)
                             text = result.first
                             bgColor = result.second
@@ -193,14 +196,23 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                         }
                     }
 
-                    if (text == null || bgColor == null)
+                    if (currentScheduleBlock == null || schoolSubject == null || text == null || bgColor == null)
                     {
-                        val otherResult = getDuringSubjectTextAndColor(context, MainActivity.subjects.toList()[0].second, Time(0, 23))
+                        schoolSubject = MainActivity.subjects.toList()[0].second
+                        currentScheduleBlock = ScheduleBlock(MainActivity.subjects.toList()[0].first, Time(8, 30), Time(1, 0))
+                        val otherResult = getDuringSubjectTextAndColor(context, schoolSubject, currentScheduleBlock.endTime - Time(8, 40))
                         text = otherResult.first
                         bgColor = otherResult.second
                     }
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
+
+                    binding.widget.shortName.text = schoolSubject.shortName
+                    binding.widget.longName.text = schoolSubject.longName
+
+                    binding.widget.startTime.text = currentScheduleBlock.startTime.toString()
+                    binding.widget.endTime.text = currentScheduleBlock.endTime.toString()
+
                     setWidgetBackgroundColor(bgColor)
                     val fgColor = getContrastingColor(bgColor)
                     setWidgetForegroundColor(fgColor)
