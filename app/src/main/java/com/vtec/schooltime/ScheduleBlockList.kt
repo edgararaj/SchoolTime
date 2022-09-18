@@ -2,9 +2,14 @@ package com.vtec.schooltime
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.ColorFilter
+import android.opengl.Visibility
 import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.marginLeft
 import androidx.core.view.setMargins
@@ -45,11 +50,8 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.root.setBackgroundColor(bgColor)
             if (currentBlock)
             {
-                (binding.root.layoutParams as ViewGroup.MarginLayoutParams).setMargins(10, -15, 10, 10)
-            }
-            else
-            {
-                (binding.root.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 2)
+                binding.arrow.visibility = View.VISIBLE
+                binding.arrow.colorFilter = BlendModeColorFilter(contrastyFgColor, BlendMode.SRC_ATOP)
             }
             binding.subjectName.setTextColor(contrastyFgColor)
             binding.subjectName.text = schoolSubject.longName

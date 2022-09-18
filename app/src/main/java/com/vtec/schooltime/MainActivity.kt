@@ -65,16 +65,16 @@ class MainActivity : AppCompatActivity() {
 
         fun calculateSmallestScheduleBlockDelta(): Int
         {
-            var result = 0
+            var result: Int? = null
             schedule.forEach { (key, value) ->
                 value.minByOrNull { scheduleBlock -> scheduleBlock.duration }?.duration?.averageHour?.let {
-                    if (key == Calendar.MONDAY)
+                    if (result == null)
                         result = it
-                    else if (it < result)
+                    else if (it < result!!)
                         result = it
                 }
             }
-            return result
+            return result ?: 0
         }
     }
 

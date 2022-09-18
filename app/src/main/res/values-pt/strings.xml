@@ -72,15 +72,15 @@
     <string name="during_subject">Durante a aula</string>
     <string name="end_of_school">No fim da escola</string>
     <string name="free_day">Dia livre</string>
-    <string name="fallback_end_of_school_msg">Acabaram-se as aulas por hoje!&lt;br&gt;Parabéns! 🎆</string>
+    <string name="fallback_end_of_school_msg">Acabaram-se as aulas por hoje!</string>
 
-    <!--    "<b>%s</b> começa em <b>%d %s</b>"-->
-    <!--    PT começa em 5 minutos-->
-    <string name="widget_subject_starting">&lt;b&gt;%s&lt;/b&gt; começa em &lt;b&gt;%d %s&lt;/b&gt;</string>
-    <!--    "%s <b>%02d:%02d</b> para acabar <b>%s</b>"-->
-    <!--    Faltam 2:50 para acabar PT-->
-    <string name="widget_subject_ending_hours">%s &lt;b&gt;%02d:%02d&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
-    <!--    "%s <b>%d %s</b> para acabar <b>%s</b>"-->
-    <!--    Faltam 5 minutos para acabar PT-->
-    <string name="widget_subject_ending_minutes">%s &lt;b&gt;%d %s&lt;/b&gt; para acabar &lt;b&gt;%s&lt;/b&gt;</string>
+    <!--    "Começa em <b>%d %s</b>"-->
+    <!--    Começa em 5 minutos-->
+    <string name="widget_subject_starting">Começa em &lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "Acaba em <b>%02d:%02d</b>"-->
+    <!--    Acaba em 2:50-->
+    <string name="widget_subject_ending_hours">Acaba em &lt;b&gt;%02d:%02d&lt;/b&gt;</string>
+    <!--    "Acaba em <b>%d %s</b>"-->
+    <!--    Acaba em 5 minutos-->
+    <string name="widget_subject_ending_minutes">Acaba em &lt;b&gt;%d %s&lt;/b&gt;</string>
 </resources>

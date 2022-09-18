@@ -72,15 +72,15 @@
     <string name="during_subject">During subject</string>
     <string name="end_of_school">End of the school</string>
     <string name="free_day">Free day</string>
-    <string name="fallback_end_of_school_msg">Classes are over for today!&lt;br&gt;Congratulations! 🎆</string>
+    <string name="fallback_end_of_school_msg">School is over for today!</string>
 
-    <!--    "<b>%s</b> starts in <b>%d %s</b>"-->
-    <!--    PT starts in 5 minutes-->
-    <string name="widget_subject_starting">&lt;b&gt;%s&lt;/b&gt; starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
-    <!--    "<b>%02d:%02d</b> until <b>%s</b> ends"-->
-    <!--    2:50 until PT ends-->
-    <string name="widget_subject_ending_hours">&lt;b&gt;%02d:%02d&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>
-    <!--    "<b>%d %s</b> until <b>%s</b> ends"-->
-    <!--    5 minutes until PT ends-->
-    <string name="widget_subject_ending_minutes">&lt;b&gt;%d %s&lt;/b&gt; until &lt;b&gt;%s&lt;/b&gt; ends</string>
+    <!--    "Starts in <b>%s</b>"-->
+    <!--    Starts in 5 minutes-->
+    <string name="widget_subject_starting">Starts in &lt;b&gt;%d %s&lt;/b&gt;</string>
+    <!--    "Ends in <b>%02d:%02d</b>"-->
+    <!--    Ends in 2:50-->
+    <string name="widget_subject_ending_hours">Ends in &lt;b&gt;%02d:%02d&lt;/b&gt;</string>
+    <!--    "Ends in <b>%d %s</b>"-->
+    <!--    Ends in 5 minutes-->
+    <string name="widget_subject_ending_minutes">Ends in &lt;b&gt;%d %s&lt;/b&gt;</string>
 </resources>

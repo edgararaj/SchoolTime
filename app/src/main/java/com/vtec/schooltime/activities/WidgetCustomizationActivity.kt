@@ -71,11 +71,19 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
     private fun setWidgetBackgroundColor(color: Int) {
         binding.widget.bg.setColorFilter(color)
+        binding.widget.shortName.setTextColor(color)
     }
 
     private fun setWidgetForegroundColor(color: Int) {
         binding.widget.text.setTextColor(color)
         binding.widget.activityButton.setColorFilter(color)
+        binding.widget.longName.setTextColor(color)
+        binding.widget.badge.setCardBackgroundColor(color)
+
+        binding.widget.startTime.setTextColor(color)
+        binding.widget.endTime.setTextColor(color)
+        binding.widget.timeLineLine.setBackgroundColor(color)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,8 +135,13 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
             when (customFieldValue) {
                 R.string.before_subject -> {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
-                    setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
-                    setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
+                    val bgColor = it.bgColor ?: context.getColor(R.color.app_bg)
+                    setWidgetBackgroundColor(bgColor)
+                    val fgColor = it.fgColor ?: context.getColor(R.color.app_fg)
+                    setWidgetForegroundColor(fgColor)
+
+                    binding.widget.subject.visibility = View.VISIBLE
+                    binding.widget.timeLine.visibility = View.GONE
 
                     var text: String? = null
 
@@ -189,7 +202,12 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                     setWidgetBackgroundColor(bgColor)
-                    setWidgetForegroundColor(getContrastingColor(bgColor))
+                    val fgColor = getContrastingColor(bgColor)
+                    setWidgetForegroundColor(fgColor)
+
+                    binding.widget.subject.visibility = View.VISIBLE
+
+                    binding.widget.timeLine.visibility = View.VISIBLE
                 }
                 R.string.end_of_school -> {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
@@ -197,6 +215,9 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     binding.widget.text.text = it.customMsg
                     setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
                     setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
+
+                    binding.widget.subject.visibility = View.GONE
+                    binding.widget.timeLine.visibility = View.GONE
                 }
                 else -> {
                     colorTypeValues = mutableListOf(R.string.background)
@@ -205,6 +226,9 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     setWidgetForegroundColor(getContrastingColor(color))
 
                     binding.widget.text.text = ""
+
+                    binding.widget.subject.visibility = View.GONE
+                    binding.widget.timeLine.visibility = View.GONE
                 }
             }
 

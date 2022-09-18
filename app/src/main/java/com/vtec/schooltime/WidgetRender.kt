@@ -27,54 +27,21 @@ fun getBeforeSubjectText(context: Context, schoolSubject: SchoolSubject, startDe
     val time = if (startDeltaTime.hour == 0) startDeltaTime.minute else startDeltaTime.averageHour
     val timeNameResId = if (startDeltaTime.hour == 0) if (startDeltaTime.minute == 1) R.string.minute else R.string.minutes else if (startDeltaTime.averageHour == 1) R.string.hour else R.string.hours
     val timeName = context.getString(timeNameResId)
-    val widgetSubjectStartingString =
-        context.getString(R.string.widget_subject_starting)
+    val widgetSubjectStartingString = context.getString(R.string.widget_subject_starting)
 
-    return when (Locale.getDefault().language) {
-        "pt" -> widgetSubjectStartingString.format(
-            schoolSubject.shortName,
-            time,
-            timeName
-        )
-        else -> widgetSubjectStartingString.format(
-            schoolSubject.shortName,
-            time,
-            timeName
-        )
-    }
+    return widgetSubjectStartingString.format(time, timeName)
 }
 
 fun getDuringSubjectTextAndColor(context: Context, schoolSubject: SchoolSubject, endDeltaTime: Time): Pair<String, Int>
 {
     val timeNameResId = if (endDeltaTime.minute == 1) R.string.minute else R.string.minutes
     val timeName = context.getString(timeNameResId)
-    val faltar = if (endDeltaTime.hour == 0) if (endDeltaTime.minute == 1) "Falta" else "Faltam" else if (endDeltaTime.hour == 1) "Falta" else "Faltam"
 
-    val text = when (Locale.getDefault().language) {
-        "pt" -> if (endDeltaTime.hour == 0)
-            context.getString(R.string.widget_subject_ending_minutes).format(
-                faltar,
-                endDeltaTime.minute,
-                timeName,
-                schoolSubject.shortName
-            )
+    val text =
+        if (endDeltaTime.hour == 0)
+            context.getString(R.string.widget_subject_ending_minutes).format(endDeltaTime.minute, timeName)
         else
-            context.getString(R.string.widget_subject_ending_hours).format(
-                faltar,
-                endDeltaTime.hour,
-                endDeltaTime.minute,
-                schoolSubject.shortName
-            )
-        else -> if (endDeltaTime.hour == 0)
-            context.getString(R.string.widget_subject_ending_minutes)
-                .format(endDeltaTime.minute, timeName, schoolSubject.shortName)
-        else
-            context.getString(R.string.widget_subject_ending_hours).format(
-                endDeltaTime.hour,
-                endDeltaTime.minute,
-                schoolSubject.shortName
-            )
-    }
+            context.getString(R.string.widget_subject_ending_hours).format(endDeltaTime.hour, endDeltaTime.minute)
 
     return Pair(text, schoolSubject.color)
 }
@@ -123,7 +90,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubj
     return ScheduleBlockSearch(type, schoolSubject, deltaTime, scheduleBlockIndex)
 }
 
-fun getWidgetSchoolState(context: Context): WidgetSchoolState
+fun getWidgetSchoolState(context: Context, scheduleBlockSearch: ScheduleBlockSearch): WidgetSchoolState
 {
     var text = Widget.customization[R.string.free_day]?.customMsg ?: ""
     var bgColor = Widget.customization[R.string.free_day]?.bgColor ?: context.getColor(R.color.app_bg)
@@ -131,7 +98,6 @@ fun getWidgetSchoolState(context: Context): WidgetSchoolState
     var alpha = Widget.customization[R.string.free_day]?.alpha ?: 1f
     var iconType = Widget.customization[R.string.free_day]?.iconType ?: R.string.widget_edit_icon
 
-    val scheduleBlockSearch = getCurrentScheduleBlock(Widget.schedule, Widget.subjects)
     when (scheduleBlockSearch.type)
     {
         R.string.before_subject -> {
@@ -171,12 +137,49 @@ class WidgetSchoolState(val text: String, val bgColor: Int, val fgColor: Int, va
 
 fun updateSchoolWidget(context: Context, views: RemoteViews)
 {
-    val widgetSchoolState = getWidgetSchoolState(context)
+    val scheduleBlockSearch = getCurrentScheduleBlock(Widget.schedule, Widget.subjects)
+    val widgetSchoolState = getWidgetSchoolState(context, scheduleBlockSearch)
 
     views.setTextViewText(R.id.text, Html.fromHtml(widgetSchoolState.text, Html.FROM_HTML_MODE_COMPACT))
     views.setInt(R.id.bg, "setColorFilter", widgetSchoolState.bgColor)
     views.setInt(R.id.bg, "setAlpha", (widgetSchoolState.alpha * 255).toInt())
     views.setTextColor(R.id.text, widgetSchoolState.fgColor)
+
+    /*
+    when (scheduleBlockSearch.type)
+    {
+        R.string.before_subject -> {
+            views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
+            views.setInt(R.id.badge, "setColorFilter", widgetSchoolState.fgColor)
+            views.setTextColor(R.id.short_name, widgetSchoolState.bgColor)
+
+            views.setViewVisibility(R.id.subject, View.VISIBLE)
+
+            views.setViewVisibility(R.id.time_line, View.GONE)
+        }
+        R.string.during_subject -> {
+            views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
+            views.setInt(R.id.badge, "setCardBackgroundColor", widgetSchoolState.fgColor)
+            views.setTextColor(R.id.short_name, widgetSchoolState.bgColor)
+
+            views.setViewVisibility(R.id.subject, View.VISIBLE)
+
+            views.setTextColor(R.id.startTime, widgetSchoolState.fgColor)
+            views.setTextColor(R.id.endTime, widgetSchoolState.fgColor)
+            views.setInt(R.id.time_line_line, "setBackgroundColor", widgetSchoolState.fgColor)
+
+            views.setViewVisibility(R.id.time_line, View.VISIBLE)
+        }
+        R.string.end_of_school -> {
+            views.setViewVisibility(R.id.subject, View.GONE)
+            views.setViewVisibility(R.id.time_line, View.GONE)
+        }
+        R.string.free_day -> {
+            views.setViewVisibility(R.id.subject, View.GONE)
+            views.setViewVisibility(R.id.time_line, View.GONE)
+        }
+    }
+     */
 
     Widget.iconType = widgetSchoolState.iconType
     if (widgetSchoolState.iconType != R.string.widget_no_icon)
@@ -287,7 +290,7 @@ fun getWeatherForecastIconBitmap(context: Context): Bitmap?
 
 fun getWidgetActivityButtonRes(context: Context): Int
 {
-    return when (getWeatherForecastIconCode(context))
+    return when (getWeatherForecastIconCode())
     {
         "01d" -> R.drawable.clear_sky_day_icon
         "01n" -> R.drawable.clear_sky_night_icon
@@ -328,7 +331,7 @@ fun getWidgetActivityButtonRes(context: Context): Int
      */
 }
 
-fun getWeatherForecastIconCode(context: Context): String?
+fun getWeatherForecastIconCode(): String?
 {
     val lat = MainActivity.weatherLocation.value?.lat
     val lon = MainActivity.weatherLocation.value?.lon
