@@ -26,15 +26,22 @@ class SubjectEditActivity : AppCompatActivity(), ColorPicker {
         {
             val newSchoolSubjectId = binding.shortSubjectNameEdit.text.toString()
             val schoolSubject = MainActivity.subjects[baseSchoolSubjectId]
-            if (schoolSubject == null || newSchoolSubjectId != baseSchoolSubjectId)
+            if (newSchoolSubjectId != baseSchoolSubjectId)
             {
                 MainActivity.subjects[newSchoolSubjectId] = SchoolSubject(newSchoolSubjectId, schoolSubjectCard.longName, schoolSubjectCard.color)
                 if (newSchoolSubjectId != baseSchoolSubjectId)
                     MainActivity.subjects.remove(baseSchoolSubjectId)
+
+                MainActivity.schedule.forEach { (i, mutableList) ->
+                    mutableList.forEach {
+                        if (it.id == baseSchoolSubjectId)
+                            it.id = newSchoolSubjectId
+                    }
+                }
             }
             else
             {
-                schoolSubject.apply {
+                schoolSubject?.apply {
                     longName = schoolSubjectCard.longName
                     color = schoolSubjectCard.color
                 }
