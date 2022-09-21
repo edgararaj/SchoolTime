@@ -15,14 +15,13 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="horizontal"
-		android:layout_marginHorizontal="12dp"
+		android:layout_marginHorizontal="15dp"
 		android:gravity="center">
 
 		<LinearLayout
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="5dp"
 			android:orientation="vertical">
 
 			<LinearLayout
@@ -81,12 +80,29 @@
 		</LinearLayout>
 
 
-		<ImageView
-			android:id="@+id/activity_button"
-			android:layout_width="40dp"
+		<LinearLayout
+			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:src="@drawable/pen_icon"
-			app:tint="@color/app_fg" />
+			android:orientation="vertical"
+			android:layout_marginLeft="5dp"
+			android:gravity="center">
+
+			<ImageView
+				android:id="@+id/activity_button"
+				android:layout_width="28dp"
+				android:layout_height="28dp"
+				android:src="@drawable/pen_icon"
+				app:tint="@color/app_fg" />
+
+			<TextView
+				android:id="@+id/temp"
+				style="@style/TextAppearance.MaterialComponents.Button"
+				android:textSize="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="35ºC" />
+
+		</LinearLayout>
 
 	</LinearLayout>
 

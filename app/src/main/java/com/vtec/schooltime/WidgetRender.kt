@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.text.Html
 import android.util.Log
 import android.view.View
@@ -21,6 +22,8 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 fun getBeforeSubjectText(context: Context, startDeltaTime: Time): String
 {
@@ -46,7 +49,7 @@ fun getDuringSubjectTextAndColor(context: Context, schoolSubject: SchoolSubject,
     return Pair(text, schoolSubject.color)
 }
 
-class ScheduleBlockSearch(val type: Int, val schoolSubject: SchoolSubject?, val deltaTime: Time?, val scheduleBlockIndex: Int?)
+class ScheduleBlockSearch(val type: Int, val schoolSubject: SchoolSubject?, val deltaTime: Time?, val scheduleBlock: ScheduleBlock?)
 
 fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubjects): ScheduleBlockSearch {
     val calendar = Calendar.getInstance()
@@ -61,7 +64,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubj
     var type = R.string.free_day
     var schoolSubject: SchoolSubject? = null
     var deltaTime: Time? = null
-    var scheduleBlockIndex: Int? = null
+    var resultScheduleBlock: ScheduleBlock? = null
 
     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
     for (scheduleBlock in scheduleBlocks) {
@@ -76,7 +79,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubj
             if (endDeltaTime > 0) {
                 type = R.string.during_subject
                 deltaTime = endDeltaTime
-                scheduleBlockIndex = scheduleBlocks.indexOf(scheduleBlock)
+                resultScheduleBlock = scheduleBlock
                 break
             } else if (scheduleBlock == schedule[currentDayOfWeek]?.last()) {
                 val deltaTime = currentTime - scheduleBlock.endTime
@@ -87,14 +90,14 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubj
         }
     }
 
-    return ScheduleBlockSearch(type, schoolSubject, deltaTime, scheduleBlockIndex)
+    return ScheduleBlockSearch(type, schoolSubject, deltaTime, resultScheduleBlock)
 }
 
 fun getWidgetSchoolState(context: Context, scheduleBlockSearch: ScheduleBlockSearch): WidgetSchoolState
 {
     var text = Widget.customization[R.string.free_day]?.customMsg ?: ""
-    var bgColor = Widget.customization[R.string.free_day]?.bgColor ?: context.getColor(R.color.app_bg)
-    var fgColor = Widget.customization[R.string.free_day]?.fgColor ?: context.getColor(R.color.app_fg)
+    var bgColor = Widget.customization[R.string.free_day]?.bgColor ?: Color.BLACK
+    var fgColor = Widget.customization[R.string.free_day]?.fgColor ?: Color.WHITE
     var alpha = Widget.customization[R.string.free_day]?.alpha ?: 1f
     var iconType = Widget.customization[R.string.free_day]?.iconType ?: R.string.widget_edit_icon
 
@@ -165,8 +168,10 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
 
             views.setViewVisibility(R.id.subject, View.VISIBLE)
 
-            views.setTextColor(R.id.startTime, widgetSchoolState.fgColor)
-            views.setTextColor(R.id.endTime, widgetSchoolState.fgColor)
+            views.setTextViewText(R.id.start_time, scheduleBlockSearch.scheduleBlock!!.startTime.toString())
+            views.setTextColor(R.id.start_time, widgetSchoolState.fgColor)
+            views.setTextViewText(R.id.end_time, scheduleBlockSearch.scheduleBlock.endTime.toString())
+            views.setTextColor(R.id.end_time, widgetSchoolState.fgColor)
 
             views.setViewVisibility(R.id.time_line, View.VISIBLE)
         }
@@ -184,14 +189,18 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     if (widgetSchoolState.iconType != R.string.widget_no_icon)
     {
         views.setInt(R.id.activity_button, "setColorFilter", widgetSchoolState.fgColor)
+        views.setTextColor(R.id.temp, widgetSchoolState.fgColor)
         when (widgetSchoolState.iconType)
         {
             R.string.widget_weather_icon -> {
-                updateWidgetWeatherIcon(context, views)
+                updateWidgetWeather(context, views)
+                views.setViewVisibility(R.id.activity_button, View.VISIBLE)
+                views.setViewVisibility(R.id.temp, View.VISIBLE)
             }
             else -> {
                 views.setImageViewResource(R.id.activity_button, R.drawable.pen_icon)
                 views.setViewVisibility(R.id.activity_button, View.VISIBLE)
+                views.setViewVisibility(R.id.temp, View.GONE)
             }
         }
     }
@@ -213,14 +222,20 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     }
 }
 
-fun updateWidgetWeatherIcon(context: Context, views: RemoteViews)
+fun updateWidgetWeather(context: Context, views: RemoteViews)
 {
     GlobalScope.launch(Dispatchers.IO) {
-        val resId = getWidgetActivityButtonRes()
-        views.setImageViewResource(R.id.activity_button, resId)
-        views.setViewVisibility(R.id.activity_button, View.VISIBLE)
-        val widget = ComponentName(context, Widget::class.java)
-        AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+        val weatherForecast = getWeatherForecast()
+        if (weatherForecast != null)
+        {
+            val resId = getWidgetActivityButtonRes(weatherForecast)
+            views.setImageViewResource(R.id.activity_button, resId)
+
+            views.setTextViewText(R.id.temp, "${weatherForecast.temp.roundToInt()}ºC")
+
+            val widget = ComponentName(context, Widget::class.java)
+            AppWidgetManager.getInstance(context).updateAppWidget(widget, views)
+        }
     }
 }
 
@@ -287,9 +302,9 @@ fun getWeatherForecastIconBitmap(context: Context): Bitmap?
  */
 
 
-fun getWidgetActivityButtonRes(): Int
+fun getWidgetActivityButtonRes(weatherForecast: WeatherForecast): Int
 {
-    return when (getWeatherForecastIconCode())
+    return when (weatherForecast.iconCode)
     {
         "01d" -> R.drawable.clear_sky_day_icon
         "01n" -> R.drawable.clear_sky_night_icon
@@ -304,45 +319,23 @@ fun getWidgetActivityButtonRes(): Int
         "50d", "50n" -> R.drawable.mist_icon
         else -> R.drawable.pen_icon
     }
-    /*
-    return when (getWeatherForecastIconCode(context))
-    {
-        "01d" -> R.drawable.a_3d_clear_sky_daymdpi
-        "01n" -> R.drawable.a_3d_clear_sky_nightmdpi
-        "02d" -> R.drawable.a_3d_few_clouds_daymdpi
-        "02n" -> R.drawable.a_3d_few_clouds_nightmdpi
-        "03d" -> R.drawable.a_3d_scattered_cloudsmdpi
-        "03n" -> R.drawable.a_3d_scattered_clouds_nightmdpi
-        "04d" -> R.drawable.a_3d_broken_cloudsmdpi
-        "04n" -> R.drawable.a_3d_broken_clouds_nightmdpi
-        "09d" -> R.drawable.a_3d_shower_rainmdpi
-        "09n" -> R.drawable.a_3d_shower_rain_nightmdpi
-        "10d" -> R.drawable.a_3d_rainmdpi
-        "10n" -> R.drawable.a_3d_rain_nightmdpi
-        "11d" -> R.drawable.a_3d_thunderstormmdpi
-        "11n" -> R.drawable.a_3d_thunderstorm_nightmdpi
-        "13d" -> R.drawable.a_3d_snow_iconmdpi
-        "13n" -> R.drawable.a_3d_snow_icon_nightmdpi
-        "50d" -> R.drawable.a_3d_mistmdpi
-        "50n" -> R.drawable.a_3d_mist_nightmdpi
-        else -> R.drawable.widget_edit_icon
-    }
-     */
 }
 
-fun getWeatherForecastIconCode(): String?
-{
+class WeatherForecast(val iconCode: String, val temp: Double)
+
+fun getWeatherForecast(): WeatherForecast? {
     val lat = MainActivity.weatherLocation.value?.lat
     val lon = MainActivity.weatherLocation.value?.lon
     val apikey = "cc752389952464c89015c0c7aa74fab1"
-    var iconCode: String? = null
 
     try {
-        val forecast = URL("https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&cnt=1&units=metric&appid=$apikey").readText()
-        iconCode = JSONObject(forecast).getJSONArray("list").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getString("icon")
+        val url = "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&cnt=1&units=metric&appid=$apikey"
+        val forecast = URL(url).readText()
+        val iconCode = JSONObject(forecast).getJSONArray("list").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getString("icon")
+        val temp = JSONObject(forecast).getJSONArray("list").getJSONObject(0).getJSONObject("main").getDouble("feels_like")
+        return WeatherForecast(iconCode, temp)
     } catch (ex: FileNotFoundException) {
         Log.d("HTTPS", "Failed to fetch weather forecast!")
+        return null
     }
-
-    return iconCode
 }

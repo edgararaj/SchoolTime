@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -75,7 +76,10 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
     private fun setWidgetForegroundColor(color: Int) {
         binding.widget.text.setTextColor(color)
+
         binding.widget.activityButton.setColorFilter(color)
+        binding.widget.temp.setTextColor(color)
+
         binding.widget.longName.setTextColor(color)
         binding.widget.shortName.setTextColor(color)
 
@@ -105,18 +109,25 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
         customization[customFieldValues[binding.customField.selectedItemPosition]]?.iconType = iconType
         if (iconType == R.string.widget_no_icon) {
             binding.widget.activityButton.visibility = View.GONE
+            binding.widget.temp.visibility = View.GONE
         } else {
             binding.widget.activityButton.visibility = View.VISIBLE
             if (iconType == R.string.widget_weather_icon)
+            {
                 binding.widget.activityButton.setImageResource(if (context.isDarkMode) R.drawable.clear_sky_night_icon else R.drawable.clear_sky_day_icon)
+                binding.widget.temp.visibility = View.VISIBLE
+            }
             else
+            {
                 binding.widget.activityButton.setImageResource(R.drawable.pen_icon)
+                binding.widget.temp.visibility = View.GONE
+            }
         }
     }
 
     private fun showCustomFieldColorPickerColor(customization: CustomField, colorType: Int) {
-        val color = if (colorType == R.string.foreground) customization.fgColor ?: context.getColor(R.color.app_fg) else
-            customization.bgColor ?: context.getColor(R.color.app_bg)
+        val color = if (colorType == R.string.foreground) customization.fgColor ?: Color.WHITE else
+            customization.bgColor ?: Color.BLACK
 
         setHexColorEditText(color)
         setSlidersProgress(color)
@@ -129,12 +140,13 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
             binding.alphaSlider.field = it.alpha
             setWidgetAlpha(it.alpha)
 
+            val bgColor = it.bgColor ?: Color.BLACK
+            val fgColor = it.bgColor ?: Color.WHITE
+
             when (customFieldValue) {
                 R.string.before_subject -> {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
-                    val bgColor = it.bgColor ?: context.getColor(R.color.app_bg)
                     setWidgetBackgroundColor(bgColor)
-                    val fgColor = it.fgColor ?: context.getColor(R.color.app_fg)
                     setWidgetForegroundColor(fgColor)
 
                     binding.widget.subject.visibility = View.VISIBLE
@@ -162,9 +174,17 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                         text = getBeforeSubjectText(context, Time(0, 23))
                     }
 
-                    val subject = MainActivity.subjects.toList()[0].second
-                    binding.widget.shortName.text = subject.shortName
-                    binding.widget.longName.text = subject.longName
+                    if (MainActivity.subjects.isNotEmpty())
+                    {
+                        val subject = MainActivity.subjects.toList()[0].second
+                        binding.widget.shortName.text = subject.shortName
+                        binding.widget.longName.text = subject.longName
+                    }
+                    else
+                    {
+                        binding.widget.shortName.text = context.getString(R.string.unnamed_small)
+                        binding.widget.longName.text = context.getString(R.string.unnamed)
+                    }
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                 }
@@ -198,8 +218,17 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     if (currentScheduleBlock == null || schoolSubject == null || text == null || bgColor == null)
                     {
-                        schoolSubject = MainActivity.subjects.toList()[0].second
-                        currentScheduleBlock = ScheduleBlock(MainActivity.subjects.toList()[0].first, Time(8, 30), Time(1, 0))
+                        if (MainActivity.subjects.isNotEmpty())
+                        {
+                            val subject = MainActivity.subjects.toList()[0]
+                            schoolSubject = subject.second
+                            currentScheduleBlock = ScheduleBlock(subject.first, Time(8, 30), Time(1, 0))
+                        }
+                        else
+                        {
+                            schoolSubject = SchoolSubject(context.getString(R.string.unnamed_small), context.getString(R.string.unnamed), Color.BLACK)
+                            currentScheduleBlock = ScheduleBlock(schoolSubject.shortName, Time(8, 30), Time(1, 0))
+                        }
                         val otherResult = getDuringSubjectTextAndColor(context, schoolSubject, currentScheduleBlock.endTime - Time(8, 40))
                         text = otherResult.first
                         bgColor = otherResult.second
@@ -225,17 +254,16 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     colorTypeValues = mutableListOf(R.string.background, R.string.foreground)
 
                     binding.widget.text.text = it.customMsg
-                    setWidgetBackgroundColor(it.bgColor ?: context.getColor(R.color.app_bg))
-                    setWidgetForegroundColor(it.fgColor ?: context.getColor(R.color.app_fg))
+                    setWidgetBackgroundColor(bgColor)
+                    setWidgetForegroundColor(fgColor)
 
                     binding.widget.subject.visibility = View.GONE
                     binding.widget.timeLine.visibility = View.GONE
                 }
                 else -> {
                     colorTypeValues = mutableListOf(R.string.background)
-                    val color = it.bgColor ?: context.getColor(R.color.app_bg)
-                    setWidgetBackgroundColor(color)
-                    setWidgetForegroundColor(getContrastingColor(color))
+                    setWidgetBackgroundColor(bgColor)
+                    setWidgetForegroundColor(getContrastingColor(bgColor))
 
                     binding.widget.text.text = ""
 
@@ -338,14 +366,6 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) { }
             }
-        }
-
-        binding.fabRestore.setOnClickListener {
-            val file = File(getExternalFilesDir(null), "widget_customization.json")
-            Json.encodeToStream(fallbackWidgetCustomization, FileOutputStream(file))
-            customization = Json.decodeFromStream(FileInputStream(file))
-
-            showCustomField(customFieldValues[binding.customField.selectedItemPosition])
         }
 
         binding.alphaSlider.onSeekBarChangeListener = {

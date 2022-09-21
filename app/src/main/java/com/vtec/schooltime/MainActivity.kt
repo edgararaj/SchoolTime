@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var weatherLocation: MutableLiveData<LocationEntry> = MutableLiveData(LocationEntry("Braga", "PT", 41.5510583, -8.4280045))
-        var schedule: SchoolSchedule = mutableMapOf()
+        var schedule: SchoolSchedule = mutableMapOf(Calendar.MONDAY to mutableListOf(), Calendar.TUESDAY to mutableListOf(), Calendar.WEDNESDAY to mutableListOf(), Calendar.THURSDAY to mutableListOf(), Calendar.FRIDAY to mutableListOf(), Calendar.SATURDAY to mutableListOf(), Calendar.SUNDAY to mutableListOf())
         var subjects: SchoolSubjects = mutableMapOf()
         var didSubjectsUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
         var didSchedulesUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadHDVT(string: String): Boolean
+    private fun loadHDVT(string: String): Boolean
     {
         val data = string.split("|")
         try {
@@ -99,18 +99,13 @@ class MainActivity : AppCompatActivity() {
             }
             subjects.clear()
             run {
-                subjects = Json.decodeFromString(data[1])
+                Json.decodeFromString<SchoolSubjects>(data[1]).forEach { (s, schoolSubject) ->
+                    subjects[s] = schoolSubject
+                }
             }
         }
         catch (e: java.lang.Exception)
         {
-            schedule.clear()
-            for (i in 1..7) {
-                schedule[i] = mutableListOf()
-            }
-            subjects.clear()
-            didSchedulesUpdate.notify()
-            didSubjectsUpdate.notify()
             return false
         }
 
@@ -204,9 +199,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!loadHDVT(File(getExternalFilesDir(null), "data.hdvt").readText()))
+        val internalData = File(getExternalFilesDir(null), "data.hdvt")
+        if (internalData.exists())
         {
-            Log.d("FileIO", "App data not found or incorrect!")
+            if (!loadHDVT(internalData.readText()))
+            {
+                Log.d("FileIO", "App data not found or incorrect!")
+            }
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

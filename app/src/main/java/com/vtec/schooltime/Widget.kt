@@ -39,7 +39,7 @@ class Widget : AppWidgetProvider() {
             MainActivity.weatherLocation.observeForever {
                 val views = RemoteViews(context.packageName, R.layout.widget)
                 if (iconType == R.string.widget_weather_icon)
-                    updateWidgetWeatherIcon(context, views)
+                    updateWidgetWeather(context, views)
             }
         }
     }
