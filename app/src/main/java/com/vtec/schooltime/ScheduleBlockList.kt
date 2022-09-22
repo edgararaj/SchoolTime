@@ -56,8 +56,10 @@ class ScheduleBlockVH(val binding: ScheduleBlockListItemBinding) : RecyclerView.
             binding.subjectName.setTextColor(contrastyFgColor)
             binding.subjectName.text = schoolSubject.longName
 
+            binding.more.setTextColor(contrastyFgColor)
+            binding.more.text = scheduleBlock.more
+
             val darkerBgColor = getDarkerColor(bgColor)
-            //binding.root.strokeColor = getDarkerColor(getDarkerColor(darkerBgColor))
             binding.innerCard.setBackgroundColor(darkerBgColor)
 
             binding.startTime.setTextColor(contrastyFgColor)

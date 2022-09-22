@@ -27,7 +27,7 @@ class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val sho
     override fun onBindViewHolder(holder: DayOfWeekVH, position: Int) {
         val dayOfWeek = adapterPosToDayOfWeek(position)
         if (adapterPosOfCurrentDayOfWeek == null) return
-        schedule[dayOfWeek]?.let { holder.bind(it, dayOfWeek, adapterPosOfCurrentDayOfWeek, null) }
+        schedule[dayOfWeek]?.let { holder.bind(it, dayOfWeek, position == adapterPosOfCurrentDayOfWeek, null) }
     }
 
     override fun getItemCount() = schedule.let { if (!showWeekend && it.size > 5) 5 else it.size }
@@ -36,7 +36,7 @@ class DayOfWeekListAdapter(private val schedule: SchoolSchedule, private val sho
 class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val context: Context = binding.root.context
 
-    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, currentDayOfWeek: Int?, editLauncher: ActivityResultLauncher<Unit>?)
+    fun bind(schedule: DayOfWeekSchedule, dayOfWeek: Int, currentDayOfWeek: Boolean, editLauncher: ActivityResultLauncher<Unit>?)
     {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek)
@@ -58,7 +58,7 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
             }
         }
 
-        if (currentDayOfWeek != null && currentDayOfWeek == dayOfWeek)
+        if (currentDayOfWeek)
         {
             binding.base.strokeWidth = 2
             binding.base.strokeColor = context.getColor(R.color.app_fg)
@@ -67,7 +67,7 @@ class DayOfWeekVH(private val binding: DayOfWeekListItemBinding) : RecyclerView.
             val scheduleBlockSearch = getCurrentScheduleBlock(MainActivity.schedule, MainActivity.subjects)
             if (scheduleBlockSearch.type == R.string.during_subject)
             {
-                val scheduleBlocks = MainActivity.schedule.getOrDefault(currentDayOfWeek, mutableListOf())
+                val scheduleBlocks = MainActivity.schedule.getOrDefault(dayOfWeek, mutableListOf())
                 currentScheduleBlockIndex = scheduleBlocks.indexOf(scheduleBlockSearch.scheduleBlock)
             }
         }

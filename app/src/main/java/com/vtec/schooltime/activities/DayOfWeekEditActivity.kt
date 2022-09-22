@@ -44,7 +44,7 @@ class DayOfWeekEditActivity: AppCompatActivity() {
             {
                 binding.dayOfWeekCard.scheduleBlocks.visibility = View.VISIBLE
                 MainActivity.schedule[dayOfWeek]?.let {
-                    it.add(ScheduleBlock(schoolSubjectId, Time(0, 0), Time(0, 0)))
+                    it.add(ScheduleBlock(schoolSubjectId, Time(0, 0), Time(0, 0), ""))
                     it.sortBy { it.startTime }
                 }
                 MainActivity.didSchedulesUpdate.notify()
@@ -68,13 +68,13 @@ class DayOfWeekEditActivity: AppCompatActivity() {
 
             val itemTouchHelper = ItemTouchHelper(ItemSlideAction(this, icon, true, action, null))
             itemTouchHelper.attachToRecyclerView(binding.dayOfWeekCard.scheduleBlocks)
-            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, null, schoolSubjectListSelector)
+            if (schedule != null) dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolSubjectListSelector)
         }
 
         val observer = Observer<Any> {
             val schedule = MainActivity.schedule[dayOfWeek]
             if (schedule != null)
-                dayOfWeekCard.bind(schedule, dayOfWeek, null, schoolSubjectListSelector)
+                dayOfWeekCard.bind(schedule, dayOfWeek, false, schoolSubjectListSelector)
         }
 
         MainActivity.didSubjectsUpdate.observe(this, observer)

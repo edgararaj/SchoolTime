@@ -54,7 +54,7 @@ class Time(val hour: Int, val minute: Int) : Comparable<Time>
 class SchoolSubject(var shortName: String, var longName: String, var color: Int)
 
 @Serializable
-class ScheduleBlock(var id: String, var startTime: Time, var duration: Time)
+class ScheduleBlock(var id: String, var startTime: Time, var duration: Time, var more: String)
 {
     val endTime get() = startTime + duration
 }

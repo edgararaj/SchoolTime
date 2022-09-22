@@ -80,6 +80,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
         binding.widget.activityButton.setColorFilter(color)
         binding.widget.temp.setTextColor(color)
 
+        binding.widget.more.setTextColor(color)
         binding.widget.longName.setTextColor(color)
         binding.widget.shortName.setTextColor(color)
 
@@ -159,11 +160,13 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                     val currentTime = Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
                     val schedule = MainActivity.schedule
                     val schoolSubjects = MainActivity.subjects
+                    var nextScheduleBlock: ScheduleBlock? = null
 
                     val scheduleBlocks = schedule.getOrDefault(currentDayOfWeek, mutableListOf())
                     for (scheduleBlock in scheduleBlocks) {
                         val startDeltaTime = scheduleBlock.startTime - currentTime
                         if (startDeltaTime > 0) {
+                            nextScheduleBlock = scheduleBlock
                             text = getBeforeSubjectText(context, startDeltaTime)
                             break
                         }
@@ -176,12 +179,14 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     if (MainActivity.subjects.isNotEmpty())
                     {
+                        binding.widget.more.text = nextScheduleBlock?.more ?: ""
                         val subject = MainActivity.subjects.toList()[0].second
                         binding.widget.shortName.text = subject.shortName
                         binding.widget.longName.text = subject.longName
                     }
                     else
                     {
+                        binding.widget.more.text = ""
                         binding.widget.shortName.text = context.getString(R.string.unnamed_small)
                         binding.widget.longName.text = context.getString(R.string.unnamed)
                     }
@@ -222,12 +227,12 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
                         {
                             val subject = MainActivity.subjects.toList()[0]
                             schoolSubject = subject.second
-                            currentScheduleBlock = ScheduleBlock(subject.first, Time(8, 30), Time(1, 0))
+                            currentScheduleBlock = ScheduleBlock(subject.first, Time(8, 30), Time(1, 0), "")
                         }
                         else
                         {
                             schoolSubject = SchoolSubject(context.getString(R.string.unnamed_small), context.getString(R.string.unnamed), Color.BLACK)
-                            currentScheduleBlock = ScheduleBlock(schoolSubject.shortName, Time(8, 30), Time(1, 0))
+                            currentScheduleBlock = ScheduleBlock(schoolSubject.shortName, Time(8, 30), Time(1, 0), "")
                         }
                         val otherResult = getDuringSubjectTextAndColor(context, schoolSubject, currentScheduleBlock.endTime - Time(8, 40))
                         text = otherResult.first
@@ -236,6 +241,7 @@ class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {
 
                     binding.widget.text.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
 
+                    binding.widget.more.text = currentScheduleBlock.more
                     binding.widget.shortName.text = schoolSubject.shortName
                     binding.widget.longName.text = schoolSubject.longName
 

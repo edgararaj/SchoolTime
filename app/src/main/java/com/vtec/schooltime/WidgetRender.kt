@@ -73,6 +73,7 @@ fun getCurrentScheduleBlock(schedule: SchoolSchedule, schoolSubjects: SchoolSubj
         if (startDeltaTime > 0) {
             type = R.string.before_subject
             deltaTime = startDeltaTime
+            resultScheduleBlock = scheduleBlock
             break
         } else {
             val endDeltaTime = scheduleBlock.endTime - currentTime
@@ -151,8 +152,10 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     when (scheduleBlockSearch.type)
     {
         R.string.before_subject -> {
+            views.setTextViewText(R.id.more, scheduleBlockSearch.scheduleBlock!!.more)
             views.setTextViewText(R.id.long_name, scheduleBlockSearch.schoolSubject!!.longName)
             views.setTextViewText(R.id.short_name, scheduleBlockSearch.schoolSubject.shortName)
+            views.setTextColor(R.id.more, widgetSchoolState.fgColor)
             views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
             views.setTextColor(R.id.short_name, widgetSchoolState.fgColor)
 
@@ -161,14 +164,16 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
             views.setViewVisibility(R.id.time_line, View.GONE)
         }
         R.string.during_subject -> {
+            views.setTextViewText(R.id.more, scheduleBlockSearch.scheduleBlock!!.more)
             views.setTextViewText(R.id.long_name, scheduleBlockSearch.schoolSubject!!.longName)
             views.setTextViewText(R.id.short_name, scheduleBlockSearch.schoolSubject.shortName)
+            views.setTextColor(R.id.more, widgetSchoolState.fgColor)
             views.setTextColor(R.id.long_name, widgetSchoolState.fgColor)
             views.setTextColor(R.id.short_name, widgetSchoolState.fgColor)
 
             views.setViewVisibility(R.id.subject, View.VISIBLE)
 
-            views.setTextViewText(R.id.start_time, scheduleBlockSearch.scheduleBlock!!.startTime.toString())
+            views.setTextViewText(R.id.start_time, scheduleBlockSearch.scheduleBlock.startTime.toString())
             views.setTextColor(R.id.start_time, widgetSchoolState.fgColor)
             views.setTextViewText(R.id.end_time, scheduleBlockSearch.scheduleBlock.endTime.toString())
             views.setTextColor(R.id.end_time, widgetSchoolState.fgColor)

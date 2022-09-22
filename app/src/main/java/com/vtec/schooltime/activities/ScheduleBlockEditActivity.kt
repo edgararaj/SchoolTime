@@ -44,6 +44,7 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
         MainActivity.schedule[dayOfWeek]?.get(scheduleBlockPosition)?.apply {
             startTime = scheduleBlockStartTime
             duration = scheduleBlockEndTime - scheduleBlockStartTime
+            more = binding.moreEdit.text.toString()
         }
         MainActivity.schedule[dayOfWeek]?.sortBy { it.startTime }
         MainActivity.didSchedulesUpdate.notify()
@@ -77,6 +78,8 @@ class ScheduleBlockEditActivity : AppCompatActivity() {
 
         schoolSubjectCard = SubjectVH(binding.schoolSubjectCard)
         schoolSubjectCard.bind(schoolSubject, null, SubjectVH.Mode.Display)
+
+        binding.moreEdit.setText(scheduleBlock.more)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         lockDuration = preferences.getBoolean("lock_duration", false)
