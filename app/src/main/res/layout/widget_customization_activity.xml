@@ -9,105 +9,120 @@
         android:id="@+id/app_bar_main"
         layout="@layout/app_bar_main" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-        <ImageView
-            android:id="@+id/dummy_wall"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/dummy_wall"
-            android:scaleType="centerCrop"/>
-
-        <include
-            android:id="@+id/widget"
-            android:layout_height="70dp"
-            android:layout_width="match_parent"
-            layout="@layout/widget"
-            android:layout_centerVertical="true"
-            android:layout_marginHorizontal="25dp"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:layout_marginTop="50dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/customize"
-            android:layout_marginBottom="10dp"
-            style="@style/TextAppearance.MaterialComponents.Body1"/>
-
-        <Spinner
-            android:id="@+id/custom_field"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="30dp"/>
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/icon_type_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/screen_bottom_margin">
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/icon_type"
-                style="@style/TextAppearance.MaterialComponents.Body2"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
 
-            <Spinner
-                android:id="@+id/icon_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/dummy_wall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/dummy_wall"
+                    android:scaleType="centerCrop"/>
+
+                <include
+                    android:id="@+id/widget"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    layout="@layout/widget"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="25dp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_marginTop="50dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/customize"
+                    android:layout_marginBottom="10dp"
+                    style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+                <Spinner
+                    android:id="@+id/custom_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="30dp"/>
+
+                <LinearLayout
+                    android:id="@+id/icon_type_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/icon_type"
+                        style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+                    <Spinner
+                        android:id="@+id/icon_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/transparency"
+                    android:layout_marginBottom="5dp"
+                    style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+                <com.vtec.schooltime.ColorPickerSeekBar
+                    android:id="@+id/alpha_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:type="alpha"
+                    android:layout_marginBottom="30dp"/>
+
+                <LinearLayout
+                    android:id="@+id/color_picker_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pick_color"
+                        style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+                    <Spinner
+                        android:id="@+id/color_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/color_picker"
+                    layout="@layout/color_picker"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/transparency"
-            android:layout_marginBottom="5dp"
-            style="@style/TextAppearance.MaterialComponents.Body2"/>
-
-        <com.vtec.schooltime.ColorPickerSeekBar
-            android:id="@+id/alpha_slider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:type="alpha"
-            android:layout_marginBottom="30dp"/>
-
-        <LinearLayout
-            android:id="@+id/color_picker_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp">
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/pick_color"
-                style="@style/TextAppearance.MaterialComponents.Body2"/>
-
-            <Spinner
-                android:id="@+id/color_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <include
-            android:id="@+id/color_picker"
-            layout="@layout/color_picker"/>
-
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
