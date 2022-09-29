@@ -10,6 +10,8 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import com.vtec.schooltime.activities.WidgetCustomization
+import com.vtec.schooltime.activities.fallbackWidgetCustomization
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -212,6 +214,7 @@ fun updateSchoolWidget(context: Context, views: RemoteViews)
     else
     {
         views.setViewVisibility(R.id.activity_button, View.GONE)
+        views.setViewVisibility(R.id.temp, View.GONE)
     }
 
     run {
@@ -246,6 +249,7 @@ fun updateWidgetWeather(context: Context, views: RemoteViews)
 
 fun updateWidget(context: Context)
 {
+    var customization = fallbackWidgetCustomization
     try {
         val data = File(context.getExternalFilesDir(null), "data.hdvt").readText().split("|")
 
@@ -266,12 +270,14 @@ fun updateWidget(context: Context)
 
         run {
             val file = File(context.getExternalFilesDir(null), "widget_customization.json")
-            Widget.customization = Json.decodeFromStream(FileInputStream(file))
+            customization = Json.decodeFromStream(FileInputStream(file))
         }
 
     } catch (ex: Exception) {
         Log.d("FileIO", "App data not found or incorrect!")
     }
+
+    Widget.customization = customization
 
     Widget.schedule.forEach { entry ->
         entry.value.sortBy { it.startTime }

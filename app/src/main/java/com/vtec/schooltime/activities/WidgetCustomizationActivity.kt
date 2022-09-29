@@ -34,10 +34,10 @@ class CustomField(var bgColor: Int?, var fgColor: Int?, var alpha: Float, var ic
 typealias WidgetCustomization = MutableMap<Int, CustomField>
 
 val fallbackWidgetCustomization: WidgetCustomization = mutableMapOf(
-    R.string.before_subject to CustomField(null, null, 0.7f, R.string.widget_weather_icon, null),
-    R.string.during_subject to CustomField(null, null, 1f, R.string.widget_weather_icon, null),
-    R.string.end_of_school to CustomField(null, null, 0.7f, R.string.widget_edit_icon, null),
-    R.string.free_day to CustomField(null, null, 0f, R.string.widget_no_icon, null)
+    R.string.before_subject to CustomField(null, null, 0.4f, R.string.widget_weather_icon, null),
+    R.string.during_subject to CustomField(null, null, 0.7f, R.string.widget_weather_icon, null),
+    R.string.end_of_school to CustomField(null, null, 0.4f, R.string.widget_weather_icon, null),
+    R.string.free_day to CustomField(null, null, 0.4f, R.string.widget_weather_icon, null)
 )
 
 class WidgetCustomizationActivity : AppCompatActivity(), ColorPicker {

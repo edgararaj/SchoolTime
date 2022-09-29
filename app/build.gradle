@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\Edgar\\key.jks')
+            storePassword 'Edgar2004'
+            keyAlias 'key0'
+            keyPassword 'Edgar2004'
+        }
+    }
     compileSdk 31
 
     defaultConfig {

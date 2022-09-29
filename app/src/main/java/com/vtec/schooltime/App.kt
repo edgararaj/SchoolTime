@@ -146,7 +146,7 @@ val Context.isDarkMode get() = resources.configuration.uiMode and Configuration.
 class App : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         const val notificationChannelId = "SchoolTime"
-        val littleVibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+        val littleVibrationEffect: VibrationEffect? = VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
     }
 
     override fun onCreate() {
